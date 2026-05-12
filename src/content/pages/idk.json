@@ -4,5 +4,10 @@
     "title": "den du",
     "description": "abc"
   },
-  "sections": []
+  "sections": [
+    {
+      "type": "contact-card",
+      "showConfidentiality": true
+    }
+  ]
 }
