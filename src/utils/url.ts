@@ -1,4 +1,4 @@
-const base = import.meta.env.BASE_URL; // '/' or '/repo-name/'
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/'); // always ends with /
 
 export function siteUrl(path: string): string {
   if (!path) return path;
