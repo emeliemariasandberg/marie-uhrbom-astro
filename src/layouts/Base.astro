@@ -4,10 +4,10 @@ import SiteFooter from '@/components/SiteFooter.astro';
 import SiteBanner from '@/components/SiteBanner.astro';
 import '@/styles/global.css';
 import { makeUrlFn } from '@/utils/url';
-const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
-
 import seoSettings from '@/content/settings/seo.json';
 import banner from '@/content/settings/banner.json';
+
+const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
 
 interface Props {
   title?: string;
