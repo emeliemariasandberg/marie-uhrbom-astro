@@ -1,9 +1,10 @@
 ---
 import navigation from '@/content/settings/navigation.json';
-import { siteUrl } from '@/utils/url';
+import { makeUrlFn } from '@/utils/url';
 
-const basePath = import.meta.env.BASE_URL.replace(/\/$/, ''); // '' or '/repo-name'
-const currentPath = Astro.url.pathname.slice(basePath.length) || '/';
+const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
+const base = import.meta.env.BASE_URL.replace(/\/$/, ''); // '' or '/repo-name'
+const currentPath = Astro.url.pathname.slice(base.length) || '/';
 
 function isActive(href: string) {
   if (href === '/') return currentPath === '/';

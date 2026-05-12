@@ -14,7 +14,8 @@ interface Props {
   subtitle?: string;
   items: ServiceItem[];
 }
-import { siteUrl } from '@/utils/url';
+import { makeUrlFn } from '@/utils/url';
+const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
 const { eyebrow, title, subtitle, items } = Astro.props;
 ---
 

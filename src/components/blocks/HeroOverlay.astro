@@ -10,7 +10,8 @@ interface Props {
   cta2Label?: string;
   cta2Href?: string;
 }
-import { siteUrl } from '@/utils/url';
+import { makeUrlFn } from '@/utils/url';
+const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
 const { eyebrow, title, subtitle, image, alt, cta1Label, cta1Href, cta2Label, cta2Href } = Astro.props;
 ---
 

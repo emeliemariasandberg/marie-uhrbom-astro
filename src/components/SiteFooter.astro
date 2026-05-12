@@ -1,7 +1,9 @@
 ---
 import navigation from '@/content/settings/navigation.json';
 import contact from '@/content/settings/contact.json';
-import { siteUrl } from '@/utils/url';
+import { makeUrlFn } from '@/utils/url';
+
+const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
 ---
 
 <footer class="mt-32 border-t border-[var(--color-border)] bg-[var(--color-secondary)]/40">

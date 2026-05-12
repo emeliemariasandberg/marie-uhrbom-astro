@@ -1,7 +1,7 @@
-const base = import.meta.env.BASE_URL.replace(/\/?$/, '/'); // always ends with /
-
-export function siteUrl(path: string): string {
-  if (!path) return path;
-  if (/^(https?:|\/\/|mailto:|tel:|#)/.test(path)) return path;
-  return base + path.replace(/^\//, '');
+export function makeUrlFn(base: string) {
+  const b = base.endsWith('/') ? base : base + '/';
+  return function siteUrl(path: string): string {
+    if (!path || /^(https?:|\/\/|mailto:|tel:|#)/.test(path)) return path;
+    return b + path.replace(/^\//, '');
+  };
 }

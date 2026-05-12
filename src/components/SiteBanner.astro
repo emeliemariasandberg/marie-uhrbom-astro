@@ -1,6 +1,8 @@
 ---
 import banner from '@/content/settings/banner.json';
-import { siteUrl } from '@/utils/url';
+import { makeUrlFn } from '@/utils/url';
+
+const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
 ---
 
 {banner.enabled && (
