@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "Läderhantverk — Marie Uhrbom",
+    "title": "Läderhantverk — Marie Uhrbom abc",
     "description": "Handgjorda läderremmar, gevärremmar, hundkoppel och sadelmakeri. Traditionellt hantverk med material av hög kvalitet från Marie Uhrbom utanför Mellerud.",
     "slug": "hantverk"
   },
@@ -50,10 +50,22 @@
       "eyebrow": "Galleri",
       "title": "Exempel på arbeten",
       "images": [
-        { "url": "/images/gallery-1.jpg", "alt": "Handgjord gevärrem i brunt läder" },
-        { "url": "/images/gallery-2.jpg", "alt": "Hundkoppel i vegetabilgarvat läder" },
-        { "url": "/images/gallery-3.jpg", "alt": "Detalj av lädersyning" },
-        { "url": "/images/gallery-4.jpg", "alt": "Hästsele i sadelmakeriarbete" }
+        {
+          "url": "/images/gallery-1.jpg",
+          "alt": "Handgjord gevärrem i brunt läder"
+        },
+        {
+          "url": "/images/gallery-2.jpg",
+          "alt": "Hundkoppel i vegetabilgarvat läder"
+        },
+        {
+          "url": "/images/gallery-3.jpg",
+          "alt": "Detalj av lädersyning"
+        },
+        {
+          "url": "/images/gallery-4.jpg",
+          "alt": "Hästsele i sadelmakeriarbete"
+        }
       ]
     },
     {
