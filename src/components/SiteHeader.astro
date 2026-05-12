@@ -1,0 +1,116 @@
+---
+import navigation from '@/content/settings/navigation.json';
+
+const currentPath = Astro.url.pathname;
+
+function isActive(href: string) {
+  if (href === '/') return currentPath === '/';
+  return currentPath.startsWith(href);
+}
+---
+
+<header class="sticky top-0 z-40 h-20 w-full backdrop-blur-sm bg-[var(--color-background)]/90 border-b border-[var(--color-border)]">
+  <div class="container-prose h-full flex items-center justify-between gap-6">
+
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-3 shrink-0 group" aria-label="Marie Uhrbom — startsida">
+      <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect width="42" height="42" rx="6" fill="var(--color-leather-deep)"/>
+        <text x="21" y="27" font-family="Cormorant Garamond, Georgia, serif" font-size="18" font-weight="500" fill="var(--color-primary-foreground)" text-anchor="middle">M</text>
+      </svg>
+      <div>
+        <div class="font-display text-xl leading-tight">Marie Uhrbom</div>
+        <div class="hidden sm:block text-[10px] tracking-[0.22em] uppercase text-[var(--color-muted-foreground)]">
+          Hantverk · Homeopati · Hälsa
+        </div>
+      </div>
+    </a>
+
+    <!-- Desktop nav -->
+    <nav class="hidden lg:flex items-center gap-1" aria-label="Huvudnavigation">
+      {navigation.header.map((item) => (
+        <a
+          href={item.href}
+          class:list={[
+            'px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+            isActive(item.href)
+              ? 'text-[var(--color-leather-deep)] bg-[var(--color-secondary)]'
+              : 'text-[var(--color-foreground)]/75 hover:text-[var(--color-foreground)] hover:bg-[var(--color-secondary)]/50'
+          ]}
+          aria-current={isActive(item.href) ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <!-- Mobile menu button -->
+    <button
+      id="mobile-menu-btn"
+      class="lg:hidden p-2 rounded-md text-[var(--color-foreground)]/75 hover:bg-[var(--color-secondary)] transition-colors"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      aria-label="Öppna meny"
+    >
+      <svg id="icon-open" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+      <svg id="icon-close" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" class="hidden">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile menu dropdown -->
+  <div
+    id="mobile-menu"
+    class="hidden lg:hidden border-t border-[var(--color-border)] bg-[var(--color-background)] px-5 py-3"
+    aria-hidden="true"
+  >
+    <nav class="flex flex-col gap-1" aria-label="Mobilnavigation">
+      {navigation.header.map((item) => (
+        <a
+          href={item.href}
+          class:list={[
+            'px-3 py-2.5 rounded-md text-sm font-medium transition-colors',
+            isActive(item.href)
+              ? 'text-[var(--color-leather-deep)] bg-[var(--color-secondary)]'
+              : 'text-[var(--color-foreground)]/75 hover:text-[var(--color-foreground)] hover:bg-[var(--color-secondary)]/50'
+          ]}
+          aria-current={isActive(item.href) ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  const iconOpen = document.getElementById('icon-open');
+  const iconClose = document.getElementById('icon-close');
+
+  btn?.addEventListener('click', () => {
+    const isOpen = menu?.classList.toggle('hidden') === false;
+    btn.setAttribute('aria-expanded', String(isOpen));
+    menu?.setAttribute('aria-hidden', String(!isOpen));
+    iconOpen?.classList.toggle('hidden', isOpen);
+    iconClose?.classList.toggle('hidden', !isOpen);
+  });
+
+  // Close menu on nav link click
+  menu?.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      menu.classList.add('hidden');
+      menu.setAttribute('aria-hidden', 'true');
+      btn?.setAttribute('aria-expanded', 'false');
+      iconOpen?.classList.remove('hidden');
+      iconClose?.classList.add('hidden');
+    });
+  });
+</script>

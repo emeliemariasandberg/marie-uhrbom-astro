@@ -1,0 +1,20 @@
+---
+interface Props {
+  quote: string;
+  attribution?: string;
+}
+const { quote, attribution } = Astro.props;
+---
+
+<section class="py-16 md:py-20">
+  <div class="container-prose max-w-3xl">
+    <blockquote class="border-l-4 border-[var(--color-leather)] pl-8">
+      <p class="font-display text-2xl md:text-3xl font-medium leading-relaxed text-[var(--color-foreground)] italic mb-4">
+        "{quote}"
+      </p>
+      {attribution && (
+        <footer class="text-sm text-[var(--color-muted-foreground)]">— {attribution}</footer>
+      )}
+    </blockquote>
+  </div>
+</section>

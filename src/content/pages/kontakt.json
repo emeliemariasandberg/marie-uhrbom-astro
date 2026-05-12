@@ -1,0 +1,29 @@
+{
+  "meta": {
+    "title": "Kontakt — Marie Uhrbom",
+    "description": "Kontakta Marie Uhrbom. Förfrågningar om läderhantverk, homeopati och livscoachning. Svarar inom ett par dagar.",
+    "slug": "kontakt"
+  },
+  "sections": [
+    {
+      "type": "page-header",
+      "eyebrow": "Kontakt",
+      "title": "Hör av dig",
+      "subtitle": "Jag svarar inom ett par dagar. Välj det område som passar din förfrågan bäst."
+    },
+    {
+      "type": "contact-card",
+      "showConfidentiality": true
+    },
+    {
+      "type": "inquiry-form",
+      "eyebrow": "Skicka ett meddelande",
+      "title": "Formulär",
+      "intro": "",
+      "area": "general",
+      "subjectLabel": "Ämne",
+      "messagePlaceholder": "Skriv ditt meddelande här...",
+      "submitLabel": "Skicka meddelande"
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "meta": {
+    "title": "Marie Uhrbom — Hantverk, Homeopati & Hälsa",
+    "description": "Välkommen till Marie Uhrbom. Klassisk homeopati, hälsa & livscoachning samt handgjort läderhantverk — utanför Mellerud, online och via telefon.",
+    "slug": "hem"
+  },
+  "sections": [
+    {
+      "type": "hero-split",
+      "eyebrow": "Välkommen",
+      "title": "Hantverk, Homeopati & Hälsa",
+      "subtitle": "Tre verksamheter med ett gemensamt syfte — att stärka välmåendet och skapa något beständigt med omsorg och kunskap.",
+      "image": "/images/hero-leather.jpg",
+      "alt": "Handgjort läder",
+      "cta1Label": "Läs om mig",
+      "cta1Href": "/om-marie",
+      "cta2Label": "Kom i kontakt",
+      "cta2Href": "/kontakt"
+    },
+    {
+      "type": "services-grid",
+      "eyebrow": "Verksamheter",
+      "title": "Vad jag erbjuder",
+      "subtitle": "Varje verksamhet är fristående men delar samma omsorgsfulla förhållningssätt.",
+      "items": [
+        {
+          "eyebrow": "Hantverk",
+          "title": "Läderhantverk",
+          "body": "Handgjorda läderremmar, hundkoppel och sadelmakeri. Varje produkt tillverkas med traditionella tekniker och material av hög kvalitet.",
+          "linkLabel": "Se hantverk",
+          "href": "/hantverk",
+          "size": "medium"
+        },
+        {
+          "eyebrow": "Hälsa",
+          "title": "Klassisk Homeopati",
+          "body": "Homeopati är ett holistiskt behandlingssystem som stärker kroppens egna läkningsförmåga. Jag tar emot människor och djur.",
+          "linkLabel": "Om homeopati",
+          "href": "/homeopati",
+          "size": "medium"
+        },
+        {
+          "eyebrow": "Vägledning",
+          "title": "Hälsa & Livscoachning",
+          "body": "Samtal och vägledning för dig som vill hitta din riktning, stärka ditt välmående och skapa förändring i ditt liv.",
+          "linkLabel": "Om coaching",
+          "href": "/vagledning",
+          "size": "medium"
+        }
+      ]
+    },
+    {
+      "type": "about-band",
+      "eyebrow": "Om Marie",
+      "title": "Engagemang och erfarenhet",
+      "body": "Jag är Marie Uhrbom — hantverkare, homeopat och livscoach. Jag har lång erfarenhet av att möta människor i olika skeden av livet och brinner för att hjälpa till på ett äkta och hållbart sätt.\n\nJag tar emot klienter utanför Mellerud i Västra Götaland, men erbjuder också konsultationer online och via telefon.",
+      "image": "/images/om-marie.jpg",
+      "alt": "Marie Uhrbom"
+    },
+    {
+      "type": "cta",
+      "title": "Har du frågor?",
+      "body": "Hör av dig — jag svarar gärna på frågor om mina verksamheter eller bokar in ett kostnadsfritt inledande samtal.",
+      "buttonLabel": "Kontakta mig",
+      "buttonHref": "/kontakt"
+    }
+  ]
+}

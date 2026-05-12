@@ -1,0 +1,60 @@
+---
+import HeroSplit from './blocks/HeroSplit.astro';
+import HeroOverlay from './blocks/HeroOverlay.astro';
+import HeroPortrait from './blocks/HeroPortrait.astro';
+import PageHeader from './blocks/PageHeader.astro';
+import TextSection from './blocks/TextSection.astro';
+import Gallery from './blocks/Gallery.astro';
+import ServicesGrid from './blocks/ServicesGrid.astro';
+import AboutBand from './blocks/AboutBand.astro';
+import MethodCards from './blocks/MethodCards.astro';
+import BookingGrid from './blocks/BookingGrid.astro';
+import ContactCard from './blocks/ContactCard.astro';
+import InquiryForm from './blocks/InquiryForm.astro';
+import CTA from './blocks/CTA.astro';
+import Quote from './blocks/Quote.astro';
+import InfoCard from './blocks/InfoCard.astro';
+
+interface Props {
+  sections: any[];
+}
+const { sections } = Astro.props;
+---
+
+{sections.map((section: any) => {
+  switch (section.type) {
+    case 'hero-split':
+      return <HeroSplit {...section} />;
+    case 'hero-overlay':
+      return <HeroOverlay {...section} />;
+    case 'hero-portrait':
+      return <HeroPortrait {...section} />;
+    case 'page-header':
+      return <PageHeader {...section} />;
+    case 'text':
+      return <TextSection title={section.title} body={section.body} />;
+    case 'gallery':
+      return <Gallery eyebrow={section.eyebrow} title={section.title} images={section.images ?? []} />;
+    case 'services-grid':
+      return <ServicesGrid {...section} />;
+    case 'about-band':
+      return <AboutBand {...section} />;
+    case 'method-cards':
+    case 'two-cards':
+      return <MethodCards items={section.items ?? []} columns={section.type === 'two-cards' ? 2 : 3} />;
+    case 'booking-grid':
+      return <BookingGrid id={section.id} body={section.body} area={section.area} />;
+    case 'contact-card':
+      return <ContactCard showConfidentiality={section.showConfidentiality} />;
+    case 'inquiry-form':
+      return <InquiryForm {...section} />;
+    case 'cta':
+      return <CTA {...section} />;
+    case 'quote':
+      return <Quote quote={section.quote} attribution={section.attribution} />;
+    case 'info-card':
+      return <InfoCard title={section.title} body={section.body} tone={section.tone} />;
+    default:
+      return null;
+  }
+})}

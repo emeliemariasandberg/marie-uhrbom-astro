@@ -1,0 +1,58 @@
+---
+interface ServiceItem {
+  eyebrow?: string;
+  title: string;
+  body: string;
+  linkLabel?: string;
+  href?: string;
+  size?: 'small' | 'medium' | 'large' | 'wide';
+  image?: string;
+}
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
+  items: ServiceItem[];
+}
+const { eyebrow, title, subtitle, items } = Astro.props;
+---
+
+<section class="py-16 md:py-20">
+  <div class="container-prose">
+    {(eyebrow || title || subtitle) && (
+      <div class="mb-12 max-w-2xl">
+        {eyebrow && <p class="eyebrow mb-3">{eyebrow}</p>}
+        {title && <h2 class="font-display text-3xl md:text-4xl font-medium leading-tight mb-4">{title}</h2>}
+        {subtitle && <p class="text-[var(--color-muted-foreground)] leading-relaxed">{subtitle}</p>}
+      </div>
+    )}
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {items.map((item) => (
+        <div class:list={[
+          'group rounded-2xl border border-[var(--color-border)] bg-[var(--color-card)] p-6 flex flex-col shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-warm)] transition-shadow',
+          item.size === 'wide' && 'sm:col-span-2',
+          item.size === 'large' && 'lg:col-span-2'
+        ]}>
+          {item.image && (
+            <div class="rounded-lg overflow-hidden aspect-video mb-5">
+              <img src={item.image} alt={item.title} class="w-full h-full object-cover" loading="lazy" />
+            </div>
+          )}
+          {item.eyebrow && <p class="eyebrow mb-2">{item.eyebrow}</p>}
+          <h3 class="font-display text-xl font-medium mb-3">{item.title}</h3>
+          <p class="text-sm text-[var(--color-muted-foreground)] leading-relaxed flex-1">{item.body}</p>
+          {item.linkLabel && item.href && (
+            <a
+              href={item.href}
+              class="mt-5 inline-flex items-center gap-1 text-sm font-medium text-[var(--color-leather)] hover:text-[var(--color-leather-deep)] transition-colors"
+            >
+              {item.linkLabel}
+              <span aria-hidden="true">→</span>
+            </a>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,56 @@
+{
+  "meta": {
+    "title": "Klassisk Homeopati — Marie Uhrbom",
+    "description": "Klassisk homeopati för människor och djur. Marie Uhrbom är utbildad homeopat och tar emot klienter utanför Mellerud, online och via telefon.",
+    "slug": "homeopati"
+  },
+  "sections": [
+    {
+      "type": "hero-overlay",
+      "eyebrow": "Klassisk Homeopati",
+      "title": "Kroppen har en inneboende förmåga att läka",
+      "subtitle": "Homeopati är ett holistiskt behandlingssystem som stärker din egen hälsa — på ett skonsamt och naturligt sätt.",
+      "image": "/images/homeopati-hero.jpg",
+      "alt": "Naturlig miljö med örter",
+      "cta1Label": "Boka samtal",
+      "cta1Href": "#boka"
+    },
+    {
+      "type": "text",
+      "title": "Vad är klassisk homeopati?",
+      "body": "Klassisk homeopati är ett holistiskt medicinskt system som grundades av Samuel Hahnemann i slutet av 1700-talet. Behandlingen utgår från principen att \"lika botar lika\" — ett ämne som hos en frisk person orsakar vissa symptom kan hos en sjuk person bota liknande symptom.\n\nVid en homeopatisk konsultation tittar vi på hela dig — din kropp, ditt sinne och din historia. Jag väljer ett medel som passar just dig, inte bara din diagnos.\n\nHomeopati är skonsamt, utan kända biverkningar och passar alla åldrar — från barn till äldre, och även djur."
+    },
+    {
+      "type": "method-cards",
+      "items": [
+        {
+          "icon": "info",
+          "title": "Första konsultationen",
+          "body": "Vi tar oss god tid — vanligtvis 60–90 minuter — för att gå igenom din hälsosituation, historia och nuvarande symptom på djupet."
+        },
+        {
+          "icon": "sparkles",
+          "title": "Uppföljning",
+          "body": "Efter att du tagit ditt medel följer vi upp hur du mår. Uppföljningar sker vanligtvis efter 4–6 veckor och är kortare än förstasamtalet."
+        },
+        {
+          "icon": "shield",
+          "title": "Djur välkomna",
+          "body": "Jag tar emot djur — hästar, hundar, katter och andra husdjur. Ägarens observation är central i djurkonsultationen."
+        }
+      ]
+    },
+    {
+      "type": "info-card",
+      "title": "Tystnadsplikt och ansvarsförsäkring",
+      "body": "Jag har tystnadsplikt och är ansvarsförsäkrad via Gjensidige. Homeopati ersätter inte konventionell medicinsk vård — vid allvarliga symptom ska du alltid kontakta läkare.",
+      "tone": "soft"
+    },
+    {
+      "type": "booking-grid",
+      "id": "boka",
+      "body": "## Boka en konsultation\n\nJag tar emot klienter i mitt hem utanför Mellerud i Västra Götaland, men erbjuder också konsultationer via video och telefon.\n\n**Pris:** Kontakta mig för aktuella priser.\n\n**Boka:** Fyll i formuläret nedan eller skicka ett e-postmeddelande direkt.",
+      "area": "homeopati"
+    }
+  ]
+}

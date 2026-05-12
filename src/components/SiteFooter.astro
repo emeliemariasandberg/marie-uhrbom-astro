@@ -1,0 +1,80 @@
+---
+import navigation from '@/content/settings/navigation.json';
+import contact from '@/content/settings/contact.json';
+---
+
+<footer class="mt-32 border-t border-[var(--color-border)] bg-[var(--color-secondary)]/40">
+  <div class="container-prose py-16">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-8">
+
+      <!-- Brand -->
+      <div class="md:col-span-2">
+        <a href="/" class="flex items-center gap-3 mb-4" aria-label="Marie Uhrbom — startsida">
+          <svg width="36" height="36" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect width="42" height="42" rx="6" fill="var(--color-leather-deep)"/>
+            <text x="21" y="27" font-family="Cormorant Garamond, Georgia, serif" font-size="18" font-weight="500" fill="var(--color-primary-foreground)" text-anchor="middle">M</text>
+          </svg>
+          <div>
+            <div class="font-display text-lg leading-tight">Marie Uhrbom</div>
+            <div class="text-[10px] tracking-[0.22em] uppercase text-[var(--color-muted-foreground)]">
+              Hantverk · Homeopati · Hälsa
+            </div>
+          </div>
+        </a>
+        <p class="text-sm text-[var(--color-muted-foreground)] max-w-xs leading-relaxed">
+          Klassisk homeopati, livscoachning och handgjort läderhantverk.
+          Jag tar emot människor och djur — utanför Mellerud, online och via telefon.
+        </p>
+      </div>
+
+      <!-- Services -->
+      <div>
+        <h2 class="text-xs font-semibold uppercase tracking-widest text-[var(--color-foreground)] mb-4">Verksamhet</h2>
+        <ul class="space-y-2">
+          {navigation.footer.map((item) => (
+            <li>
+              <a href={item.href} class="text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] transition-colors">
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <h2 class="text-xs font-semibold uppercase tracking-widest text-[var(--color-foreground)] mb-4">Kontakt</h2>
+        <ul class="space-y-2">
+          {contact.email && (
+            <li>
+              <a href={`mailto:${contact.email}`} class="text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] transition-colors break-all">
+                {contact.email}
+              </a>
+            </li>
+          )}
+          {contact.phone && (
+            <li>
+              <a href={`tel:${contact.phone}`} class="text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] transition-colors">
+                {contact.phone}
+              </a>
+            </li>
+          )}
+          {contact.location && (
+            <li class="text-sm text-[var(--color-muted-foreground)]">{contact.location}</li>
+          )}
+          <li class="pt-1">
+            <a href="/kontakt" class="text-sm text-[var(--color-leather)] hover:text-[var(--color-leather-deep)] transition-colors font-medium">
+              Skicka meddelande →
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="mt-12 pt-6 border-t border-[var(--color-border)] flex flex-wrap items-center justify-between gap-4 text-xs text-[var(--color-muted-foreground)]">
+      <span>© {new Date().getFullYear()} Marie Uhrbom · Tystnadsplikt · Ansvarsförsäkrad via Gjensidige</span>
+      <a href="/admin" class="hover:text-[var(--color-foreground)] transition-colors">Logga in</a>
+    </div>
+  </div>
+</footer>

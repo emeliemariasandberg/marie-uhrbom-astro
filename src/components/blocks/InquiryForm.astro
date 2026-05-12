@@ -1,0 +1,175 @@
+---
+interface Props {
+  id?: string;
+  eyebrow?: string;
+  title?: string;
+  intro?: string;
+  area?: string;
+  subjectLabel?: string;
+  messagePlaceholder?: string;
+  submitLabel?: string;
+}
+const {
+  id,
+  eyebrow,
+  title,
+  intro,
+  area = 'general',
+  subjectLabel = 'Ämne',
+  messagePlaceholder = 'Ditt meddelande...',
+  submitLabel = 'Skicka',
+} = Astro.props;
+
+const formId = `inquiry-form-${Math.random().toString(36).slice(2, 7)}`;
+---
+
+<section id={id} class="py-16 md:py-20">
+  <div class="container-prose max-w-2xl">
+    {eyebrow && <p class="eyebrow mb-3">{eyebrow}</p>}
+    {title && <h2 class="font-display text-3xl md:text-4xl font-medium leading-tight mb-4">{title}</h2>}
+    {intro && <p class="text-[var(--color-muted-foreground)] leading-relaxed mb-8">{intro}</p>}
+
+    <form
+      id={formId}
+      class="space-y-5"
+      data-area={area}
+      novalidate
+    >
+      <!-- Honeypot (spam protection) -->
+      <input type="text" name="_honey" class="hidden" tabindex="-1" autocomplete="off" />
+      <input type="hidden" name="area" value={area} />
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div>
+          <label for={`${formId}-name`} class="block text-sm font-medium mb-1.5">
+            Namn <span class="text-[var(--color-destructive)]">*</span>
+          </label>
+          <input
+            id={`${formId}-name`}
+            name="name"
+            type="text"
+            required
+            autocomplete="name"
+            class="w-full px-3.5 py-2.5 rounded-lg border border-[var(--color-input)] bg-[var(--color-card)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] focus:ring-offset-1 transition-shadow"
+          />
+        </div>
+        <div>
+          <label for={`${formId}-email`} class="block text-sm font-medium mb-1.5">
+            E-post <span class="text-[var(--color-destructive)]">*</span>
+          </label>
+          <input
+            id={`${formId}-email`}
+            name="email"
+            type="email"
+            required
+            autocomplete="email"
+            class="w-full px-3.5 py-2.5 rounded-lg border border-[var(--color-input)] bg-[var(--color-card)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] focus:ring-offset-1 transition-shadow"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label for={`${formId}-subject`} class="block text-sm font-medium mb-1.5">
+          {subjectLabel}
+        </label>
+        <input
+          id={`${formId}-subject`}
+          name="subject"
+          type="text"
+          class="w-full px-3.5 py-2.5 rounded-lg border border-[var(--color-input)] bg-[var(--color-card)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] focus:ring-offset-1 transition-shadow"
+        />
+      </div>
+
+      <div>
+        <label for={`${formId}-message`} class="block text-sm font-medium mb-1.5">
+          Meddelande <span class="text-[var(--color-destructive)]">*</span>
+        </label>
+        <textarea
+          id={`${formId}-message`}
+          name="message"
+          required
+          rows="5"
+          placeholder={messagePlaceholder}
+          class="w-full px-3.5 py-2.5 rounded-lg border border-[var(--color-input)] bg-[var(--color-card)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] focus:ring-offset-1 transition-shadow resize-y"
+        ></textarea>
+      </div>
+
+      <div class="flex items-start gap-3">
+        <input
+          id={`${formId}-gdpr`}
+          name="gdpr"
+          type="checkbox"
+          required
+          class="mt-0.5 rounded border-[var(--color-input)] text-[var(--color-primary)] focus:ring-[var(--color-ring)]"
+        />
+        <label for={`${formId}-gdpr`} class="text-sm text-[var(--color-muted-foreground)] leading-relaxed">
+          Jag godkänner att mina uppgifter behandlas för att hantera min förfrågan. Inga uppgifter delas med tredje part.
+          <span class="text-[var(--color-destructive)]"> *</span>
+        </label>
+      </div>
+
+      <!-- Status messages -->
+      <div id={`${formId}-success`} class="hidden rounded-lg bg-green-50 border border-green-200 p-4 text-sm text-green-800">
+        Tack! Ditt meddelande har skickats. Jag återkommer inom ett par dagar.
+      </div>
+      <div id={`${formId}-error`} class="hidden rounded-lg bg-red-50 border border-red-200 p-4 text-sm text-red-800">
+        Något gick fel. Försök igen eller skicka ett e-postmeddelande direkt.
+      </div>
+
+      <button
+        type="submit"
+        id={`${formId}-submit`}
+        class="inline-flex items-center gap-2 px-8 py-3 rounded-lg bg-[var(--color-primary)] text-[var(--color-primary-foreground)] font-medium text-sm hover:opacity-90 transition-opacity disabled:opacity-60 disabled:cursor-not-allowed shadow-[var(--shadow-soft)]"
+      >
+        <span id={`${formId}-submit-text`}>{submitLabel}</span>
+        <svg id={`${formId}-spinner`} class="hidden animate-spin" width="16" height="16" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+        </svg>
+      </button>
+    </form>
+  </div>
+</section>
+
+<script define:vars={{ formId }}>
+  const form = document.getElementById(formId);
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const honey = form.querySelector('[name="_honey"]');
+      if (honey && honey.value) return; // Spam bot
+
+      const submitBtn = document.getElementById(`${formId}-submit`);
+      const submitText = document.getElementById(`${formId}-submit-text`);
+      const spinner = document.getElementById(`${formId}-spinner`);
+      const successMsg = document.getElementById(`${formId}-success`);
+      const errorMsg = document.getElementById(`${formId}-error`);
+
+      submitBtn.disabled = true;
+      spinner.classList.remove('hidden');
+      successMsg.classList.add('hidden');
+      errorMsg.classList.add('hidden');
+
+      try {
+        const data = new FormData(form);
+        const res = await fetch('/form.php', {
+          method: 'POST',
+          body: data,
+        });
+
+        if (res.ok) {
+          successMsg.classList.remove('hidden');
+          form.reset();
+        } else {
+          throw new Error('Server error');
+        }
+      } catch {
+        errorMsg.classList.remove('hidden');
+      } finally {
+        submitBtn.disabled = false;
+        spinner.classList.add('hidden');
+      }
+    });
+  }
+</script>

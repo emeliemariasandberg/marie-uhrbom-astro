@@ -1,0 +1,64 @@
+---
+import SiteHeader from '@/components/SiteHeader.astro';
+import SiteFooter from '@/components/SiteFooter.astro';
+import SiteBanner from '@/components/SiteBanner.astro';
+import '@/styles/global.css';
+
+import seoSettings from '@/content/settings/seo.json';
+import banner from '@/content/settings/banner.json';
+
+interface Props {
+  title?: string;
+  description?: string;
+  slug?: string;
+}
+
+const {
+  title = seoSettings.defaultTitle,
+  description = seoSettings.defaultDescription,
+  slug = '',
+} = Astro.props;
+
+const canonicalUrl = new URL(slug ? `/${slug}` : '/', Astro.site ?? 'https://marieuhrbom.se');
+---
+
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl.href} />
+
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl.href} />
+    {seoSettings.ogImage && <meta property="og:image" content={seoSettings.ogImage} />}
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Google Fonts: Cormorant Garamond + Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@400;500;600&display=swap"
+    />
+  </head>
+  <body>
+    {banner.enabled && <SiteBanner />}
+    <SiteHeader />
+    <main>
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>

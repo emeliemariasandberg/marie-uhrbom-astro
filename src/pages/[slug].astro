@@ -1,0 +1,33 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageRenderer from '@/components/PageRenderer.astro';
+
+// Automatically picks up any JSON file dropped into src/content/pages/.
+// No code change needed when Marie's admin creates a new page.
+const allModules = import.meta.glob<{ default: any }>('../content/pages/*.json', { eager: true });
+
+function slugFromPath(path: string) {
+  return path.split('/').pop()!.replace('.json', '');
+}
+
+// hem.json is served by index.astro, exclude it here
+const pageEntries = Object.entries(allModules).filter(
+  ([path]) => slugFromPath(path) !== 'hem'
+);
+
+export function getStaticPaths() {
+  const mods = import.meta.glob<{ default: any }>('../content/pages/*.json', { eager: true });
+  return Object.keys(mods)
+    .map(path => path.split('/').pop()!.replace('.json', ''))
+    .filter(slug => slug !== 'hem')
+    .map(slug => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+const match = pageEntries.find(([path]) => slugFromPath(path) === slug);
+const page = match?.[1].default ?? match?.[1];
+---
+
+<Base title={page.meta.title} description={page.meta.description} slug={slug}>
+  <PageRenderer sections={page.sections} />
+</Base>

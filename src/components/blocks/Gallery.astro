@@ -1,0 +1,35 @@
+---
+interface GalleryImage {
+  url: string;
+  alt: string;
+}
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  images: GalleryImage[];
+}
+const { eyebrow, title, images } = Astro.props;
+---
+
+<section class="py-16 md:py-20">
+  <div class="container-prose">
+    {(eyebrow || title) && (
+      <div class="mb-10">
+        {eyebrow && <p class="eyebrow mb-3">{eyebrow}</p>}
+        {title && <h2 class="font-display text-3xl md:text-4xl font-medium leading-tight">{title}</h2>}
+      </div>
+    )}
+    <div class="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
+      {images.map((img) => (
+        <div class="break-inside-avoid rounded-xl overflow-hidden shadow-[var(--shadow-soft)]">
+          <img
+            src={img.url}
+            alt={img.alt}
+            class="w-full h-auto object-cover"
+            loading="lazy"
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

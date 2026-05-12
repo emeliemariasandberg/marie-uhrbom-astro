@@ -1,0 +1,28 @@
+---
+interface Props {
+  title: string;
+  body?: string;
+  buttonLabel?: string;
+  buttonHref?: string;
+}
+const { title, body, buttonLabel, buttonHref } = Astro.props;
+---
+
+<section class="py-16 md:py-20">
+  <div class="container-prose">
+    <div class="rounded-2xl bg-[var(--color-leather-deep)] text-[var(--color-primary-foreground)] p-10 md:p-14 text-center shadow-[var(--shadow-warm)]">
+      <h2 class="font-display text-3xl md:text-4xl font-medium mb-4">{title}</h2>
+      {body && (
+        <p class="text-white/80 leading-relaxed mb-8 max-w-xl mx-auto">{body}</p>
+      )}
+      {buttonLabel && buttonHref && (
+        <a
+          href={buttonHref}
+          class="inline-flex items-center px-8 py-3.5 rounded-lg bg-white text-[var(--color-leather-deep)] font-medium text-sm hover:bg-white/90 transition-colors shadow-[var(--shadow-soft)]"
+        >
+          {buttonLabel}
+        </a>
+      )}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,9 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageRenderer from '@/components/PageRenderer.astro';
+import page from '@/content/pages/hem.json';
+---
+
+<Base title={page.meta.title} description={page.meta.description} slug="">
+  <PageRenderer sections={page.sections} />
+</Base>

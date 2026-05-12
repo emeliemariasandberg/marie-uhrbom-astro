@@ -1,0 +1,71 @@
+{
+  "meta": {
+    "title": "Läderhantverk — Marie Uhrbom",
+    "description": "Handgjorda läderremmar, gevärremmar, hundkoppel och sadelmakeri. Traditionellt hantverk med material av hög kvalitet från Marie Uhrbom utanför Mellerud.",
+    "slug": "hantverk"
+  },
+  "sections": [
+    {
+      "type": "hero-portrait",
+      "eyebrow": "Hantverk med själ",
+      "title": "Handgjort läder av hög kvalitet",
+      "subtitle": "Gevärremmar, hundkoppel och sadelmakeri — tillverkat för hand med omsorg och beständighet.",
+      "body": "Varje produkt är unik och tillverkad i Sverige med traditionella sadelmakarteknik och vegetabilgarvat läder. Jag arbetar nära kunden för att ta fram det som passar just dig och ditt djur.",
+      "image": "/images/hero-leather.jpg",
+      "alt": "Handgjort läder i naturbrunt",
+      "cta1Label": "Beställ eller fråga",
+      "cta1Href": "#bestall",
+      "footnote": "Levenstid 1–4 veckor beroende på beställning."
+    },
+    {
+      "type": "services-grid",
+      "eyebrow": "Sortiment",
+      "title": "Vad jag tillverkar",
+      "subtitle": "Alla produkter görs på beställning. Kontakta mig för priser och leveranstid.",
+      "items": [
+        {
+          "title": "Gevärremmar",
+          "body": "Handgjorda gevärremmar i vegetabilgarvat läder. Välj bredd, längd och beslag efter dina önskemål.",
+          "size": "medium"
+        },
+        {
+          "title": "Hundkoppel & halsband",
+          "body": "Hållbara koppel och halsband för hund — tillverkade att hålla länge och bli vackrare med åren.",
+          "size": "medium"
+        },
+        {
+          "title": "Sadelmakeri",
+          "body": "Reparationer och tillverkning av seldon, stigläder, tränsdelar och annan hästutrustning i läder.",
+          "size": "medium"
+        },
+        {
+          "title": "Bälten & accessoarer",
+          "body": "Enkla och hållbara bälten, nyckelringar och små lädertillbehör för vardagsbruk.",
+          "size": "medium"
+        }
+      ]
+    },
+    {
+      "type": "gallery",
+      "eyebrow": "Galleri",
+      "title": "Exempel på arbeten",
+      "images": [
+        { "url": "/images/gallery-1.jpg", "alt": "Handgjord gevärrem i brunt läder" },
+        { "url": "/images/gallery-2.jpg", "alt": "Hundkoppel i vegetabilgarvat läder" },
+        { "url": "/images/gallery-3.jpg", "alt": "Detalj av lädersyning" },
+        { "url": "/images/gallery-4.jpg", "alt": "Hästsele i sadelmakeriarbete" }
+      ]
+    },
+    {
+      "type": "inquiry-form",
+      "id": "bestall",
+      "eyebrow": "Beställ eller fråga",
+      "title": "Kom i kontakt",
+      "intro": "Fyll i formuläret nedan så hör jag av mig inom ett par dagar med mer information om pris och leveranstid.",
+      "area": "hantverk",
+      "subjectLabel": "Vad gäller det?",
+      "messagePlaceholder": "Beskriv gärna vad du vill ha — typ av produkt, önskad bredd/längd, om det är till hund, häst eller gevär, och om du har önskemål om beslag.",
+      "submitLabel": "Skicka förfrågan"
+    }
+  ]
+}

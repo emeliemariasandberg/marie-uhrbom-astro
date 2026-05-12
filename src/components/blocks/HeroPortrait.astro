@@ -1,0 +1,61 @@
+---
+import { marked } from 'marked';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+  body?: string;
+  image?: string;
+  alt?: string;
+  cta1Label?: string;
+  cta1Href?: string;
+  footnote?: string;
+}
+const { eyebrow, title, subtitle, body, image, alt, cta1Label, cta1Href, footnote } = Astro.props;
+const bodyHtml = body ? marked.parse(body) : '';
+---
+
+<section class="py-20 md:py-28">
+  <div class="container-prose">
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start">
+      {image && (
+        <div class="lg:col-span-2 rounded-2xl overflow-hidden aspect-[3/4] shadow-[var(--shadow-warm)]">
+          <img
+            src={image}
+            alt={alt ?? ''}
+            class="w-full h-full object-cover"
+            loading="eager"
+          />
+        </div>
+      )}
+      <div class:list={['flex flex-col justify-center', image ? 'lg:col-span-3' : 'lg:col-span-5']}>
+        {eyebrow && <p class="eyebrow mb-4">{eyebrow}</p>}
+        <h1 class="font-display text-4xl md:text-5xl font-medium leading-[1.1] mb-4">
+          {title}
+        </h1>
+        {subtitle && (
+          <p class="text-lg text-[var(--color-muted-foreground)] leading-relaxed mb-6">
+            {subtitle}
+          </p>
+        )}
+        {bodyHtml && (
+          <div class="prose-warm mb-8" set:html={bodyHtml} />
+        )}
+        {cta1Label && cta1Href && (
+          <div class="flex flex-wrap gap-3">
+            <a
+              href={cta1Href}
+              class="inline-flex items-center px-6 py-3 rounded-lg bg-[var(--color-primary)] text-[var(--color-primary-foreground)] font-medium text-sm hover:opacity-90 transition-opacity shadow-[var(--shadow-soft)]"
+            >
+              {cta1Label}
+            </a>
+          </div>
+        )}
+        {footnote && (
+          <p class="mt-6 text-xs text-[var(--color-muted-foreground)]">{footnote}</p>
+        )}
+      </div>
+    </div>
+  </div>
+</section>

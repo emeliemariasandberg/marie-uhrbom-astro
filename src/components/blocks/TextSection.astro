@@ -1,0 +1,19 @@
+---
+import { marked } from 'marked';
+
+interface Props {
+  title?: string;
+  body: string;
+}
+const { title, body } = Astro.props;
+const bodyHtml = marked.parse(body);
+---
+
+<section class="py-16 md:py-20">
+  <div class="container-prose max-w-3xl">
+    {title && (
+      <h2 class="font-display text-3xl md:text-4xl font-medium leading-tight mb-8">{title}</h2>
+    )}
+    <div class="prose-warm" set:html={bodyHtml} />
+  </div>
+</section>
