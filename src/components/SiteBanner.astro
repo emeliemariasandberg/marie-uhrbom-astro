@@ -1,5 +1,6 @@
 ---
 import banner from '@/content/settings/banner.json';
+import { siteUrl } from '@/utils/url';
 ---
 
 {banner.enabled && (
@@ -8,7 +9,7 @@ import banner from '@/content/settings/banner.json';
       <p class="text-center flex-1">
         {banner.message}
         {banner.linkHref && banner.linkLabel && (
-          <a href={banner.linkHref} class="ml-2 underline underline-offset-2 font-medium hover:opacity-80">
+          <a href={siteUrl(banner.linkHref)} class="ml-2 underline underline-offset-2 font-medium hover:opacity-80">
             {banner.linkLabel}
           </a>
         )}

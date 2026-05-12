@@ -8,6 +8,7 @@ interface Props {
   title?: string;
   images: GalleryImage[];
 }
+import { siteUrl } from '@/utils/url';
 const { eyebrow, title, images } = Astro.props;
 ---
 
@@ -23,7 +24,7 @@ const { eyebrow, title, images } = Astro.props;
       {images.map((img) => (
         <div class="break-inside-avoid rounded-xl overflow-hidden shadow-[var(--shadow-soft)]">
           <img
-            src={img.url}
+            src={siteUrl(img.url)}
             alt={img.alt}
             class="w-full h-auto object-cover"
             loading="lazy"

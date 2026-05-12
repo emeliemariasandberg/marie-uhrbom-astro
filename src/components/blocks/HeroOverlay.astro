@@ -10,13 +10,14 @@ interface Props {
   cta2Label?: string;
   cta2Href?: string;
 }
+import { siteUrl } from '@/utils/url';
 const { eyebrow, title, subtitle, image, alt, cta1Label, cta1Href, cta2Label, cta2Href } = Astro.props;
 ---
 
 <section class="relative min-h-[70vh] flex items-end overflow-hidden">
   {image && (
     <img
-      src={image}
+      src={siteUrl(image)}
       alt={alt ?? ''}
       class="absolute inset-0 w-full h-full object-cover"
       loading="eager"

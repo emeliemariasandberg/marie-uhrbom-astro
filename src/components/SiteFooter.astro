@@ -1,6 +1,7 @@
 ---
 import navigation from '@/content/settings/navigation.json';
 import contact from '@/content/settings/contact.json';
+import { siteUrl } from '@/utils/url';
 ---
 
 <footer class="mt-32 border-t border-[var(--color-border)] bg-[var(--color-secondary)]/40">
@@ -9,7 +10,7 @@ import contact from '@/content/settings/contact.json';
 
       <!-- Brand -->
       <div class="md:col-span-2">
-        <a href="/" class="flex items-center gap-3 mb-4" aria-label="Marie Uhrbom — startsida">
+        <a href={siteUrl('/')} class="flex items-center gap-3 mb-4" aria-label="Marie Uhrbom — startsida">
           <svg width="36" height="36" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <rect width="42" height="42" rx="6" fill="var(--color-leather-deep)"/>
             <text x="21" y="27" font-family="Cormorant Garamond, Georgia, serif" font-size="18" font-weight="500" fill="var(--color-primary-foreground)" text-anchor="middle">M</text>
@@ -33,7 +34,7 @@ import contact from '@/content/settings/contact.json';
         <ul class="space-y-2">
           {navigation.footer.map((item) => (
             <li>
-              <a href={item.href} class="text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] transition-colors">
+              <a href={siteUrl(item.href)} class="text-sm text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] transition-colors">
                 {item.label}
               </a>
             </li>
@@ -63,7 +64,7 @@ import contact from '@/content/settings/contact.json';
             <li class="text-sm text-[var(--color-muted-foreground)]">{contact.location}</li>
           )}
           <li class="pt-1">
-            <a href="/kontakt" class="text-sm text-[var(--color-leather)] hover:text-[var(--color-leather-deep)] transition-colors font-medium">
+            <a href={siteUrl('/kontakt')} class="text-sm text-[var(--color-leather)] hover:text-[var(--color-leather-deep)] transition-colors font-medium">
               Skicka meddelande →
             </a>
           </li>
@@ -74,7 +75,7 @@ import contact from '@/content/settings/contact.json';
     <!-- Bottom bar -->
     <div class="mt-12 pt-6 border-t border-[var(--color-border)] flex flex-wrap items-center justify-between gap-4 text-xs text-[var(--color-muted-foreground)]">
       <span>© {new Date().getFullYear()} Marie Uhrbom · Tystnadsplikt · Ansvarsförsäkrad via Gjensidige</span>
-      <a href="/admin" class="hover:text-[var(--color-foreground)] transition-colors">Logga in</a>
+      <a href={siteUrl('/admin')} class="hover:text-[var(--color-foreground)] transition-colors">Logga in</a>
     </div>
   </div>
 </footer>

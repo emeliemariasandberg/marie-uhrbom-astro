@@ -14,6 +14,7 @@ interface Props {
   subtitle?: string;
   items: ServiceItem[];
 }
+import { siteUrl } from '@/utils/url';
 const { eyebrow, title, subtitle, items } = Astro.props;
 ---
 
@@ -36,7 +37,7 @@ const { eyebrow, title, subtitle, items } = Astro.props;
         ]}>
           {item.image && (
             <div class="rounded-lg overflow-hidden aspect-video mb-5">
-              <img src={item.image} alt={item.title} class="w-full h-full object-cover" loading="lazy" />
+              <img src={siteUrl(item.image)} alt={item.title} class="w-full h-full object-cover" loading="lazy" />
             </div>
           )}
           {item.eyebrow && <p class="eyebrow mb-2">{item.eyebrow}</p>}
