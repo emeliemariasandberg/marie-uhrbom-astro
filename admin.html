@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marie Uhrbom — Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: oklch(0.972 0.014 80);
+  --leather: oklch(0.55 0.13 45);
+  --leather-deep: oklch(0.36 0.09 40);
+  --sage: oklch(0.78 0.045 135);
+  --background: oklch(0.978 0.011 85);
+  --foreground: oklch(0.24 0.04 40);
+  --muted: oklch(0.95 0.014 80);
+  --muted-fg: oklch(0.48 0.025 50);
+  --border: oklch(0.88 0.022 70);
+  --destructive: oklch(0.55 0.2 25);
+  --font-display: "Cormorant Garamond", Georgia, serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --radius: 0.5rem;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100dvh;
+}
+h1, h2, h3 { font-family: var(--font-display); font-weight: 500; line-height: 1.15; }
+h1 { font-size: 2rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.125rem; }
+
+.app-header {
+  background: white;
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.header-title { font-family: var(--font-body); font-weight: 500; font-size: 0.9375rem; flex: 1; text-align: center; }
+.main { max-width: 52rem; margin: 0 auto; padding: 2rem 1.25rem 6rem; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 0.375rem;
+  padding: 0.5rem 1rem; border-radius: var(--radius);
+  font-family: var(--font-body); font-size: 0.875rem; font-weight: 500;
+  cursor: pointer; border: none;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.btn:active { transform: scale(0.97); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+.btn-primary { background: var(--leather-deep); color: white; }
+.btn-primary:hover:not(:disabled) { opacity: 0.88; }
+.btn-secondary { background: var(--muted); color: var(--foreground); border: 1px solid var(--border); }
+.btn-secondary:hover:not(:disabled) { background: var(--border); }
+.btn-ghost { background: transparent; color: var(--muted-fg); border: 1px solid var(--border); }
+.btn-ghost:hover:not(:disabled) { background: var(--muted); color: var(--foreground); }
+.btn-danger { background: var(--destructive); color: white; }
+.btn-sm { padding: 0.25rem 0.625rem; font-size: 0.8125rem; }
+
+.field { display: flex; flex-direction: column; gap: 0.375rem; }
+.field label { font-size: 0.8125rem; font-weight: 500; color: var(--muted-fg); letter-spacing: 0.02em; }
+
+input[type="text"],
+input[type="password"],
+textarea,
+select {
+  width: 100%; padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  font-family: var(--font-body); font-size: 0.9375rem;
+  background: white; color: var(--foreground);
+  transition: border-color 0.15s; outline: none;
+}
+input[type="text"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus { border-color: var(--leather); box-shadow: 0 0 0 2px oklch(0.55 0.13 45 / 0.15); }
+textarea { resize: vertical; }
+.hint { font-size: 0.75rem; color: var(--muted-fg); }
+
+.card { background: white; border: 1px solid var(--border); border-radius: calc(var(--radius) * 1.5); padding: 1.25rem; }
+
+.page-item {
+  background: white; border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 0.875rem 1.25rem;
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.page-item + .page-item { margin-top: 0.5rem; }
+
+.section-block { background: white; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.section-block + .section-block { margin-top: 0.5rem; }
+
+.section-header {
+  display: flex; align-items: center; gap: 0.625rem;
+  padding: 0.75rem 1rem; cursor: pointer; user-select: none;
+}
+.section-header:hover { background: var(--muted); }
+
+.section-badge {
+  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  background: var(--muted); color: var(--muted-fg);
+  padding: 0.125rem 0.5rem; border-radius: 999px; white-space: nowrap;
+}
+
+.section-preview { flex: 1; color: var(--muted-fg); font-size: 0.875rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.section-arrow { color: var(--muted-fg); font-size: 0.7rem; }
+.section-controls { display: flex; gap: 0.25rem; }
+.section-body { padding: 1rem 1.25rem; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 1rem; }
+
+.image-wrap { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+.image-thumb { width: 80px; height: 80px; object-fit: cover; border-radius: var(--radius); border: 1px solid var(--border); display: block; flex-shrink: 0; }
+.image-empty { width: 80px; height: 80px; background: var(--muted); border-radius: var(--radius); border: 1px dashed var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--muted-fg); text-align: center; flex-shrink: 0; }
+
+.list-row { display: flex; gap: 0.5rem; align-items: flex-start; padding: 0.75rem; background: var(--muted); border-radius: var(--radius); }
+.list-row + .list-row { margin-top: 0.375rem; }
+.list-row-fields { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+.list-row-fields input, .list-row-fields textarea, .list-row-fields select { font-size: 0.875rem; }
+
+.checkbox-row { display: flex; align-items: center; gap: 0.5rem; }
+.checkbox-row input[type="checkbox"] { width: 1rem; height: 1rem; accent-color: var(--leather-deep); flex-shrink: 0; cursor: pointer; }
+.checkbox-row label { font-size: 0.9375rem; color: var(--foreground); font-weight: normal; cursor: pointer; }
+
+.tab-bar { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+.tab-btn { padding: 0.625rem 1.25rem; font-size: 0.875rem; background: none; border: none; cursor: pointer; color: var(--muted-fg); border-bottom: 2px solid transparent; margin-bottom: -1px; font-family: var(--font-body); }
+.tab-btn.active { color: var(--leather-deep); border-bottom-color: var(--leather-deep); font-weight: 500; }
+
+.nav-row { display: flex; gap: 0.375rem; margin-bottom: 0.375rem; align-items: center; }
+
+.back-btn { background: none; border: none; cursor: pointer; color: var(--muted-fg); font-family: var(--font-body); font-size: 0.875rem; padding: 0; display: flex; align-items: center; gap: 0.25rem; }
+.back-btn:hover { color: var(--foreground); }
+
+.loading { display: flex; align-items: center; justify-content: center; gap: 0.625rem; padding: 4rem 1rem; color: var(--muted-fg); }
+.spinner { display: inline-block; width: 1rem; height: 1rem; border: 2px solid currentColor; border-right-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+#toast {
+  position: fixed; bottom: 1.5rem; right: 1.5rem;
+  background: var(--foreground); color: white;
+  padding: 0.75rem 1.25rem; border-radius: var(--radius);
+  font-size: 0.875rem; z-index: 100; max-width: 24rem;
+  transform: translateY(5rem); opacity: 0;
+  transition: transform 0.22s ease, opacity 0.22s ease;
+  pointer-events: none;
+}
+#toast.show { transform: translateY(0); opacity: 1; }
+#toast.error { background: var(--destructive); }
+
+.section-meta-label {
+  font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--muted-fg); margin-bottom: 0.625rem;
+}
+.add-row { display: flex; gap: 0.5rem; align-items: center; margin-top: 0.875rem; }
+.add-row select { flex: 1; }
+.divider { height: 1px; background: var(--border); margin: 1.25rem 0; }
+.text-muted { color: var(--muted-fg); font-size: 0.875rem; }
+.ml-auto { margin-left: auto; }
+.flex { display: flex; }
+.gap-2 { gap: 0.5rem; }
+
+@media (max-width: 600px) {
+  .app-header { padding: 0.625rem 1rem; }
+  .main { padding: 1.25rem 1rem 5rem; }
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast"></div>
+<script>
+'use strict';
+
+/* ── Schema ───────────────────────────────────────────────────── */
+
+const SECTION_SCHEMA = {
+  'hero-split': [
+    { key: 'eyebrow',   label: 'Ögonbrynstext',       type: 'text' },
+    { key: 'title',     label: 'Rubrik',               type: 'text', required: true },
+    { key: 'subtitle',  label: 'Underrubrik',          type: 'text' },
+    { key: 'image',     label: 'Bild',                 type: 'image' },
+    { key: 'alt',       label: 'Bildbeskrivning',      type: 'text' },
+    { key: 'cta1Label', label: 'Knapp 1 text',         type: 'text' },
+    { key: 'cta1Href',  label: 'Knapp 1 länk',         type: 'text' },
+    { key: 'cta2Label', label: 'Knapp 2 text',         type: 'text' },
+    { key: 'cta2Href',  label: 'Knapp 2 länk',         type: 'text' },
+    { key: 'footnote',  label: 'Fotnot',               type: 'text' },
+  ],
+  'hero-overlay': [
+    { key: 'eyebrow',   label: 'Ögonbrynstext',        type: 'text' },
+    { key: 'title',     label: 'Rubrik',               type: 'text', required: true },
+    { key: 'subtitle',  label: 'Underrubrik',          type: 'text' },
+    { key: 'image',     label: 'Bakgrundsbild',        type: 'image' },
+    { key: 'alt',       label: 'Bildbeskrivning',      type: 'text' },
+    { key: 'cta1Label', label: 'Knapp 1 text',         type: 'text' },
+    { key: 'cta1Href',  label: 'Knapp 1 länk',         type: 'text' },
+    { key: 'cta2Label', label: 'Knapp 2 text',         type: 'text' },
+    { key: 'cta2Href',  label: 'Knapp 2 länk',         type: 'text' },
+  ],
+  'hero-portrait': [
+    { key: 'eyebrow',   label: 'Ögonbrynstext',        type: 'text' },
+    { key: 'title',     label: 'Rubrik',               type: 'text', required: true },
+    { key: 'subtitle',  label: 'Underrubrik',          type: 'text' },
+    { key: 'body',      label: 'Brödtext',             type: 'textarea' },
+    { key: 'image',     label: 'Porträttbild',         type: 'image' },
+    { key: 'alt',       label: 'Bildbeskrivning',      type: 'text' },
+    { key: 'cta1Label', label: 'Knapptext',            type: 'text' },
+    { key: 'cta1Href',  label: 'Knappens länk',        type: 'text' },
+    { key: 'footnote',  label: 'Fotnot',               type: 'text' },
+  ],
+  'page-header': [
+    { key: 'eyebrow',   label: 'Ögonbrynstext',        type: 'text' },
+    { key: 'title',     label: 'Rubrik (H1)',           type: 'text', required: true },
+    { key: 'subtitle',  label: 'Underrubrik',          type: 'text' },
+  ],
+  'text': [
+    { key: 'title',     label: 'Rubrik (H2)',           type: 'text' },
+    { key: 'body',      label: 'Brödtext (markdown)',   type: 'textarea', required: true },
+  ],
+  'gallery': [
+    { key: 'eyebrow',   label: 'Ögonbrynstext',        type: 'text' },
+    { key: 'title',     label: 'Rubrik',               type: 'text' },
+    { key: 'images',    label: 'Bilder',               type: 'image-list' },
+  ],
+  'services-grid': [
+    { key: 'eyebrow',   label: 'Ögonbrynstext',        type: 'text' },
+    { key: 'title',     label: 'Rubrik',               type: 'text' },
+    { key: 'subtitle',  label: 'Underrubrik',          type: 'text' },
+    { key: 'items',     label: 'Kort',                 type: 'service-list' },
+  ],
+  'about-band': [
+    { key: 'eyebrow',   label: 'Ögonbrynstext',        type: 'text' },
+    { key: 'title',     label: 'Rubrik',               type: 'text', required: true },
+    { key: 'body',      label: 'Brödtext (markdown)',  type: 'textarea' },
+    { key: 'image',     label: 'Bild',                 type: 'image' },
+    { key: 'alt',       label: 'Bildbeskrivning',      type: 'text' },
+  ],
+  'method-cards': [
+    { key: 'items',     label: 'Kort (3-kolumn)',       type: 'card-list' },
+  ],
+  'two-cards': [
+    { key: 'items',     label: 'Kort (2-kolumn)',       type: 'card-list' },
+  ],
+  'booking-grid': [
+    { key: 'id',        label: 'Ankar-ID (valfritt)',   type: 'text' },
+    { key: 'body',      label: 'Text (markdown)',       type: 'textarea', required: true },
+  ],
+  'contact-card': [
+    { key: 'showConfidentiality', label: 'Visa tystnadsplikt-text', type: 'checkbox' },
+  ],
+  'inquiry-form': [
+    { key: 'id',                  label: 'Ankar-ID',                        type: 'text' },
+    { key: 'eyebrow',             label: 'Ögonbrynstext',                   type: 'text' },
+    { key: 'title',               label: 'Rubrik',                          type: 'text' },
+    { key: 'intro',               label: 'Inledande text',                  type: 'text' },
+    { key: 'area',                label: 'Område',                          type: 'select', options: ['hantverk','homeopati','coachning','general'] },
+    { key: 'subjectLabel',        label: 'Ämnets etikett',                  type: 'text' },
+    { key: 'messagePlaceholder',  label: 'Meddelandets platshållare',       type: 'text' },
+    { key: 'submitLabel',         label: 'Knapptext',                       type: 'text' },
+  ],
+  'cta': [
+    { key: 'title',       label: 'Rubrik',         type: 'text', required: true },
+    { key: 'body',        label: 'Brödtext',       type: 'text' },
+    { key: 'buttonLabel', label: 'Knapptext',      type: 'text' },
+    { key: 'buttonHref',  label: 'Knappens länk',  type: 'text' },
+  ],
+  'quote': [
+    { key: 'quote',       label: 'Citat',          type: 'textarea', required: true },
+    { key: 'attribution', label: 'Av',             type: 'text' },
+  ],
+  'info-card': [
+    { key: 'title',       label: 'Rubrik',         type: 'text', required: true },
+    { key: 'body',        label: 'Text',           type: 'textarea', required: true },
+    { key: 'tone',        label: 'Ton',            type: 'select', options: ['soft','warm'] },
+  ],
+};
+
+const SECTION_LABELS = {
+  'hero-split':    'Hero — delad',
+  'hero-overlay':  'Hero — overlay',
+  'hero-portrait': 'Hero — porträtt',
+  'page-header':   'Sidrubriken',
+  'text':          'Textblock',
+  'gallery':       'Galleri',
+  'services-grid': 'Tjänster (rutnät)',
+  'about-band':    'Om-band',
+  'method-cards':  'Metodkort (3-kol)',
+  'two-cards':     'Kort (2-kol)',
+  'booking-grid':  'Bokningsrutnät',
+  'contact-card':  'Kontaktkort',
+  'inquiry-form':  'Förfrågningsformulär',
+  'cta':           'CTA-block',
+  'quote':         'Citat',
+  'info-card':     'Infokort',
+};
+
+/* ── State ────────────────────────────────────────────────────── */
+
+let cfg = {};
+let pageData = null;
+let pageSlug = '';
+let pageSha = '';
+let openSections = new Set();
+let settingsTab = 'contact';
+let settingsData = {};
+
+/* ── GitHub API ───────────────────────────────────────────────── */
+
+async function apiReq(method, path, body) {
+  const res = await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}${path}`, {
+    method,
+    headers: {
+      Authorization: `Bearer ${cfg.pat}`,
+      Accept: 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+      ...(body ? { 'Content-Type': 'application/json' } : {}),
+    },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.message || `HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+async function getFile(filePath) {
+  return apiReq('GET', `/contents/${filePath}?ref=${cfg.branch}`);
+}
+
+async function putFile(filePath, content, message, sha) {
+  const body = { message, content: b64Encode(content), branch: cfg.branch };
+  if (sha) body.sha = sha;
+  return apiReq('PUT', `/contents/${filePath}`, body);
+}
+
+async function getPageFiles() {
+  const tree = await apiReq('GET', `/git/trees/${cfg.branch}?recursive=1`);
+  return tree.tree
+    .filter(f => f.path.startsWith('src/content/pages/') && f.path.endsWith('.json'))
+    .map(f => f.path);
+}
+
+/* ── Encoding ─────────────────────────────────────────────────── */
+
+function b64Encode(str) {
+  const bytes = new TextEncoder().encode(str);
+  let bin = '';
+  bytes.forEach(b => (bin += String.fromCharCode(b)));
+  return btoa(bin);
+}
+
+function b64Decode(b64) {
+  const bin = atob(b64.replace(/\s/g, ''));
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+
+/* ── Toast ────────────────────────────────────────────────────── */
+
+let toastTimer;
+function toast(msg, isError = false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'show' + (isError ? ' error' : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.className = ''; }, 3800);
+}
+
+/* ── Image helpers ────────────────────────────────────────────── */
+
+// Converts a stored path like /images/foo.jpg to a displayable URL.
+// The file is a local file:// so relative /images paths won't load —
+// we point directly at GitHub's raw content CDN instead.
+function rawUrl(storedPath) {
+  if (!storedPath) return '';
+  const repoPath = 'public' + (storedPath.startsWith('/') ? storedPath : '/' + storedPath);
+  return `https://raw.githubusercontent.com/${cfg.owner}/${cfg.repo}/${cfg.branch}/${repoPath}`;
+}
+
+/* ── Image upload ─────────────────────────────────────────────── */
+
+async function uploadImage(file) {
+  const buffer = await file.arrayBuffer();
+
+  // 4-byte content hash → same image always gets the same filename,
+  // different images with the same filename get different filenames.
+  const hashBuf = await crypto.subtle.digest('SHA-1', buffer);
+  const hash = Array.from(new Uint8Array(hashBuf)).slice(0, 4)
+    .map(b => b.toString(16).padStart(2, '0')).join('');
+
+  const ext  = file.name.split('.').pop().toLowerCase();
+  const base = file.name.replace(/\.[^.]+$/, '').toLowerCase()
+    .replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  const name    = `${base}-${hash}.${ext}`;
+  const apiPath = `public/images/${name}`;
+
+  const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+
+  let existingSha;
+  try {
+    const existing = await getFile(apiPath);
+    existingSha = existing.sha;
+  } catch { /* new file */ }
+
+  const body = { message: `Laddar upp ${name}`, content: base64, branch: cfg.branch };
+  if (existingSha) body.sha = existingSha;
+  await apiReq('PUT', `/contents/${apiPath}`, body);
+
+  return `/images/${name}`;
+}
+
+/* ── DOM helper ───────────────────────────────────────────────── */
+
+function h(tag, attrs, ...children) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (k === 'className') e.className = v;
+    else if (k === 'style') e.style.cssText = v;
+    else if (k === 'htmlFor') e.htmlFor = v;
+    else if (k === 'checked') e.checked = v;
+    else if (k === 'selected') e.selected = v;
+    else if (k === 'disabled') e.disabled = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2).toLowerCase(), v);
+    else e.setAttribute(k, v);
+  }
+  for (const c of children.flat(Infinity)) {
+    if (c == null || c === false) continue;
+    e.append(typeof c === 'string' ? document.createTextNode(c) : c);
+  }
+  return e;
+}
+
+function app() { return document.getElementById('app'); }
+function loading(msg = 'Laddar…') {
+  app().innerHTML = '';
+  app().append(h('div', { className: 'loading' }, h('span', { className: 'spinner' }), msg));
+}
+
+/* ── Header builder ───────────────────────────────────────────── */
+
+function makeHeader(left, center, right) {
+  return h('header', { className: 'app-header' },
+    left  || h('span', {}),
+    center ? h('span', { className: 'header-title' }, center) : h('span', {}),
+    right || h('span', {}),
+  );
+}
+
+/* ── View: Setup ──────────────────────────────────────────────── */
+
+function showSetup() {
+  app().innerHTML = '';
+
+  const form = h('form', { className: 'card', style: 'display:flex;flex-direction:column;gap:1rem;max-width:28rem;margin:3rem auto;' });
+
+  form.append(h('h2', { style: 'margin-bottom:0.5rem' }, 'Välkommen, Marie'));
+  form.append(h('p', { className: 'text-muted', style: 'margin-bottom:0.5rem' }, 'Fyll i dina GitHub-uppgifter för att komma igång.'));
+
+  const fields = [
+    { name: 'pat',    label: 'GitHub Personal Access Token', type: 'password' },
+    { name: 'owner',  label: 'Repo-ägare (t.ex. emesan)',    type: 'text' },
+    { name: 'repo',   label: 'Repo-namn (t.ex. marie-uhrbom)', type: 'text' },
+    { name: 'branch', label: 'Branch (standard: main)',      type: 'text', placeholder: 'main' },
+  ];
+
+  fields.forEach(f => {
+    const inp = h('input', { type: f.type, name: f.name, placeholder: f.placeholder || '', value: cfg[f.name] || '' });
+    if (f.name !== 'branch') inp.required = true;
+    form.append(h('div', { className: 'field' }, h('label', {}, f.label), inp));
+  });
+
+  const submitBtn = h('button', { type: 'submit', className: 'btn btn-primary', style: 'margin-top:0.25rem' }, 'Spara & fortsätt');
+  form.append(submitBtn);
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    cfg = {
+      pat:    fd.get('pat').trim(),
+      owner:  fd.get('owner').trim(),
+      repo:   fd.get('repo').trim(),
+      branch: fd.get('branch').trim() || 'main',
+    };
+    localStorage.setItem('marie-admin-cfg', JSON.stringify(cfg));
+    loadPageList();
+  });
+
+  const main = h('div', { className: 'main' }, form);
+  app().append(main);
+}
+
+/* ── View: Page List ──────────────────────────────────────────── */
+
+async function loadPageList() {
+  loading('Laddar sidor…');
+  try {
+    const files = await getPageFiles();
+    const pages = await Promise.all(files.map(async filePath => {
+      const slug = filePath.replace('src/content/pages/', '').replace('.json', '');
+      const file = await getFile(filePath);
+      const data = JSON.parse(b64Decode(file.content));
+      return { slug, title: data.meta?.title || slug, filePath };
+    }));
+    showPageList(pages);
+  } catch (err) {
+    toast('Kunne ikke hämta sidor: ' + err.message, true);
+    showSetup();
+  }
+}
+
+function showPageList(pages) {
+  app().innerHTML = '';
+
+  const header = makeHeader(
+    null,
+    'Marie Uhrbom — Admin',
+    h('div', { className: 'flex gap-2' },
+      h('button', { className: 'btn btn-ghost btn-sm', onClick: loadSettings }, 'Inställningar'),
+      h('button', { className: 'btn btn-ghost btn-sm', onClick: () => { localStorage.removeItem('marie-admin-cfg'); cfg = {}; showSetup(); } }, 'Logga ut'),
+    ),
+  );
+
+  const list = h('div', {});
+  pages.forEach(p => {
+    list.append(h('div', { className: 'page-item' },
+      h('div', {},
+        h('div', { style: 'font-weight:500' }, p.title),
+        h('div', { className: 'text-muted' }, '/' + p.slug),
+      ),
+      h('button', { className: 'btn btn-primary btn-sm', onClick: () => loadEditor(p.slug, p.filePath) }, 'Redigera'),
+    ));
+  });
+
+  const main = h('div', { className: 'main' },
+    h('div', { style: 'display:flex;align-items:center;margin-bottom:1.5rem' },
+      h('h2', {}, 'Sidor'),
+      h('button', { className: 'btn btn-secondary btn-sm ml-auto', onClick: showNewPage }, '+ Ny sida'),
+    ),
+    list,
+  );
+
+  app().append(header, main);
+}
+
+/* ── View: Page Editor ────────────────────────────────────────── */
+
+async function loadEditor(slug, filePath) {
+  loading('Laddar sida…');
+  pageSlug = slug;
+  try {
+    const file = await getFile(filePath || `src/content/pages/${slug}.json`);
+    pageData = JSON.parse(b64Decode(file.content));
+    pageSha = file.sha;
+    openSections = new Set();
+    showEditor();
+  } catch (err) {
+    toast('Fel: ' + err.message, true);
+    loadPageList();
+  }
+}
+
+function showEditor() {
+  app().innerHTML = '';
+
+  const publishBtn = h('button', { className: 'btn btn-primary btn-sm', onClick: publishPage }, 'Publicera');
+
+  const header = makeHeader(
+    h('button', { className: 'back-btn', onClick: loadPageList }, '← Sidor'),
+    pageData.meta?.title || pageSlug,
+    publishBtn,
+  );
+
+  const metaCard = h('div', { className: 'card', style: 'display:flex;flex-direction:column;gap:0.875rem;margin-bottom:1.5rem' },
+    h('div', { className: 'field' },
+      h('label', {}, 'Sidtitel'),
+      h('input', { type: 'text', value: pageData.meta?.title || '', onInput: e => { pageData.meta = pageData.meta || {}; pageData.meta.title = e.target.value; } }),
+    ),
+    h('div', { className: 'field' },
+      h('label', {}, 'Meta-beskrivning (SEO)'),
+      h('input', { type: 'text', value: pageData.meta?.description || '', onInput: e => { pageData.meta = pageData.meta || {}; pageData.meta.description = e.target.value; } }),
+    ),
+  );
+
+  const sectionsList = h('div', { id: 'sections-list' });
+  rebuildSectionList(sectionsList);
+
+  const addBar = makeAddSectionBar(sectionsList);
+
+  const main = h('div', { className: 'main' },
+    h('p', { className: 'section-meta-label' }, 'Sidinformation'),
+    metaCard,
+    h('p', { className: 'section-meta-label' }, 'Sektioner'),
+    sectionsList,
+    addBar,
+  );
+
+  app().append(header, main);
+}
+
+function rebuildSectionList(container) {
+  container.innerHTML = '';
+  const sections = pageData.sections || [];
+  if (!sections.length) {
+    container.append(h('p', { className: 'text-muted', style: 'padding:0.75rem 0' }, 'Inga sektioner ännu — lägg till en nedan.'));
+    return;
+  }
+  sections.forEach((sec, i) => container.append(makeSectionBlock(sec, i, sections.length, container)));
+}
+
+function makeSectionBlock(sec, i, total, listEl) {
+  const schema  = SECTION_SCHEMA[sec.type] || [];
+  const label   = SECTION_LABELS[sec.type] || sec.type;
+  const isOpen  = openSections.has(i);
+  const preview = schema.find(f => f.key === 'title' || f.key === 'quote');
+  const previewTxt = preview ? (sec[preview.key] || '') : '';
+
+  const block = h('div', { className: 'section-block' });
+
+  const upBtn   = h('button', { className: 'btn btn-ghost btn-sm', title: 'Flytta upp', disabled: i === 0, onClick: () => { swap(i, i - 1); rebuildSectionList(listEl); } }, '↑');
+  const downBtn = h('button', { className: 'btn btn-ghost btn-sm', title: 'Flytta ner', disabled: i === total - 1, onClick: () => { swap(i, i + 1); rebuildSectionList(listEl); } }, '↓');
+  const delBtn  = h('button', { className: 'btn btn-ghost btn-sm', style: 'color:var(--destructive)', onClick: e => {
+    e.stopPropagation();
+    if (!confirm(`Ta bort "${label}"?`)) return;
+    pageData.sections.splice(i, 1);
+    openSections.delete(i);
+    rebuildSectionList(listEl);
+  }}, 'Radera');
+
+  const headerEl = h('div', { className: 'section-header', onClick: () => {
+    if (openSections.has(i)) openSections.delete(i); else openSections.add(i);
+    rebuildSectionList(listEl);
+  }},
+    h('span', { className: 'section-badge' }, label),
+    h('span', { className: 'section-preview' }, previewTxt),
+    h('span', { className: 'section-arrow' }, isOpen ? '▲' : '▼'),
+    h('div', { className: 'section-controls', onClick: e => e.stopPropagation() }, upBtn, downBtn, delBtn),
+  );
+
+  block.append(headerEl);
+
+  if (isOpen) {
+    const body = h('div', { className: 'section-body' });
+    schema.forEach(field => body.append(makeField(field, sec[field.key], val => { sec[field.key] = val; })));
+    block.append(body);
+  }
+
+  return block;
+}
+
+function swap(a, b) {
+  [pageData.sections[a], pageData.sections[b]] = [pageData.sections[b], pageData.sections[a]];
+  openSections = new Set();
+}
+
+function makeAddSectionBar(listEl) {
+  const sel = h('select', {},
+    h('option', { value: '' }, '— Välj sektionstyp —'),
+    ...Object.entries(SECTION_LABELS).map(([k, v]) => h('option', { value: k }, v)),
+  );
+
+  const addBtn = h('button', { className: 'btn btn-secondary', onClick: () => {
+    if (!sel.value) return;
+    pageData.sections = pageData.sections || [];
+    pageData.sections.push({ type: sel.value });
+    openSections.add(pageData.sections.length - 1);
+    sel.value = '';
+    rebuildSectionList(listEl);
+    listEl.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }}, '+ Lägg till');
+
+  return h('div', { className: 'add-row', style: 'margin-top:1rem' }, sel, addBtn);
+}
+
+/* ── Field editors ────────────────────────────────────────────── */
+
+function makeField(field, value, onChange) {
+  const wrap = h('div', { className: 'field' });
+
+  if (field.type === 'checkbox') {
+    const id = 'cb-' + Math.random().toString(36).slice(2);
+    const cb = h('input', { type: 'checkbox', id, checked: !!value });
+    cb.addEventListener('change', e => onChange(e.target.checked));
+    wrap.append(h('div', { className: 'checkbox-row' }, cb, h('label', { htmlFor: id }, field.label)));
+    return wrap;
+  }
+
+  wrap.append(h('label', {}, field.label + (field.required ? ' *' : '')));
+
+  switch (field.type) {
+    case 'text': {
+      wrap.append(h('input', { type: 'text', value: value || '', onInput: e => onChange(e.target.value) }));
+      break;
+    }
+    case 'textarea': {
+      const ta = document.createElement('textarea');
+      ta.rows = 5;
+      ta.value = value || '';
+      ta.addEventListener('input', e => onChange(e.target.value));
+      wrap.append(ta, h('span', { className: 'hint' }, 'Stöder markdown: **fetstil**, *kursiv*, - lista'));
+      break;
+    }
+    case 'select': {
+      const sel = h('select', { onChange: e => onChange(e.target.value) },
+        h('option', { value: '' }, '—'),
+        ...(field.options || []).map(o => h('option', { value: o, selected: o === value }, o)),
+      );
+      if (value) sel.value = value;
+      wrap.append(sel);
+      break;
+    }
+    case 'image': {
+      wrap.append(makeImageField(value, onChange));
+      break;
+    }
+    case 'image-list': {
+      wrap.append(makeImageList(value || [], onChange));
+      break;
+    }
+    case 'card-list': {
+      wrap.append(makeCardList(value || [], onChange));
+      break;
+    }
+    case 'service-list': {
+      wrap.append(makeServiceList(value || [], onChange));
+      break;
+    }
+  }
+
+  return wrap;
+}
+
+function makeImageField(value, onChange) {
+  const wrap = h('div', { className: 'image-wrap' });
+
+  let thumb = value
+    ? h('img', { src: rawUrl(value), className: 'image-thumb', alt: '' })
+    : h('div', { className: 'image-empty' }, 'Ingen bild');
+
+  const fileInput = document.createElement('input');
+  fileInput.type = 'file';
+  fileInput.accept = 'image/*';
+  fileInput.style.display = 'none';
+
+  const uploadBtn = h('button', { className: 'btn btn-ghost btn-sm', onClick: () => fileInput.click() }, 'Välj bild');
+
+  fileInput.addEventListener('change', async e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    uploadBtn.disabled = true;
+    uploadBtn.innerHTML = '<span class="spinner"></span>';
+    try {
+      const url = await uploadImage(file);
+      onChange(url);
+      const newThumb = h('img', { src: rawUrl(url), className: 'image-thumb', alt: '' });
+      wrap.replaceChild(newThumb, thumb);
+      thumb = newThumb;
+      toast('Bilden laddades upp!');
+    } catch (err) {
+      toast('Uppladdning misslyckades: ' + err.message, true);
+    } finally {
+      uploadBtn.disabled = false;
+      uploadBtn.textContent = 'Byt bild';
+    }
+  });
+
+  wrap.append(thumb, uploadBtn, fileInput);
+  return wrap;
+}
+
+function makeImageList(items, onChange) {
+  const container = h('div', {});
+  const list = [...items];
+
+  const rerender = () => {
+    container.innerHTML = '';
+    list.forEach((item, idx) => {
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = 'image/*';
+      fileInput.style.display = 'none';
+
+      const thumb = item.url
+        ? h('img', { src: rawUrl(item.url), className: 'image-thumb', alt: '' })
+        : h('div', { className: 'image-empty' }, 'Bild');
+
+      const pickBtn = h('button', { className: 'btn btn-ghost btn-sm', onClick: () => fileInput.click() }, item.url ? 'Byt' : 'Välj');
+
+      fileInput.addEventListener('change', async e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        pickBtn.disabled = true;
+        try {
+          list[idx].url = await uploadImage(file);
+          onChange([...list]);
+          rerender();
+          toast('Bilden laddades upp!');
+        } catch (err) {
+          toast('Fel: ' + err.message, true);
+        } finally {
+          pickBtn.disabled = false;
+        }
+      });
+
+      const altInp = h('input', { type: 'text', placeholder: 'Bildbeskrivning (alt)', value: item.alt || '', onInput: e => { list[idx].alt = e.target.value; onChange([...list]); } });
+      const delBtn = h('button', { className: 'btn btn-ghost btn-sm', style: 'color:var(--destructive)', onClick: () => { list.splice(idx, 1); onChange([...list]); rerender(); } }, '×');
+
+      container.append(h('div', { className: 'list-row' },
+        h('div', { style: 'display:flex;flex-direction:column;align-items:center;gap:0.375rem' }, thumb, pickBtn, fileInput),
+        h('div', { className: 'list-row-fields' }, altInp),
+        delBtn,
+      ));
+    });
+
+    container.append(h('button', { className: 'btn btn-ghost btn-sm', style: 'margin-top:0.375rem', onClick: () => { list.push({ url: '', alt: '' }); onChange([...list]); rerender(); } }, '+ Lägg till bild'));
+  };
+
+  rerender();
+  return container;
+}
+
+function makeCardList(items, onChange) {
+  const container = h('div', {});
+  const list = [...items];
+  const ICONS = ['info', 'sparkles', 'shield'];
+
+  const rerender = () => {
+    container.innerHTML = '';
+    list.forEach((item, idx) => {
+      const iconSel = h('select', { style: 'font-size:0.8125rem;width:auto', onChange: e => { list[idx].icon = e.target.value; onChange([...list]); } },
+        ICONS.map(o => h('option', { value: o, selected: o === item.icon }, o)),
+      );
+      const titleInp = h('input', { type: 'text', placeholder: 'Rubrik', value: item.title || '', onInput: e => { list[idx].title = e.target.value; onChange([...list]); } });
+      const bodyTa = document.createElement('textarea');
+      bodyTa.rows = 3; bodyTa.placeholder = 'Text'; bodyTa.value = item.body || '';
+      bodyTa.addEventListener('input', e => { list[idx].body = e.target.value; onChange([...list]); });
+      const delBtn = h('button', { className: 'btn btn-ghost btn-sm', style: 'color:var(--destructive)', onClick: () => { list.splice(idx, 1); onChange([...list]); rerender(); } }, '×');
+
+      container.append(h('div', { className: 'list-row' },
+        h('div', { className: 'list-row-fields' },
+          h('div', { style: 'display:flex;align-items:center;gap:0.5rem' }, h('span', { style: 'font-size:0.8125rem;color:var(--muted-fg)' }, 'Ikon'), iconSel),
+          titleInp, bodyTa,
+        ),
+        delBtn,
+      ));
+    });
+    container.append(h('button', { className: 'btn btn-ghost btn-sm', style: 'margin-top:0.375rem', onClick: () => { list.push({ icon: 'info', title: '', body: '' }); onChange([...list]); rerender(); } }, '+ Lägg till kort'));
+  };
+
+  rerender();
+  return container;
+}
+
+function makeServiceList(items, onChange) {
+  const container = h('div', {});
+  const list = [...items];
+  const SIZES = ['small', 'medium', 'large'];
+
+  const rerender = () => {
+    container.innerHTML = '';
+    list.forEach((item, idx) => {
+      const inp = (key, ph) => h('input', { type: 'text', placeholder: ph, value: item[key] || '', onInput: e => { list[idx][key] = e.target.value; onChange([...list]); } });
+      const bodyTa = document.createElement('textarea');
+      bodyTa.rows = 3; bodyTa.placeholder = 'Beskrivning'; bodyTa.value = item.body || '';
+      bodyTa.addEventListener('input', e => { list[idx].body = e.target.value; onChange([...list]); });
+
+      const sizeSel = h('select', { style: 'width:auto;font-size:0.8125rem', onChange: e => { list[idx].size = e.target.value; onChange([...list]); } },
+        SIZES.map(o => h('option', { value: o, selected: o === item.size }, o)),
+      );
+      const delBtn = h('button', { className: 'btn btn-ghost btn-sm', style: 'color:var(--destructive)', onClick: () => { list.splice(idx, 1); onChange([...list]); rerender(); } }, '×');
+
+      container.append(h('div', { className: 'list-row' },
+        h('div', { className: 'list-row-fields' },
+          inp('eyebrow', 'Ögonbrynstext'), inp('title', 'Rubrik'), bodyTa,
+          inp('linkLabel', 'Länktext'), inp('href', 'URL'),
+          h('div', { style: 'display:flex;align-items:center;gap:0.5rem' }, h('span', { style: 'font-size:0.8125rem;color:var(--muted-fg)' }, 'Storlek'), sizeSel),
+        ),
+        delBtn,
+      ));
+    });
+    container.append(h('button', { className: 'btn btn-ghost btn-sm', style: 'margin-top:0.375rem', onClick: () => { list.push({ eyebrow: '', title: '', body: '', linkLabel: '', href: '', size: 'medium' }); onChange([...list]); rerender(); } }, '+ Lägg till tjänst'));
+  };
+
+  rerender();
+  return container;
+}
+
+/* ── Publish ──────────────────────────────────────────────────── */
+
+async function publishPage() {
+  const btn = app().querySelector('header .btn-primary');
+  if (!btn) return;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    const json = JSON.stringify(pageData, null, 2);
+    const filePath = `src/content/pages/${pageSlug}.json`;
+    const res = await putFile(filePath, json, `Uppdaterar ${pageSlug}`, pageSha);
+    pageSha = res.content.sha;
+    toast('Publicerat! Sidan är live om ~2 minuter.');
+  } catch (err) {
+    toast('Fel vid publicering: ' + err.message, true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Publicera';
+  }
+}
+
+/* ── View: New Page ───────────────────────────────────────────── */
+
+function showNewPage() {
+  app().innerHTML = '';
+
+  const header = makeHeader(
+    h('button', { className: 'back-btn', onClick: loadPageList }, '← Sidor'),
+    'Ny sida',
+    null,
+  );
+
+  const form = h('div', { className: 'card', style: 'display:flex;flex-direction:column;gap:1rem' });
+
+  const slugInp = h('input', { type: 'text', placeholder: 'om-marie', pattern: '[a-z0-9-]+', required: true });
+  const titleInp = h('input', { type: 'text', required: true });
+  const descInp  = h('input', { type: 'text' });
+
+  form.append(
+    h('div', { className: 'field' }, h('label', {}, 'Slug (URL-del) *'), slugInp, h('span', { className: 'hint' }, 'Gemener, siffror och bindestreck. T.ex. "om-marie"')),
+    h('div', { className: 'field' }, h('label', {}, 'Sidtitel *'), titleInp),
+    h('div', { className: 'field' }, h('label', {}, 'Meta-beskrivning (SEO)'), descInp),
+  );
+
+  const createBtn = h('button', { className: 'btn btn-primary' }, 'Skapa sida');
+  form.append(createBtn);
+
+  createBtn.addEventListener('click', async () => {
+    const slug = slugInp.value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
+    const title = titleInp.value.trim();
+    if (!slug || !title) { toast('Slug och sidtitel krävs.', true); return; }
+
+    createBtn.disabled = true;
+    createBtn.innerHTML = '<span class="spinner"></span>';
+    try {
+      const data = { meta: { slug, title, description: descInp.value.trim() }, sections: [] };
+      const filePath = `src/content/pages/${slug}.json`;
+      await putFile(filePath, JSON.stringify(data, null, 2), `Skapar sida: ${slug}`, null);
+      toast('Sida skapad!');
+      await loadEditor(slug, filePath);
+    } catch (err) {
+      toast('Fel: ' + err.message, true);
+      createBtn.disabled = false;
+      createBtn.textContent = 'Skapa sida';
+    }
+  });
+
+  const main = h('div', { className: 'main' }, form);
+  app().append(header, main);
+}
+
+/* ── View: Settings ───────────────────────────────────────────── */
+
+async function loadSettings() {
+  loading('Laddar inställningar…');
+  try {
+    const [cf, nf, bf] = await Promise.all([
+      getFile('src/content/settings/contact.json'),
+      getFile('src/content/settings/navigation.json'),
+      getFile('src/content/settings/banner.json'),
+    ]);
+    settingsData = {
+      contact:    { data: JSON.parse(b64Decode(cf.content)), sha: cf.sha },
+      navigation: { data: JSON.parse(b64Decode(nf.content)), sha: nf.sha },
+      banner:     { data: JSON.parse(b64Decode(bf.content)), sha: bf.sha },
+    };
+    showSettings();
+  } catch (err) {
+    toast('Fel: ' + err.message, true);
+    loadPageList();
+  }
+}
+
+function showSettings() {
+  app().innerHTML = '';
+
+  const header = makeHeader(
+    h('button', { className: 'back-btn', onClick: loadPageList }, '← Sidor'),
+    'Inställningar',
+    null,
+  );
+
+  const tabBar  = h('div', { className: 'tab-bar' });
+  const content = h('div', {});
+
+  const TABS = [
+    { id: 'contact',    label: 'Kontakt' },
+    { id: 'navigation', label: 'Navigation' },
+    { id: 'banner',     label: 'Banner' },
+  ];
+
+  const switchTab = id => {
+    settingsTab = id;
+    tabBar.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+    content.innerHTML = '';
+    if (id === 'contact')    content.append(makeContactTab());
+    if (id === 'navigation') content.append(makeNavTab());
+    if (id === 'banner')     content.append(makeBannerTab());
+  };
+
+  TABS.forEach(t => {
+    const btn = h('button', { className: 'tab-btn' + (t.id === settingsTab ? ' active' : ''), onClick: () => switchTab(t.id) }, t.label);
+    btn.dataset.tab = t.id;
+    tabBar.append(btn);
+  });
+
+  switchTab(settingsTab);
+
+  const main = h('div', { className: 'main' }, tabBar, content);
+  app().append(header, main);
+}
+
+function makeContactTab() {
+  const d = settingsData.contact.data;
+  const card = h('div', { className: 'card', style: 'display:flex;flex-direction:column;gap:1rem' });
+
+  [
+    { key: 'email',           label: 'E-post' },
+    { key: 'phone',           label: 'Telefon' },
+    { key: 'location',        label: 'Plats' },
+    { key: 'confidentiality', label: 'Tystnadsplikt-text' },
+  ].forEach(f => {
+    card.append(h('div', { className: 'field' },
+      h('label', {}, f.label),
+      h('input', { type: 'text', value: d[f.key] || '', onInput: e => { d[f.key] = e.target.value; } }),
+    ));
+  });
+
+  const saveBtn = h('button', { className: 'btn btn-primary', style: 'margin-top:0.25rem', onClick: async () => {
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner"></span>';
+    try {
+      const res = await putFile('src/content/settings/contact.json', JSON.stringify(d, null, 2), 'Uppdaterar kontaktuppgifter', settingsData.contact.sha);
+      settingsData.contact.sha = res.content.sha;
+      toast('Kontaktuppgifter sparade!');
+    } catch (err) { toast('Fel: ' + err.message, true); }
+    finally { saveBtn.disabled = false; saveBtn.textContent = 'Spara'; }
+  }}, 'Spara');
+
+  card.append(saveBtn);
+  return card;
+}
+
+function makeNavTab() {
+  const d = settingsData.navigation.data;
+
+  const makeNavSection = (key, heading) => {
+    const items = d[key] = d[key] || [];
+    const wrap = h('div', {});
+
+    const rerender = () => {
+      wrap.innerHTML = '';
+      wrap.append(h('p', { className: 'section-meta-label', style: 'margin-bottom:0.625rem' }, heading));
+      items.forEach((item, idx) => {
+        wrap.append(h('div', { className: 'nav-row' },
+          h('input', { type: 'text', placeholder: 'Text', value: item.label || '', style: 'flex:1', onInput: e => { items[idx].label = e.target.value; } }),
+          h('input', { type: 'text', placeholder: 'URL', value: item.href || '', style: 'flex:1', onInput: e => { items[idx].href = e.target.value; } }),
+          h('button', { className: 'btn btn-ghost btn-sm', style: 'color:var(--destructive)', onClick: () => { items.splice(idx, 1); rerender(); } }, '×'),
+        ));
+      });
+      wrap.append(h('button', { className: 'btn btn-ghost btn-sm', style: 'margin-top:0.25rem', onClick: () => { items.push({ label: '', href: '' }); rerender(); } }, '+ Lägg till länk'));
+    };
+
+    rerender();
+    return wrap;
+  };
+
+  const card = h('div', { className: 'card', style: 'display:flex;flex-direction:column;gap:1.25rem' },
+    makeNavSection('header', 'Topmeny'),
+    h('div', { className: 'divider', style: 'margin:0' }),
+    makeNavSection('footer', 'Fotmeny'),
+  );
+
+  const saveBtn = h('button', { className: 'btn btn-primary', style: 'margin-top:1rem', onClick: async () => {
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner"></span>';
+    try {
+      const res = await putFile('src/content/settings/navigation.json', JSON.stringify(d, null, 2), 'Uppdaterar navigation', settingsData.navigation.sha);
+      settingsData.navigation.sha = res.content.sha;
+      toast('Navigation sparad!');
+    } catch (err) { toast('Fel: ' + err.message, true); }
+    finally { saveBtn.disabled = false; saveBtn.textContent = 'Spara'; }
+  }}, 'Spara');
+
+  return h('div', {}, card, saveBtn);
+}
+
+function makeBannerTab() {
+  const d = settingsData.banner.data;
+  const card = h('div', { className: 'card', style: 'display:flex;flex-direction:column;gap:1rem' });
+
+  const cbId = 'banner-enabled';
+  const cb = h('input', { type: 'checkbox', id: cbId, checked: !!d.enabled });
+  cb.addEventListener('change', e => { d.enabled = e.target.checked; });
+  card.append(h('div', { className: 'checkbox-row' }, cb, h('label', { htmlFor: cbId }, 'Visa banner')));
+
+  [
+    { key: 'message',   label: 'Meddelande' },
+    { key: 'linkLabel', label: 'Länktext (valfritt)' },
+    { key: 'linkHref',  label: 'Länk-URL (valfritt)' },
+  ].forEach(f => {
+    card.append(h('div', { className: 'field' },
+      h('label', {}, f.label),
+      h('input', { type: 'text', value: d[f.key] || '', onInput: e => { d[f.key] = e.target.value; } }),
+    ));
+  });
+
+  const saveBtn = h('button', { className: 'btn btn-primary', style: 'margin-top:0.25rem', onClick: async () => {
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner"></span>';
+    try {
+      const res = await putFile('src/content/settings/banner.json', JSON.stringify(d, null, 2), 'Uppdaterar banner', settingsData.banner.sha);
+      settingsData.banner.sha = res.content.sha;
+      toast('Banner sparad!');
+    } catch (err) { toast('Fel: ' + err.message, true); }
+    finally { saveBtn.disabled = false; saveBtn.textContent = 'Spara'; }
+  }}, 'Spara');
+
+  card.append(saveBtn);
+  return card;
+}
+
+/* ── Init ─────────────────────────────────────────────────────── */
+
+function init() {
+  try {
+    const stored = localStorage.getItem('marie-admin-cfg');
+    if (stored) cfg = JSON.parse(stored);
+  } catch { cfg = {}; }
+
+  if (cfg.pat && cfg.owner && cfg.repo) {
+    loadPageList();
+  } else {
+    showSetup();
+  }
+}
+
+init();
+</script>
+</body>
+</html>
