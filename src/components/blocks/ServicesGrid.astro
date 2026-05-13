@@ -58,14 +58,14 @@ const { eyebrow, title, subtitle, items } = Astro.props;
               </div>
             )}
             <div class:list={[
-              'flex flex-col flex-1',
-              isWide ? 'p-8 justify-center' : 'p-6',
+              'flex flex-col flex-1 justify-center',
+              isWide ? 'p-8' : 'p-6',
             ]}>
               {item.eyebrow && <p class="eyebrow mb-2">{item.eyebrow}</p>}
               <h3 class="font-display text-xl font-medium mb-3">{item.title}</h3>
-              <p class="text-sm text-[var(--color-muted-foreground)] leading-relaxed flex-1">{item.body}</p>
+              <p class="text-sm text-[var(--color-muted-foreground)] leading-relaxed">{item.body}</p>
               {item.linkLabel && (
-                <span class="mt-5 inline-flex items-center gap-1 text-sm font-medium text-[var(--color-leather)] group-hover:text-[var(--color-leather-deep)] transition-colors">
+                <span class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-[var(--color-leather)] group-hover:text-[var(--color-leather-deep)] group-hover:text-base transition-all duration-200">
                   {item.linkLabel}
                   <span aria-hidden="true">→</span>
                 </span>

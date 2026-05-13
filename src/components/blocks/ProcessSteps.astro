@@ -13,12 +13,6 @@ const { eyebrow, title, steps } = Astro.props;
 
 const colMap: Record<number, string> = { 1: 'md:grid-cols-1', 2: 'md:grid-cols-2', 3: 'md:grid-cols-3', 4: 'md:grid-cols-4' };
 const colClass = colMap[Math.min(steps.length, 4)] ?? 'md:grid-cols-4';
-
-// Dynamic connecting line: from center of first circle to center of last
-// Each circle center sits at (2k-1)/(2n) of total width → left = 1/(2n), right = 1/(2n)
-const n = Math.min(steps.length, 4);
-const pct = n > 1 ? (100 / (n * 2)).toFixed(2) : '0';
-const lineStyle = `left: calc(${pct}% + 1.5rem); right: calc(${pct}% + 1.5rem)`;
 ---
 
 <section class="py-16 md:py-20">
@@ -30,22 +24,14 @@ const lineStyle = `left: calc(${pct}% + 1.5rem); right: calc(${pct}% + 1.5rem)`;
       </div>
     )}
 
-    <div class:list={['relative grid grid-cols-1 gap-8 md:gap-6', colClass]}>
-      {steps.length > 1 && (
-        <div
-          class="hidden md:block absolute top-8 h-px bg-[var(--color-border)]"
-          style={lineStyle}
-          aria-hidden="true"
-        />
-      )}
-
+    <div class:list={['grid grid-cols-1 gap-8 md:gap-6', colClass]}>
       {steps.map((step) => (
-        <div class="relative flex flex-col">
-          <div class="flex items-center gap-4 mb-4 md:flex-col md:items-start md:gap-3">
-            <div class="relative shrink-0 w-16 h-16 rounded-full bg-[var(--color-sage-deep)] text-[var(--color-primary-foreground)] flex items-center justify-center shadow-[var(--shadow-sage)] z-10">
-              <span class="font-display text-2xl font-medium">{step.number}</span>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="shrink-0 w-12 h-12 rounded-full bg-[var(--color-sage-deep)] text-[var(--color-primary-foreground)] flex items-center justify-center shadow-[var(--shadow-sage)]">
+              <span class="font-display text-xl font-medium leading-none select-none">{step.number}</span>
             </div>
-            <h3 class="font-display text-xl font-medium leading-snug md:mt-2">{step.title}</h3>
+            <h3 class="font-display text-xl font-medium leading-snug">{step.title}</h3>
           </div>
           <p class="text-sm text-[var(--color-muted-foreground)] leading-relaxed">{step.body}</p>
         </div>
