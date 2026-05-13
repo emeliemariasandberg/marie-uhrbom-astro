@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Marie Uhrbom — Hantverk, Homeopati & Hälsa",
-    "description": "Klassisk homeopati, livscoachning och handgjort läderhantverk. Marie Uhrbom tar emot nära Mellerud, online och via telefon.",
+    "description": "Klassisk homeopati, vägledning och handgjort läderhantverk. Marie Uhrbom tar emot nära Mellerud, online och via telefon.",
     "slug": ""
   },
   "sections": [
@@ -22,7 +22,7 @@
       "type": "about-band",
       "eyebrow": "Om Marie",
       "title": "Engagemang och erfarenhet",
-      "body": "Jag är Marie Uhrbom — sadelmakare sedan 1996, livscoach sedan 2006 och klassisk homeopat med examen 2024. Jag bor och verkar utanför Mellerud i Västra Götaland och tar emot klienter och kunder både på plats och på distans.\n\nOavsett om du vill beställa en handgjord gevärrem, söker stöd för din hälsa eller behöver hjälp att hitta rätt i livet — möter jag dig med samma omsorg och närvaro.",
+      "body": "Jag är Marie Uhrbom — sadelmakare sedan 1996, vägledare sedan 2006 och klassisk homeopat med examen 2024. Jag bor och verkar utanför Mellerud i Västra Götaland och tar emot klienter och kunder både på plats och på distans.\n\nOavsett om du vill beställa en handgjord gevärsrem, söker stöd för din hälsa eller behöver hjälp att hitta rätt i livet — möter jag dig med samma omsorg och närvaro.",
       "image": "/images/marieuhrbom-c9d5f7b9.jpg",
       "alt": "Marie Uhrbom",
       "linkLabel": "Läs mer om mig",
@@ -37,7 +37,7 @@
         {
           "eyebrow": "Hantverk",
           "title": "Läderhantverk",
-          "body": "Handgjorda gevärremmar, hundkoppel och sadelmakeri i vegetabilgarvat Tärnsjö-läder. Varje produkt är unik och tillverkas med traditionella tekniker — för att hålla livet ut.",
+          "body": "Handgjorda gevärsremmar, beställningar och sadelmakeri i vegetabilgarvat Tärnsjö-läder. Varje produkt är unik och tillverkas med traditionella tekniker — för att hålla livet ut.",
           "linkLabel": "Se hantverk & priser",
           "href": "/hantverk",
           "image": "/images/laderhanterverk3-0d74d63f.jpeg",
@@ -54,9 +54,9 @@
         },
         {
           "eyebrow": "Vägledning",
-          "title": "Hälsa & Livscoachning",
+          "title": "Hälsa & Vägledning",
           "body": "Samtal och vägledning för dig som vill hitta din riktning, stärka välmåendet och skapa verklig förändring. Det inledande samtalet är kostnadsfritt.",
-          "linkLabel": "Om coaching",
+          "linkLabel": "Om vägledning",
           "href": "/vagledning",
           "size": "wide",
           "image": "/images/bokvildvaxande2-cf242ceb.jpeg"
@@ -72,13 +72,13 @@
       "type": "newsletter-signup",
       "eyebrow": "Nyhetsbrev",
       "title": "Håll dig uppdaterad",
-      "body": "Ungefär en gång i månaden delar jag tankar om hälsa, homeopati, livscoachning och läderhantverk. Välj vad du är intresserad av.",
+      "body": "Ungefär en gång i månaden delar jag tankar om hälsa, homeopati, vägledning och läderhantverk. Välj vad du är intresserad av.",
       "area": "all"
     },
     {
       "type": "cta",
       "title": "Välkommen att höra av dig",
-      "body": "Funderar du på en beställning, vill boka ett samtal eller har du bara en fråga? Hör av dig — jag svarar inom ett par dagar och det inledande samtalet är alltid kostnadsfritt.",
+      "body": "Funderar du på en beställning, vill boka ett samtal, en homeopatisk konsultation eller har du bara en fråga? Hör av dig — jag svarar inom ett par dagar och det inledande samtalet är alltid kostnadsfritt.",
       "buttonLabel": "Kontakta mig",
       "buttonHref": "/kontakt"
     }
