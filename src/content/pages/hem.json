@@ -40,7 +40,7 @@
           "body": "Handgjorda gevärremmar, hundkoppel och sadelmakeri i vegetabilgarvat Tärnsjö-läder. Varje produkt är unik och tillverkas med traditionella tekniker — för att hålla livet ut.",
           "linkLabel": "Se hantverk & priser",
           "href": "/hantverk",
-          "image": "/images/hero-leather.jpg",
+          "image": "/images/laderhanterverk3-0d74d63f.jpeg",
           "size": "large"
         },
         {
@@ -49,7 +49,8 @@
           "body": "Homeopati stärker kroppens egna läkningsförmåga på ett skonsamt och naturligt sätt. Jag tar emot människor och djur — online, via telefon eller nära Mellerud.",
           "linkLabel": "Om homeopati",
           "href": "/homeopati",
-          "size": "medium"
+          "size": "medium",
+          "image": "/images/diplomhomeopati-f39798ce.jpeg"
         },
         {
           "eyebrow": "Vägledning",
@@ -57,7 +58,8 @@
           "body": "Samtal och vägledning för dig som vill hitta din riktning, stärka välmåendet och skapa verklig förändring. Det inledande samtalet är kostnadsfritt.",
           "linkLabel": "Om coaching",
           "href": "/vagledning",
-          "size": "medium"
+          "size": "medium",
+          "image": "/images/bokvildvaxande2-cf242ceb.jpeg"
         }
       ]
     },
