@@ -4,5 +4,23 @@
     "title": "testavsektioner",
     "description": ""
   },
-  "sections": []
+  "sections": [
+    {
+      "type": "hero-split",
+      "title": "rubrik för toppsektion -text  + bild",
+      "image": "/images/bok-f14e5c69.jpeg",
+      "cta1Label": "knapp 1 text",
+      "cta1Href": "",
+      "eyebrow": "etikett",
+      "subtitle": "underrubrik"
+    },
+    {
+      "type": "hero-overlay",
+      "title": "toppsektion -bild i bakgrunden",
+      "image": "/images/naturaker-b21fa6a6.jpeg",
+      "eyebrow": "etikett",
+      "subtitle": "underrubrik",
+      "cta1Label": "text"
+    }
+  ]
 }
