@@ -56,8 +56,19 @@
     {
       "type": "booking-grid",
       "id": "boka",
-      "body": "## Boka en konsultation\n\nJag tar emot klienter i mitt hem utanför Mellerud i Västra Götaland, men erbjuder också konsultationer via video och telefon. Det kostar ingenting att höra av sig med en fråga.\n\n**Priser (inklusive moms):**\n- Första samtal (1,5–2 h): **1 200 kr**\n- Uppföljning (ca 30 min): **800 kr**\n- Homeopatiska medel tillkommer\n\n**Boka:** Fyll i formuläret nedan eller skicka ett e-postmeddelande direkt.",
+      "body": "## Boka en konsultation\n\nJag tar emot klienter i mitt hem utanför Mellerud i Västra Götaland, men erbjuder också konsultationer via video och telefon. Det kostar ingenting att höra av sig med en fråga.\n\n**Priser (inklusive moms):**\n- Första samtal (1,5–2 h): **1 200 kr**\n- Uppföljning (ca 30 min): **800 kr**\n- Homeopatiska medel tillkommer",
       "area": "homeopati"
+    },
+    {
+      "type": "inquiry-form",
+      "id": "forfragan",
+      "eyebrow": "Ta första steget",
+      "title": "Skicka en förfrågan",
+      "intro": "Fyll i formuläret så hör jag av mig inom ett par dagar. Du är också välkommen att ringa eller skicka ett e-postmeddelande direkt.",
+      "area": "homeopati",
+      "subjectLabel": "Vad gäller det?",
+      "messagePlaceholder": "Berätta kort om vad du söker hjälp med, och om du föredrar att ses fysiskt, via video eller telefon.",
+      "submitLabel": "Skicka förfrågan"
     }
   ]
 }

@@ -34,7 +34,16 @@ const {
   errorText = 'Något gick fel. Försök igen eller skicka ett e-postmeddelande direkt.',
 } = Astro.props;
 
-const formId = `inquiry-form-${Math.random().toString(36).slice(2, 7)}`;
+const apiKey   = import.meta.env.PUBLIC_BREVO_API_KEY   ?? '';
+const sender   = import.meta.env.PUBLIC_BREVO_SENDER    ?? '';
+const recipient = import.meta.env.PUBLIC_BREVO_RECIPIENT ?? '';
+const formId   = `inquiry-form-${Math.random().toString(36).slice(2, 7)}`;
+
+const areaLabel = {
+  homeopati: 'Homeopati',
+  coachning: 'Hälsa & Livscoachning',
+  hantverk:  'Läderhantverk',
+}[area] ?? 'Förfrågan';
 ---
 
 <section id={id} class="py-16 md:py-20">
@@ -43,15 +52,9 @@ const formId = `inquiry-form-${Math.random().toString(36).slice(2, 7)}`;
     {title && <h2 class="font-display text-3xl md:text-4xl font-medium leading-tight mb-4">{title}</h2>}
     {intro && <p class="text-[var(--color-muted-foreground)] leading-relaxed mb-8">{intro}</p>}
 
-    <form
-      id={formId}
-      class="space-y-5"
-      data-area={area}
-      novalidate
-    >
-      <!-- Honeypot (spam protection) -->
+    <form id={formId} class="space-y-5" novalidate>
+      <!-- Honeypot -->
       <input type="text" name="_honey" class="hidden" tabindex="-1" autocomplete="off" />
-      <input type="hidden" name="area" value={area} />
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div>
@@ -124,7 +127,6 @@ const formId = `inquiry-form-${Math.random().toString(36).slice(2, 7)}`;
         </label>
       </div>
 
-      <!-- Status messages -->
       <div id={`${formId}-success`} class="hidden rounded-lg bg-green-50 border border-green-200 p-4 text-sm text-green-800">
         {successText}
       </div>
@@ -147,15 +149,15 @@ const formId = `inquiry-form-${Math.random().toString(36).slice(2, 7)}`;
   </div>
 </section>
 
-<script define:vars={{ formId }}>
-(function(){
+<script define:vars={{ formId, apiKey, sender, recipient, areaLabel }}>
+(function () {
   const form = document.getElementById(formId);
   if (!form) return;
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const honey = form.querySelector('[name="_honey"]');
-    if (honey && honey.value) return;
+    if (form.querySelector('[name="_honey"]')?.value) return;
 
     const submitBtn  = document.getElementById(`${formId}-submit`);
     const spinner    = document.getElementById(`${formId}-spinner`);
@@ -167,14 +169,52 @@ const formId = `inquiry-form-${Math.random().toString(36).slice(2, 7)}`;
     successMsg.classList.add('hidden');
     errorMsg.classList.add('hidden');
 
+    const name    = form.querySelector('[name="name"]')?.value?.trim()    ?? '';
+    const email   = form.querySelector('[name="email"]')?.value?.trim()   ?? '';
+    const subject = form.querySelector('[name="subject"]')?.value?.trim() ?? '';
+    const message = form.querySelector('[name="message"]')?.value?.trim() ?? '';
+
+    const emailSubject = subject
+      ? `[${areaLabel}] ${subject}`
+      : `[${areaLabel}] Förfrågan via marieuhrbom.se`;
+
+    const body = [
+      `Ny förfrågan via marieuhrbom.se`,
+      `----------------------------------------`,
+      `Område:   ${areaLabel}`,
+      `Namn:     ${name}`,
+      `E-post:   ${email}`,
+      subject ? `Ämne:     ${subject}` : '',
+      ``,
+      `Meddelande:`,
+      message,
+      ``,
+      `----------------------------------------`,
+      `GDPR-samtycke: Ja`,
+    ].filter(line => line !== undefined && !(line === '' && false)).join('\n');
+
     try {
-      const data = new FormData(form);
-      const res = await fetch('/form.php', { method: 'POST', body: data });
+      const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'api-key': apiKey,
+          'content-type': 'application/json',
+          'accept': 'application/json',
+        },
+        body: JSON.stringify({
+          sender:      { name: 'marieuhrbom.se', email: sender },
+          to:          [{ email: recipient, name: 'Marie Uhrbom' }],
+          replyTo:     { email, name },
+          subject:     emailSubject,
+          textContent: body,
+        }),
+      });
+
       if (res.ok) {
         successMsg.classList.remove('hidden');
         form.reset();
       } else {
-        throw new Error('Server error');
+        throw new Error('API error');
       }
     } catch {
       errorMsg.classList.remove('hidden');
