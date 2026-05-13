@@ -9,9 +9,9 @@
   "theme_color": "oklch(0.36 0.09 40)",
   "icons": [
     {
-      "src": "/favicon.svg",
+      "src": "/images/marieuhrbom-c9d5f7b9.jpg",
       "sizes": "any",
-      "type": "image/svg+xml",
+      "type": "image/jpeg",
       "purpose": "any"
     }
   ]
