@@ -10,12 +10,13 @@
       "eyebrow": "Välkommen",
       "title": "Hantverk, Homeopati & Hälsa",
       "subtitle": "Tre verksamheter med ett gemensamt syfte — att stärka välmåendet och skapa något beständigt med omsorg och kunskap.",
-      "image": "/images/hero-leather.jpg",
+      "image": "/images/marieuhrbom-c9d5f7b9.jpg",
       "alt": "Handgjort läder",
       "cta1Label": "Läs om mig",
       "cta1Href": "/om-marie",
       "cta2Label": "Kom i kontakt",
-      "cta2Href": "/kontakt"
+      "cta2Href": "/kontakt",
+      "bgImage": "/images/naturaker-b21fa6a6.jpeg"
     },
     {
       "type": "services-grid",
