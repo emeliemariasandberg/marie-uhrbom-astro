@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="sv">
 <head>
 <meta charset="UTF-8">
@@ -1308,7 +1308,7 @@ function makeCardList(items, onChange) {
 function makeServiceList(items, onChange) {
   const container = h('div', {});
   const list = [...items];
-  const SIZES = [{ value: 'small', label: 'Liten' }, { value: 'medium', label: 'Mellanstor' }, { value: 'large', label: 'Stor (2 kolumner bred)' }];
+  const SIZES = [{ value: 'small', label: 'Liten' }, { value: 'medium', label: 'Mellanstor' }, { value: 'large', label: 'Stor (2 kolumner bred)' }, { value: 'wide', label: 'Bred rad (bild till vänster)' }];
 
   const rerender = () => {
     container.innerHTML = '';
@@ -1856,3 +1856,4 @@ init();
 </script>
 </body>
 </html>
+
