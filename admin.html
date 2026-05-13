@@ -391,6 +391,16 @@ function rawUrl(storedPath) {
 
 /* ── Image upload ─────────────────────────────────────────────── */
 
+function bufferToBase64(buffer) {
+  const bytes = new Uint8Array(buffer);
+  const CHUNK = 8192;
+  let bin = '';
+  for (let i = 0; i < bytes.length; i += CHUNK) {
+    bin += String.fromCharCode(...bytes.subarray(i, i + CHUNK));
+  }
+  return btoa(bin);
+}
+
 async function uploadImage(file) {
   const buffer = await file.arrayBuffer();
 
@@ -406,7 +416,7 @@ async function uploadImage(file) {
   const name    = `${base}-${hash}.${ext}`;
   const apiPath = `public/images/${name}`;
 
-  const base64 = btoa(String.fromCharCode(...new Uint8Array(buffer)));
+  const base64 = bufferToBase64(buffer);
 
   let existingSha;
   try {
