@@ -1,4 +1,6 @@
 ---
+import contact from '@/content/settings/contact.json';
+
 interface Props {
   id?: string;
   eyebrow?: string;
@@ -97,7 +99,7 @@ const formId = `nl-${Math.random().toString(36).slice(2, 7)}`;
         Tack! Du är nu anmäld. Välkommen till nyhetsbrevet.
       </div>
       <div id={`${formId}-error`} class="hidden rounded-lg bg-red-50 border border-red-200 p-4 text-sm text-red-800">
-        Något gick fel. Försök igen eller kontakta mig direkt på info@marieuhrbom.se.
+        Något gick fel. Försök igen eller kontakta mig direkt på {contact.email}.
       </div>
 
       <button
