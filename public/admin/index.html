@@ -1866,40 +1866,72 @@ function makeConfigTab() {
 
   card.append(h('p', { className: 'text-muted', style: 'font-size:0.875rem' }, 'Dessa uppgifter behövs för att admin-verktyget ska kunna spara ändringar till webbplatsen. Kontakta din webbutvecklare om du är osäker.'));
 
-  const fields = [
-    { name: 'pat',   label: 'GitHub Access Token', type: 'password', hint: 'Hemlig nyckel som ger åtkomst till webbplatsen' },
-    { name: 'owner', label: 'GitHub-konto',         type: 'text',     hint: 'T.ex. emesan' },
-    { name: 'repo',  label: 'Repo-namn',            type: 'text',     hint: 'T.ex. marie-uhrbom' },
-  ];
-
-  const inputs = {};
-  fields.forEach(f => {
-    const inp = h('input', { type: f.type, value: cfg[f.name] || '', placeholder: f.hint });
-    inputs[f.name] = inp;
-    card.append(h('div', { className: 'field' },
-      h('label', {}, f.label),
-      inp,
-      h('span', { className: 'hint' }, f.hint),
-    ));
-  });
+  const patInput = h('input', { type: 'password', value: cfg.pat || '', placeholder: 'github_pat_…' });
 
   const saveBtn = h('button', { className: 'btn btn-primary', style: 'margin-top:0.25rem', onClick: () => {
-    const pat   = inputs.pat.value.trim();
-    const owner = inputs.owner.value.trim();
-    const repo  = inputs.repo.value.trim();
-    if (!pat || !owner || !repo) { toast('Alla fält måste fyllas i.', true); return; }
-    cfg = { pat, owner, repo, branch: 'main' };
+    const pat = patInput.value.trim();
+    if (!pat) { toast('Ange din token.', true); return; }
+    cfg = { pat, owner: 'emeliemariasandberg', repo: 'marie-uhrbom-astro', branch: 'main' };
     localStorage.setItem('marie-admin-cfg', JSON.stringify(cfg));
-    toast('Konfiguration sparad!');
+    toast('Token sparad!');
     saveBtn.textContent = '✓ Sparat';
-    setTimeout(() => {
-      if (saveBtn.isConnected) saveBtn.textContent = 'Spara';
-      loadPageList();
-    }, 800);
+    setTimeout(() => { if (saveBtn.isConnected) saveBtn.textContent = 'Spara'; }, 2000);
   }}, 'Spara');
+
+  card.append(h('div', { className: 'field' },
+    h('label', {}, 'GitHub Access Token'),
+    patInput,
+    h('span', { className: 'hint' }, 'Hemlig nyckel som ger åtkomst till webbplatsen'),
+  ));
 
   card.append(saveBtn);
   return card;
+}
+
+/* ── Login screen ─────────────────────────────────────────────── */
+
+function showLoginScreen() {
+  app().innerHTML = '';
+
+  const patInput = h('input', { type: 'password', placeholder: 'github_pat_…' });
+  patInput.addEventListener('keydown', e => { if (e.key === 'Enter') saveBtn.click(); });
+
+  const saveBtn = h('button', { className: 'btn btn-primary', style: 'width:100%;margin-top:0.5rem', onClick: async () => {
+    const pat = patInput.value.trim();
+    if (!pat) { toast('Ange din token.', true); return; }
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner"></span> Verifierar…';
+    try {
+      const res = await fetch('https://api.github.com/repos/emeliemariasandberg/marie-uhrbom-astro', {
+        headers: { Authorization: `Bearer ${pat}`, Accept: 'application/vnd.github+json' }
+      });
+      if (!res.ok) throw new Error(res.status === 401 ? 'Ogiltig token.' : `Fel ${res.status}`);
+      cfg = { pat, owner: 'emeliemariasandberg', repo: 'marie-uhrbom-astro', branch: 'main' };
+      localStorage.setItem('marie-admin-cfg', JSON.stringify(cfg));
+      loadPageList();
+    } catch (err) {
+      toast(err.message, true);
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Logga in';
+    }
+  }}, 'Logga in');
+
+  const form = h('div', { className: 'card', style: 'display:flex;flex-direction:column;gap:1rem;width:100%;max-width:22rem' });
+  form.append(
+    h('h2', { style: 'font-size:1.25rem;margin-bottom:0.25rem' }, 'Logga in'),
+    h('div', { className: 'field' }, h('label', {}, 'GitHub Access Token'), patInput),
+    saveBtn,
+  );
+
+  app().append(
+    h('div', { style: 'min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem;gap:1.5rem' },
+      h('div', { style: 'text-align:center' },
+        h('h1', { style: 'font-size:1.5rem' }, 'Marie Uhrbom'),
+        h('p', { style: 'color:var(--muted-fg);font-size:0.875rem;margin-top:0.25rem' }, 'Webbplatsadmin'),
+      ),
+      form,
+    )
+  );
 }
 
 /* ── Init ─────────────────────────────────────────────────────── */
@@ -1913,8 +1945,7 @@ function init() {
   if (cfg.pat && cfg.owner && cfg.repo) {
     loadPageList();
   } else {
-    settingsTab = 'konfiguration';
-    loadSettings();
+    showLoginScreen();
   }
 }
 
