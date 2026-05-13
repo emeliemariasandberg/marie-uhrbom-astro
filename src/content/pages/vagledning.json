@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "Hälsa & Livscoachning — Marie Uhrbom",
-    "description": "Hälsa och livscoachning med Marie Uhrbom. Samtal och vägledning för dig som söker klarhet, riktning och ett stärkt välmående. Utanför Mellerud, online och via telefon.",
+    "title": "Hälsa & Vägledning — Marie Uhrbom",
+    "description": "Hälsa och vägledning med Marie Uhrbom. Samtal och vägledning för dig som söker klarhet, riktning och ett stärkt välmående. Utanför Mellerud, online och via telefon.",
     "slug": "vagledning"
   },
   "sections": [
@@ -19,8 +19,8 @@
     },
     {
       "type": "text",
-      "title": "Vad är livscoachning?",
-      "body": "Livscoachning är ett samarbete mellan dig och mig, med fokus på din nuvarande situation och dit du vill komma. Till skillnad från terapi handlar coaching om att blicka framåt — att identifiera vad du vill och vad som håller dig tillbaka.\n\nJag lyssnar utan att döma, ställer frågor som hjälper dig att se dig själv och din situation tydligare, och stöttar dig i att ta konkreta steg mot det liv du vill leva.\n\nCoachning passar dig som:\n- Söker klarhet i en livssituation\n- Vill skapa förändring men vet inte hur\n- Behöver stöd och struktur för att nå dina mål\n- Vill stärka relationen till dig själv och ditt välmående"
+      "title": "Vad innebär vägledning?",
+      "body": "Vägledning är ett samarbete mellan dig och mig, med fokus på din nuvarande situation och dit du vill komma. Till skillnad från terapi handlar vägledning om att blicka framåt — att identifiera vad du vill och vad som håller dig tillbaka.\n\nJag lyssnar utan att döma, ställer frågor som hjälper dig att se dig själv och din situation tydligare, och stöttar dig i att ta konkreta steg mot det liv du vill leva.\n\nVägledning passar dig som:\n- Söker klarhet i en livssituation\n- Vill skapa förändring men vet inte hur\n- Behöver stöd och struktur för att nå dina mål\n- Vill stärka relationen till dig själv och ditt välmående"
     },
     {
       "type": "info-card",
@@ -42,7 +42,7 @@
     {
       "type": "newsletter-signup",
       "eyebrow": "Nyhetsbrev",
-      "title": "Inspiration om hälsa och livscoachning",
+      "title": "Inspiration om hälsa och vägledning",
       "body": "Ungefär en gång i månaden delar jag reflektioner om välmående, förändring och att leva mer i linje med sig själv. Inga spam, avregistrera dig när som helst.",
       "area": "coachning"
     }
