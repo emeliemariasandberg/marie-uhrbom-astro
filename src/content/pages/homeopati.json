@@ -69,6 +69,13 @@
       "subjectLabel": "Vad gäller det?",
       "messagePlaceholder": "Berätta kort om vad du söker hjälp med, och om du föredrar att ses fysiskt, via video eller telefon.",
       "submitLabel": "Skicka förfrågan"
+    },
+    {
+      "type": "newsletter-signup",
+      "eyebrow": "Nyhetsbrev",
+      "title": "Få tips om hälsa och homeopati",
+      "body": "Ungefär en gång i månaden delar jag tankar om hälsa, homeopati och välmående. Inga spam, avregistrera dig när som helst.",
+      "area": "homeopati"
     }
   ]
 }

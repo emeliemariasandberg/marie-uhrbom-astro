@@ -69,6 +69,13 @@
       "attribution": "Marie Uhrbom"
     },
     {
+      "type": "newsletter-signup",
+      "eyebrow": "Nyhetsbrev",
+      "title": "Håll dig uppdaterad",
+      "body": "Ungefär en gång i månaden delar jag tankar om hälsa, homeopati, livscoachning och läderhantverk. Välj vad du är intresserad av.",
+      "area": "all"
+    },
+    {
       "type": "cta",
       "title": "Välkommen att höra av dig",
       "body": "Funderar du på en beställning, vill boka ett samtal eller har du bara en fråga? Hör av dig — jag svarar inom ett par dagar och det inledande samtalet är alltid kostnadsfritt.",

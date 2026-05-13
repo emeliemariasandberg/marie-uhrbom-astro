@@ -1,15 +1,32 @@
 ---
 interface Props {
+  id?: string;
   eyebrow?: string;
   title?: string;
   body?: string;
+  area?: 'homeopati' | 'coachning' | 'hantverk' | 'all';
 }
+const {
+  id,
+  eyebrow,
+  title = 'Håll dig uppdaterad',
+  body,
+  area = 'all',
+} = Astro.props;
 
-const { eyebrow, title, body } = Astro.props;
+const apiKey = import.meta.env.PUBLIC_BREVO_API_KEY ?? '';
+const listMap = {
+  homeopati: Number(import.meta.env.PUBLIC_BREVO_LIST_HOMEOPATI),
+  coachning: Number(import.meta.env.PUBLIC_BREVO_LIST_VAGLEDNING),
+  hantverk:  Number(import.meta.env.PUBLIC_BREVO_LIST_HANTVERK),
+};
+const singleListId = area !== 'all' ? listMap[area] ?? null : null;
+const showCheckboxes = area === 'all';
+
 const formId = `nl-${Math.random().toString(36).slice(2, 7)}`;
 ---
 
-<section class="py-16 md:py-20 bg-[var(--color-secondary)]">
+<section id={id} class="py-16 md:py-20 bg-[var(--color-secondary)]">
   <div class="container-prose max-w-xl">
     <div class="text-center mb-8">
       {eyebrow && <p class="eyebrow mb-3">{eyebrow}</p>}
@@ -34,34 +51,33 @@ const formId = `nl-${Math.random().toString(36).slice(2, 7)}`;
         />
       </div>
 
-      <div>
-        <p class="text-sm font-medium mb-2.5">
-          Jag är intresserad av <span class="text-[var(--color-destructive)]">*</span>
-        </p>
-        <div class="flex flex-col sm:flex-row gap-3">
-          <label class="flex items-center gap-2.5 cursor-pointer">
-            <input
-              type="checkbox"
-              name="interest"
-              value="halsa"
-              class="w-4 h-4 rounded border-[var(--color-input)] accent-[var(--color-leather)]"
-            />
-            <span class="text-sm">Homeopati &amp; hälsa</span>
-          </label>
-          <label class="flex items-center gap-2.5 cursor-pointer">
-            <input
-              type="checkbox"
-              name="interest"
-              value="hantverk"
-              class="w-4 h-4 rounded border-[var(--color-input)] accent-[var(--color-leather)]"
-            />
-            <span class="text-sm">Läderhantverk</span>
-          </label>
+      {showCheckboxes && (
+        <div>
+          <p class="text-sm font-medium mb-2.5">
+            Jag är intresserad av <span class="text-[var(--color-destructive)]">*</span>
+          </p>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <label class="flex items-center gap-2.5 cursor-pointer">
+              <input type="checkbox" name="interest" value="homeopati"
+                class="w-4 h-4 rounded border-[var(--color-input)] accent-[var(--color-leather)]" />
+              <span class="text-sm">Homeopati</span>
+            </label>
+            <label class="flex items-center gap-2.5 cursor-pointer">
+              <input type="checkbox" name="interest" value="coachning"
+                class="w-4 h-4 rounded border-[var(--color-input)] accent-[var(--color-leather)]" />
+              <span class="text-sm">Hälsa & Livscoachning</span>
+            </label>
+            <label class="flex items-center gap-2.5 cursor-pointer">
+              <input type="checkbox" name="interest" value="hantverk"
+                class="w-4 h-4 rounded border-[var(--color-input)] accent-[var(--color-leather)]" />
+              <span class="text-sm">Läderhantverk</span>
+            </label>
+          </div>
+          <p id={`${formId}-interest-err`} class="hidden text-xs text-[var(--color-destructive)] mt-1.5">
+            Välj minst ett alternativ.
+          </p>
         </div>
-        <p id={`${formId}-interest-err`} class="hidden text-xs text-[var(--color-destructive)] mt-1.5">
-          Välj minst ett alternativ.
-        </p>
-      </div>
+      )}
 
       <div class="flex items-start gap-3">
         <input
@@ -81,7 +97,7 @@ const formId = `nl-${Math.random().toString(36).slice(2, 7)}`;
         Tack! Du är nu anmäld. Välkommen till nyhetsbrevet.
       </div>
       <div id={`${formId}-error`} class="hidden rounded-lg bg-red-50 border border-red-200 p-4 text-sm text-red-800">
-        Något gick fel. Försök igen eller kontakta mig direkt på marie@marieuhrbom.se.
+        Något gick fel. Försök igen eller kontakta mig direkt på info@marieuhrbom.se.
       </div>
 
       <button
@@ -99,46 +115,61 @@ const formId = `nl-${Math.random().toString(36).slice(2, 7)}`;
   </div>
 </section>
 
-<script define:vars={{ formId }}>
+<script define:vars={{ formId, apiKey, singleListId, showCheckboxes, listMap }}>
+(function () {
   const form = document.getElementById(formId);
   if (!form) return;
 
   form.addEventListener('submit', async e => {
     e.preventDefault();
 
-    const honey = form.querySelector('[name="_honey"]');
-    if (honey && honey.value) return;
+    if (form.querySelector('[name="_honey"]')?.value) return;
 
-    const email   = form.querySelector('[name="email"]').value.trim();
-    const gdpr    = form.querySelector('[name="gdpr"]').checked;
-    const checks  = [...form.querySelectorAll('[name="interest"]:checked')];
+    const email      = form.querySelector('[name="email"]')?.value?.trim();
+    const gdpr       = form.querySelector('[name="gdpr"]')?.checked;
     const interestErr = document.getElementById(`${formId}-interest-err`);
     const successMsg  = document.getElementById(`${formId}-success`);
     const errorMsg    = document.getElementById(`${formId}-error`);
     const submitBtn   = document.getElementById(`${formId}-submit`);
     const spinner     = document.getElementById(`${formId}-spinner`);
 
-    interestErr.classList.add('hidden');
+    if (interestErr) interestErr.classList.add('hidden');
     successMsg.classList.add('hidden');
     errorMsg.classList.add('hidden');
 
-    if (!checks.length) {
-      interestErr.classList.remove('hidden');
-      return;
-    }
     if (!email || !gdpr) return;
+
+    let listIds = [];
+    if (showCheckboxes) {
+      const checked = [...form.querySelectorAll('[name="interest"]:checked')];
+      if (!checked.length) {
+        if (interestErr) interestErr.classList.remove('hidden');
+        return;
+      }
+      listIds = checked.map(el => listMap[el.value]).filter(Boolean);
+    } else {
+      listIds = [singleListId];
+    }
 
     submitBtn.disabled = true;
     spinner.classList.remove('hidden');
 
     try {
-      const data = new FormData();
-      data.append('email', email);
-      data.append('interest', checks.map(c => c.value).join(','));
-      data.append('gdpr', '1');
+      const results = await Promise.all(
+        listIds.map(listId =>
+          fetch('https://api.brevo.com/v3/contacts', {
+            method: 'POST',
+            headers: {
+              'api-key': apiKey,
+              'content-type': 'application/json',
+              'accept': 'application/json',
+            },
+            body: JSON.stringify({ email, listIds: [listId], updateEnabled: true }),
+          })
+        )
+      );
 
-      const res = await fetch('/newsletter.php', { method: 'POST', body: data });
-      if (res.ok) {
+      if (results.every(r => r.ok || r.status === 204)) {
         successMsg.classList.remove('hidden');
         form.reset();
       } else {
@@ -151,4 +182,5 @@ const formId = `nl-${Math.random().toString(36).slice(2, 7)}`;
       spinner.classList.add('hidden');
     }
   });
+})();
 </script>

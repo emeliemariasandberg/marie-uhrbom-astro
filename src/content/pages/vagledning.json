@@ -38,6 +38,13 @@
       "subjectLabel": "Vad vill du prata om?",
       "messagePlaceholder": "Berätta kort om vad som för dig till coaching och vad du hoppas på.",
       "submitLabel": "Skicka förfrågan"
+    },
+    {
+      "type": "newsletter-signup",
+      "eyebrow": "Nyhetsbrev",
+      "title": "Inspiration om hälsa och livscoachning",
+      "body": "Ungefär en gång i månaden delar jag reflektioner om välmående, förändring och att leva mer i linje med sig själv. Inga spam, avregistrera dig när som helst.",
+      "area": "coachning"
     }
   ]
 }

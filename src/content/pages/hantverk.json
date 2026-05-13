@@ -83,6 +83,13 @@
       "subjectLabel": "Vad gäller det?",
       "messagePlaceholder": "T.ex: Gevärrem med älgmotiv och namnet Svensson. Standardlängd 90 cm. Ofärgad baksida.",
       "submitLabel": "Skicka förfrågan"
+    },
+    {
+      "type": "newsletter-signup",
+      "eyebrow": "Nyhetsbrev",
+      "title": "Följ hantverket",
+      "body": "Ungefär en gång i månaden delar jag bilder och berättelser från verkstaden — nya mönster, pågående arbeten och tankar om hantverk. Inga spam, avregistrera dig när som helst.",
+      "area": "hantverk"
     }
   ]
 }
