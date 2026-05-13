@@ -11,9 +11,11 @@
       "title": "Kroppen har en inneboende förmåga att läka",
       "subtitle": "Homeopati är ett holistiskt behandlingssystem som stärker din egen hälsa — på ett skonsamt och naturligt sätt.",
       "image": "/images/homeopati-hero.jpg",
-      "alt": "Naturlig miljö med örter",
+      "alt": "Naturlig miljö med örter och grönska",
       "cta1Label": "Boka samtal",
-      "cta1Href": "#boka"
+      "cta1Href": "#boka",
+      "cta2Label": "Läs om mig",
+      "cta2Href": "/om-marie"
     },
     {
       "type": "text",
@@ -25,31 +27,36 @@
       "items": [
         {
           "icon": "info",
-          "title": "Första konsultationen",
-          "body": "Vi tar oss god tid — vanligtvis 60–90 minuter — för att gå igenom din hälsosituation, historia och nuvarande symptom på djupet."
+          "title": "1. Vi ses",
+          "body": "Vi tar oss god tid — vanligtvis 60–90 minuter — för att tillsammans gå igenom din hälsosituation, historia och nuvarande symptom på djupet. Du berättar, jag lyssnar."
         },
         {
           "icon": "sparkles",
-          "title": "Uppföljning",
-          "body": "Efter att du tagit ditt medel följer vi upp hur du mår. Uppföljningar sker vanligtvis efter 4–6 veckor och är kortare än förstasamtalet."
+          "title": "2. Ditt medel",
+          "body": "Utifrån vad du berättat väljer jag ett homeopatiskt medel som passar just dig. Medlet stärker kroppens egna läkningsprocesser på ett skonsamt sätt."
         },
         {
           "icon": "shield",
-          "title": "Djur välkomna",
-          "body": "Jag tar emot djur — hästar, hundar, katter och andra husdjur. Ägarens observation är central i djurkonsultationen."
+          "title": "3. Vi följer upp",
+          "body": "Efter 4–6 veckor ses vi igen för att utvärdera hur du mår. Uppföljningar är kortare och vi justerar behandlingen om det behövs. Djur är varmt välkomna."
         }
       ]
     },
     {
+      "type": "quote",
+      "quote": "Jag möter varje klient som en unik människa — inte en diagnos. Det är det som är kärnan i klassisk homeopati.",
+      "attribution": "Marie Uhrbom"
+    },
+    {
       "type": "info-card",
-      "title": "Tystnadsplikt och ansvarsförsäkring",
-      "body": "Jag har tystnadsplikt och är ansvarsförsäkrad via Gjensidige.\n\nVid akuta eller livshotande tillstånd ska sjukvården alltid kontaktas. Homeopater får enligt lag inte behandla diabetes, cancer eller epilepsi. Barn under 8 år får inte behandlas av homeopat i Sverige.\n\nHomeopati är ett komplement — inte ett alternativ — till konventionell medicinsk vård.",
+      "title": "Praktisk information",
+      "body": "Jag har **tystnadsplikt** och är **ansvarsförsäkrad** via Gjensidige.\n\nVid akuta eller livshotande tillstånd ska sjukvården alltid kontaktas. Homeopater får enligt lag inte behandla diabetes, cancer eller epilepsi. Barn under 8 år får inte behandlas av homeopat i Sverige.\n\nHomeopati är ett komplement — inte ett alternativ — till konventionell medicinsk vård.",
       "tone": "soft"
     },
     {
       "type": "booking-grid",
       "id": "boka",
-      "body": "## Boka en konsultation\n\nJag tar emot klienter i mitt hem utanför Mellerud i Västra Götaland, men erbjuder också konsultationer via video och telefon.\n\n**Priser (inklusive moms):**\n- Första samtal (1,5–2 h): 1 200 kr\n- Uppföljning (ca 30 min): 800 kr\n- Homeopatiska medel tillkommer\n\n**Boka:** Fyll i formuläret nedan eller skicka ett e-postmeddelande direkt.",
+      "body": "## Boka en konsultation\n\nJag tar emot klienter i mitt hem utanför Mellerud i Västra Götaland, men erbjuder också konsultationer via video och telefon. Det kostar ingenting att höra av sig med en fråga.\n\n**Priser (inklusive moms):**\n- Första samtal (1,5–2 h): **1 200 kr**\n- Uppföljning (ca 30 min): **800 kr**\n- Homeopatiska medel tillkommer\n\n**Boka:** Fyll i formuläret nedan eller skicka ett e-postmeddelande direkt.",
       "area": "homeopati"
     }
   ]

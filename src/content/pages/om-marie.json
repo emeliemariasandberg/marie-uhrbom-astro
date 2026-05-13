@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Om Marie — Marie Uhrbom",
-    "description": "Lär känna Marie Uhrbom — hantverkare, homeopat och livscoach utanför Mellerud. Erfarenhet, utbildning och ett genuint engagemang för naturlig hälsa och hantverk.",
+    "description": "Lär känna Marie Uhrbom — sadelmakare sedan 1996, livscoach sedan 2006 och homeopat med examen 2024. Verksam nära Mellerud i Västra Götaland.",
     "slug": "om-marie"
   },
   "sections": [
@@ -10,9 +10,34 @@
       "eyebrow": "Om Marie",
       "title": "Hantverkare, Homeopat & Livscoach",
       "subtitle": "Med rötterna i Västra Götaland och hjärtat i hantverket.",
-      "body": "Jag heter Marie Uhrbom och har ägnat stor del av mitt yrkesliv åt att möta människor och djur i olika behov — som hantverkare, homeopat och coach.\n\nMitt arbete bär ett gemensamt syfte: att bidra till välmående på ett genuint, hållbart och omsorgsfritt sätt. Oavsett om det handlar om ett handgjort läderbälte eller ett djupt samtal.",
+      "body": "Jag heter Marie Uhrbom och har ägnat stor del av mitt yrkesliv åt att möta människor och djur i olika behov — som hantverkare, homeopat och coach.\n\nMitt arbete bär ett gemensamt syfte: att bidra till välmående på ett genuint, hållbart och omsorgsfullt sätt. Oavsett om det handlar om ett handgjort läderbälte eller ett djupt samtal.",
       "image": "/images/om-marie.jpg",
-      "alt": "Marie Uhrbom"
+      "alt": "Marie Uhrbom",
+      "cta1Label": "Kom i kontakt",
+      "cta1Href": "/kontakt"
+    },
+    {
+      "type": "credential-strip",
+      "items": [
+        {
+          "label": "Läderhantverk",
+          "since": "sedan 1996",
+          "description": "Sadelmakare & hantverkare",
+          "href": "/hantverk"
+        },
+        {
+          "label": "Hälsa & Coaching",
+          "since": "sedan 2006",
+          "description": "Livscoach & hälsovägledare",
+          "href": "/vagledning"
+        },
+        {
+          "label": "Klassisk Homeopati",
+          "since": "examen 2024",
+          "description": "Utbildad klassisk homeopat",
+          "href": "/homeopati"
+        }
+      ]
     },
     {
       "type": "text",
@@ -22,13 +47,13 @@
     {
       "type": "info-card",
       "title": "Tystnadsplikt & ansvarsförsäkring",
-      "body": "Jag har tystnadsplikt i min roll som homeopat och coach. Jag är ansvarsförsäkrad via Gjensidige.",
+      "body": "Jag har **tystnadsplikt** i min roll som homeopat och coach. Jag är **ansvarsförsäkrad** via Gjensidige.",
       "tone": "warm"
     },
     {
       "type": "cta",
       "title": "Välkommen att höra av dig",
-      "body": "Har du frågor om mig eller mina verksamheter? Hör gärna av dig.",
+      "body": "Har du frågor om mig, mina verksamheter eller vill du boka ett första samtal? Hör gärna av dig — det inledande samtalet är alltid kostnadsfritt.",
       "buttonLabel": "Kontakta mig",
       "buttonHref": "/kontakt"
     }

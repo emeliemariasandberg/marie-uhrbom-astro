@@ -1,7 +1,7 @@
 {
   "meta": {
-    "title": "Läderhantverk — Marie Uhrbom abc",
-    "description": "Handgjorda läderremmar, gevärremmar, hundkoppel och sadelmakeri. Traditionellt hantverk med material av hög kvalitet från Marie Uhrbom utanför Mellerud.",
+    "title": "Läderhantverk — Marie Uhrbom",
+    "description": "Handgjorda gevärremmar, hundkoppel och sadelmakeri i Tärnsjö-läder. Traditionellt hantverk med material av hög kvalitet från Marie Uhrbom utanför Mellerud.",
     "slug": "hantverk"
   },
   "sections": [
@@ -10,51 +10,12 @@
       "eyebrow": "Hantverk med själ",
       "title": "Handgjort läder av hög kvalitet",
       "subtitle": "Gevärremmar, hundkoppel och sadelmakeri — tillverkat för hand med omsorg och beständighet.",
-      "body": "Varje produkt är unik och tillverkad i Sverige med traditionella sadelmakarteknik och vegetabilgarvat läder. Jag arbetar nära kunden för att ta fram det som passar just dig och ditt djur.",
+      "body": "Varje produkt är unik och tillverkad i Sverige med traditionell sadelmakarteknink och vegetabilgarvat läder. Jag arbetar nära kunden för att ta fram det som passar just dig och ditt djur.",
       "image": "/images/hero-leather.jpg",
-      "alt": "Handgjort läder i naturbrunt",
+      "alt": "Handgjord gevärrem i naturbrunt Tärnsjö-läder",
       "cta1Label": "Beställ eller fråga",
       "cta1Href": "#bestall",
-      "footnote": "Levenstid 1–4 veckor beroende på beställning."
-    },
-    {
-      "type": "services-grid",
-      "eyebrow": "Sortiment",
-      "title": "Vad jag tillverkar",
-      "subtitle": "Alla produkter görs på beställning. Kontakta mig för priser och leveranstid.",
-      "items": [
-        {
-          "title": "Gevärremmar",
-          "body": "Handgjorda gevärremmar i vegetabilgarvat läder. Välj bredd, längd och beslag efter dina önskemål.",
-          "size": "medium"
-        },
-        {
-          "title": "Hundkoppel & halsband",
-          "body": "Hållbara koppel och halsband för hund — tillverkade att hålla länge och bli vackrare med åren.",
-          "size": "medium"
-        },
-        {
-          "title": "Sadelmakeri",
-          "body": "Reparationer och tillverkning av seldon, stigläder, tränsdelar och annan hästutrustning i läder.",
-          "size": "medium"
-        },
-        {
-          "title": "Bälten & accessoarer",
-          "body": "Enkla och hållbara bälten, nyckelringar och små lädertillbehör för vardagsbruk.",
-          "size": "medium"
-        }
-      ]
-    },
-    {
-      "type": "text",
-      "title": "Beställ en personlig gevärrem",
-      "body": "Hos mig beställer du en gevärrem i Tärnsjö-läder, 3–3,5 mm tjockt med ett neoprenlager på baksidan som förhindrar att remmen glider. Standardlängden är 90 cm och passar de flesta jägare — något längre kan beställas vid behov. Remmen fästs med läderremmar så att det inte finns något som skramlar eller blänker.\n\n**Tillgängliga motiv**\n\nÄlg, rådjur, hare, orre, varg, vildsvin, dovhjort, kronhjort, lodjur. Eget motiv går att beställa — hör av dig för mer information.\n\nMotiven görs för hand med läderplastik där mönstret skärs ut och slås in med punsar för en tydlig 3D-effekt.\n\n**Namn på remmen**\n\nDu kan få ditt namn (eller ett annat ord) ingraverat med bokstavspunsar. Kontrollera stavningen noga innan du beställer — det går inte att ändra i efterhand.\n\n**Färg och finish**\n\nRemmen färgas med chattering, en teknik som ger naturliga variationer i färgen beroende på lädrets struktur. Baksidan lämnas ofärgad som standard men kan färgas mot tillägg.\n\n**Leveranstid**\n\nVarje rem görs på beställning från en hel hud. Leveranstiden varierar beroende på hur många beställningar som ligger inne — fråga gärna om aktuell tid innan du beställer, eller räkna med några veckors väntan."
-    },
-    {
-      "type": "info-card",
-      "title": "Priser (inklusive moms)",
-      "body": "- Rem med befintligt motiv och namn: **1 250 kr**\n- Färgad baksida: **+200 kr**\n- Kundens eget motiv: **från +400 kr**\n\nKontakta mig via formuläret nedan, SMS till 0703-266213 eller e-post till marieuhrbom@hotmail.com för att stämma av leveranstid och lägga din beställning.",
-      "tone": "warm"
+      "footnote": "Leveranstid 1–4 veckor beroende på beställning."
     },
     {
       "type": "gallery",
@@ -63,15 +24,84 @@
       "images": [
         {
           "url": "/images/laderhantverk1.jpeg",
-          "alt": "Handgjord gevärrem i brunt läder"
+          "alt": "Handgjord gevärrem i brunt Tärnsjö-läder med älgmotiv"
         },
         {
           "url": "/images/laderhantverk2.jpeg",
-          "alt": "Hundkoppel i vegetabilgarvat läder"
+          "alt": "Hundkoppel i vegetabilgarvat läder — hållbart och vackert"
         },
         {
           "url": "/images/laderhanterverk4.png",
-          "alt": "Detalj av lädersyning"
+          "alt": "Närbild på lädersyning och traditionell punsteknik"
+        },
+        {
+          "url": "/images/hero-leather.jpg",
+          "alt": "Läderrem med motiv och namnpuns — beställd gevärrem"
+        }
+      ]
+    },
+    {
+      "type": "process-steps",
+      "eyebrow": "Hur det går till",
+      "title": "Från idé till färdig produkt",
+      "steps": [
+        {
+          "number": "1",
+          "title": "Kontakta mig",
+          "body": "Berätta vad du vill ha — motiv, mått, namn och eventuella önskemål om färg. Jag svarar inom ett par dagar."
+        },
+        {
+          "number": "2",
+          "title": "Vi stämmer av",
+          "body": "Jag bekräftar din beställning, vi diskuterar detaljer och jag ger dig en aktuell leveranstid innan du binder dig."
+        },
+        {
+          "number": "3",
+          "title": "Du får din rem",
+          "body": "Produkten tillverkas för hand från en hel hud. När den är klar skickar jag den till dig — beständig och redo att användas."
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "title": "Beställ en personlig gevärrem",
+      "body": "Hos mig beställer du en gevärrem i Tärnsjö-läder, 3–3,5 mm tjockt med ett neoprenlager på baksidan som förhindrar att remmen glider. Standardlängden är 90 cm och passar de flesta jägare — något längre kan beställas vid behov. Remmen fästs med läderremmar så att det inte finns något som skramlar eller blänker.\n\n## Tillgängliga motiv\n\nÄlg, rådjur, hare, orre, varg, vildsvin, dovhjort, kronhjort, lodjur. Eget motiv går att beställa — hör av dig för mer information.\n\nMotiven görs för hand med läderplastik där mönstret skärs ut och slås in med punsar för en tydlig 3D-effekt.\n\n## Namn på remmen\n\nDu kan få ditt namn (eller ett annat ord) ingraverat med bokstavspunsar. Kontrollera stavningen noga innan du beställer — det går inte att ändra i efterhand.\n\n## Färg och finish\n\nRemmen färgas med chattering, en teknik som ger naturliga variationer i färgen beroende på lädrets struktur. Baksidan lämnas ofärgad som standard men kan färgas mot tillägg.\n\n## Leveranstid\n\nVarje rem görs på beställning från en hel hud. Leveranstiden varierar beroende på hur många beställningar som ligger inne — fråga gärna om aktuell tid innan du beställer, eller räkna med några veckors väntan."
+    },
+    {
+      "type": "info-card",
+      "title": "Priser (inklusive moms)",
+      "body": "- Rem med befintligt motiv och namn: **1 250 kr**\n- Färgad baksida: **+200 kr**\n- Kundens eget motiv: **från +400 kr**\n\nKontakta mig via formuläret nedan, SMS till 0703-266213 eller e-post till marieuhrbom@hotmail.com för att stämma av leveranstid och lägga din beställning.",
+      "tone": "warm"
+    },
+    {
+      "type": "services-grid",
+      "eyebrow": "Sortiment",
+      "title": "Vad jag tillverkar",
+      "subtitle": "Alla produkter görs på beställning. Kontakta mig för detaljer och leveranstid.",
+      "items": [
+        {
+          "title": "Gevärremmar",
+          "body": "Handgjorda gevärremmar i vegetabilgarvat läder. Välj motiv, bredd, längd och beslag efter dina önskemål.",
+          "image": "/images/laderhantverk1.jpeg",
+          "size": "medium"
+        },
+        {
+          "title": "Hundkoppel & halsband",
+          "body": "Hållbara koppel och halsband för hund — tillverkade att hålla länge och bli vackrare med åren.",
+          "image": "/images/laderhantverk2.jpeg",
+          "size": "medium"
+        },
+        {
+          "title": "Sadelmakeri",
+          "body": "Reparationer och tillverkning av seldon, stigläder, tränsdelar och annan hästutrustning i läder.",
+          "image": "/images/hero-leather.jpg",
+          "size": "medium"
+        },
+        {
+          "title": "Bälten & accessoarer",
+          "body": "Enkla och hållbara bälten, nyckelringar och små lädertillbehör för vardagsbruk.",
+          "image": "/images/laderhanterverk4.png",
+          "size": "medium"
         }
       ]
     },

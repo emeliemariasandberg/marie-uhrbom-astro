@@ -9,7 +9,7 @@
       "type": "page-header",
       "eyebrow": "Kontakt",
       "title": "Hör av dig",
-      "subtitle": "Jag svarar inom ett par dagar. Välj det område som passar din förfrågan bäst."
+      "subtitle": "Oavsett om du vill beställa en gevärrem, boka ett samtal eller bara undrar något — hör av dig. Jag svarar inom ett par dagar och det kostar ingenting att fråga."
     },
     {
       "type": "contact-card",
@@ -19,7 +19,7 @@
       "type": "inquiry-form",
       "eyebrow": "Skicka ett meddelande",
       "title": "Formulär",
-      "intro": "",
+      "intro": "Välj det ämne som passar din förfrågan bäst, skriv ett meddelande — så hör jag av mig så snart jag kan.",
       "area": "general",
       "subjectLabel": "Ämne",
       "messagePlaceholder": "Skriv ditt meddelande här...",

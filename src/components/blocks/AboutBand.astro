@@ -10,8 +10,10 @@ interface Props {
   image?: string;
   alt?: string;
   bgImage?: string;
+  linkLabel?: string;
+  linkHref?: string;
 }
-const { eyebrow, title, body, image, alt, bgImage } = Astro.props;
+const { eyebrow, title, body, image, alt, bgImage, linkLabel, linkHref } = Astro.props;
 const bodyHtml = marked.parse(body);
 ---
 
@@ -44,6 +46,15 @@ const bodyHtml = marked.parse(body);
         {eyebrow && <p class="eyebrow mb-4">{eyebrow}</p>}
         <h2 class="font-display text-3xl md:text-4xl font-medium leading-tight mb-6">{title}</h2>
         <div class="prose-warm" set:html={bodyHtml} />
+        {linkLabel && linkHref && (
+          <a
+            href={siteUrl(linkHref)}
+            class="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-leather)] hover:text-[var(--color-leather-deep)] transition-colors"
+          >
+            {linkLabel}
+            <span aria-hidden="true">→</span>
+          </a>
+        )}
       </div>
     </div>
   </div>

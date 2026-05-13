@@ -39,7 +39,9 @@ const canonicalUrl = new URL(slug ? `/${slug}` : '/', Astro.site ?? 'https://mar
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl.href} />
-    {seoSettings.ogImage && <meta property="og:image" content={seoSettings.ogImage} />}
+    {seoSettings.ogImage && (
+      <meta property="og:image" content={new URL(seoSettings.ogImage, Astro.site ?? 'https://marieuhrbom.se').href} />
+    )}
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />

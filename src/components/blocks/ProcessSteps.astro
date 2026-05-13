@@ -1,0 +1,41 @@
+---
+interface Step {
+  number: string;
+  title: string;
+  body: string;
+}
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  steps: Step[];
+}
+const { eyebrow, title, steps } = Astro.props;
+---
+
+<section class="py-16 md:py-20">
+  <div class="container-prose">
+    {(eyebrow || title) && (
+      <div class="mb-12 max-w-2xl">
+        {eyebrow && <p class="eyebrow mb-3">{eyebrow}</p>}
+        {title && <h2 class="font-display text-3xl md:text-4xl font-medium leading-tight">{title}</h2>}
+      </div>
+    )}
+
+    <div class="relative grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6">
+      <!-- connecting line on desktop -->
+      <div class="hidden md:block absolute top-8 left-[calc(16.67%+1rem)] right-[calc(16.67%+1rem)] h-px bg-[var(--color-border)]" aria-hidden="true"></div>
+
+      {steps.map((step) => (
+        <div class="relative flex flex-col">
+          <div class="flex items-center gap-4 mb-4 md:flex-col md:items-start md:gap-3">
+            <div class="relative shrink-0 w-16 h-16 rounded-full bg-[var(--color-leather-deep)] text-[var(--color-primary-foreground)] flex items-center justify-center shadow-[var(--shadow-warm)] z-10">
+              <span class="font-display text-2xl font-medium">{step.number}</span>
+            </div>
+            <h3 class="font-display text-xl font-medium leading-snug md:mt-2">{step.title}</h3>
+          </div>
+          <p class="text-sm text-[var(--color-muted-foreground)] leading-relaxed md:pl-0">{step.body}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

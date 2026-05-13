@@ -16,6 +16,8 @@ import Quote from './blocks/Quote.astro';
 import InfoCard from './blocks/InfoCard.astro';
 import Testimonials from './blocks/Testimonials.astro';
 import NewsletterSignup from './blocks/NewsletterSignup.astro';
+import ProcessSteps from './blocks/ProcessSteps.astro';
+import CredentialStrip from './blocks/CredentialStrip.astro';
 
 interface Props {
   sections: any[];
@@ -60,6 +62,10 @@ const { sections } = Astro.props;
       return <Testimonials eyebrow={section.eyebrow} title={section.title} items={section.items ?? []} />;
     case 'newsletter-signup':
       return <NewsletterSignup eyebrow={section.eyebrow} title={section.title} body={section.body} />;
+    case 'process-steps':
+      return <ProcessSteps eyebrow={section.eyebrow} title={section.title} steps={section.steps ?? []} />;
+    case 'credential-strip':
+      return <CredentialStrip items={section.items ?? []} />;
     default:
       return null;
   }

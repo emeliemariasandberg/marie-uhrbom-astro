@@ -6,30 +6,20 @@
   },
   "sections": [
     {
-      "type": "page-header",
+      "type": "hero-portrait",
       "eyebrow": "Hälsa & Vägledning",
       "title": "Hitta din riktning",
-      "subtitle": "Coachning och vägledning för dig som vill skapa förändring, stärka ditt välmående och leva mer i linje med dig själv."
+      "subtitle": "Coachning och vägledning för dig som vill skapa förändring, stärka ditt välmående och leva mer i linje med dig själv.",
+      "body": "Jag har arbetat med coaching och stöttning i över 20 år. Varje samtal utgår från dig — din situation, dina resurser och vart du vill komma. Det inledande samtalet är kostnadsfritt och utan förpliktelse.",
+      "image": "/images/om-marie.jpg",
+      "alt": "Marie Uhrbom, livscoach och hälsovägledare",
+      "cta1Label": "Boka kostnadsfritt samtal",
+      "cta1Href": "#boka"
     },
     {
       "type": "text",
       "title": "Vad är livscoachning?",
-      "body": "Livscoachning är ett samarbete mellan dig och mig, med fokus på din nuvarande situation och dit du vill komma. Till skillnad från terapi handlar coaching om att blicka framåt — att identifiera vad du vill och vad som håller dig tillbaka.\n\nJag lyssnar utan att döma, ställer frågor som hjälper dig att se dig själv och din situation tydligare, och stöttar dig i att ta konkreta steg mot det liv du vill leva.\n\nCoachning passar dig som:\n- Söker klarhet i en livssituation\n- Vill skapa förändring men vet inte hur\n- Behöver stöd och structure för att nå dina mål\n- Vill stärka relationen till dig själv och ditt välmående"
-    },
-    {
-      "type": "two-cards",
-      "items": [
-        {
-          "icon": "sparkles",
-          "title": "Individuella samtal",
-          "body": "Enskilda coachingsamtal anpassade efter dina behov och mål. Vi träffas i mitt hem, online eller via telefon."
-        },
-        {
-          "icon": "info",
-          "title": "Förlopp",
-          "body": "De flesta väljer ett förlopp på 4–8 samtal för att skapa verklig förändring. Vi utvärderar löpande och anpassar."
-        }
-      ]
+      "body": "Livscoachning är ett samarbete mellan dig och mig, med fokus på din nuvarande situation och dit du vill komma. Till skillnad från terapi handlar coaching om att blicka framåt — att identifiera vad du vill och vad som håller dig tillbaka.\n\nJag lyssnar utan att döma, ställer frågor som hjälper dig att se dig själv och din situation tydligare, och stöttar dig i att ta konkreta steg mot det liv du vill leva.\n\nCoachning passar dig som:\n- Söker klarhet i en livssituation\n- Vill skapa förändring men vet inte hur\n- Behöver stöd och struktur för att nå dina mål\n- Vill stärka relationen till dig själv och ditt välmående"
     },
     {
       "type": "quote",
@@ -37,9 +27,24 @@
       "attribution": "Marie Uhrbom"
     },
     {
+      "type": "two-cards",
+      "items": [
+        {
+          "icon": "sparkles",
+          "title": "Individuella samtal",
+          "body": "Vi träffas en och en, anpassat efter dina behov och mål. Du väljer om vi ses i mitt hem, online eller via telefon — det som känns bäst för dig."
+        },
+        {
+          "icon": "info",
+          "title": "Förlopp & process",
+          "body": "De flesta väljer 4–8 samtal för att skapa verklig och hållbar förändring. Vi utvärderar löpande och anpassar takten efter vad som händer i ditt liv."
+        }
+      ]
+    },
+    {
       "type": "info-card",
-      "title": "Pris",
-      "body": "**600 kr / 60 minuter** (inklusive moms)\n\nDet inledande samtalet är kostnadsfritt och utan förpliktelse — ett tillfälle att berätta om vad du söker och se om vi passar ihop.",
+      "title": "Pris & första steget",
+      "body": "**600 kr / 60 minuter** (inklusive moms)\n\nDet inledande samtalet är **kostnadsfritt och utan förpliktelse** — ett tillfälle för dig att berätta om vad du söker och för oss att se om vi passar ihop. Ingen bindning, inget krav.",
       "tone": "soft"
     },
     {
@@ -47,7 +52,7 @@
       "id": "boka",
       "eyebrow": "Ta första steget",
       "title": "Boka ett inledande samtal",
-      "intro": "Det inledande samtalet är kostnadsfritt och utan förpliktelse. Vi pratar om vad du söker och om vi är rätt för varandra.",
+      "intro": "Det inledande samtalet är kostnadsfritt och utan förpliktelse. Vi pratar om vad du söker och om vi är rätt för varandra. Jag svarar inom ett par dagar.",
       "area": "coachning",
       "subjectLabel": "Vad vill du prata om?",
       "messagePlaceholder": "Berätta kort om vad som för dig till coaching och vad du hoppas på.",
