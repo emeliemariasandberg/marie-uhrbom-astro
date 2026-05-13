@@ -1,0 +1,39 @@
+---
+interface TestimonialItem {
+  quote: string;
+  attribution?: string;
+}
+
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  items: TestimonialItem[];
+}
+
+const { eyebrow, title, items = [] } = Astro.props;
+---
+
+<section class="py-16 md:py-24 bg-[var(--color-muted)]">
+  <div class="container-prose">
+    {(eyebrow || title) && (
+      <div class="text-center mb-12">
+        {eyebrow && <p class="eyebrow mb-3">{eyebrow}</p>}
+        {title && <h2 class="font-display text-3xl md:text-4xl font-medium leading-tight">{title}</h2>}
+      </div>
+    )}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {items.map(item => (
+        <blockquote class="bg-[var(--color-card)] border border-[var(--color-border)] rounded-xl p-7 flex flex-col gap-5 shadow-[var(--shadow-soft)]">
+          <p class="font-display text-xl italic leading-relaxed text-[var(--color-foreground)] flex-1">
+            &ldquo;{item.quote}&rdquo;
+          </p>
+          {item.attribution && (
+            <footer class="text-sm text-[var(--color-muted-foreground)] font-medium tracking-wide">
+              &mdash; {item.attribution}
+            </footer>
+          )}
+        </blockquote>
+      ))}
+    </div>
+  </div>
+</section>

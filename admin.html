@@ -49,7 +49,7 @@ h3 { font-size: 1.125rem; }
   top: 0;
   z-index: 10;
 }
-.header-title { font-family: var(--font-body); font-weight: 500; font-size: 0.9375rem; flex: 1; text-align: center; }
+.header-title { font-family: var(--font-body); font-weight: 500; font-size: 0.9375rem; }
 .main { max-width: 52rem; margin: 0 auto; padding: 2rem 1.25rem 6rem; }
 
 .btn {
@@ -91,6 +91,13 @@ textarea { resize: vertical; }
 .hint { font-size: 0.75rem; color: var(--muted-fg); }
 
 .card { background: white; border: 1px solid var(--border); border-radius: calc(var(--radius) * 1.5); padding: 1.25rem; }
+.card-success {
+  background: oklch(0.97 0.025 145);
+  border: 1px solid oklch(0.85 0.06 145);
+  border-radius: calc(var(--radius) * 1.5);
+  padding: 1.5rem;
+  text-align: center;
+}
 
 .page-item {
   background: white; border: 1px solid var(--border);
@@ -138,7 +145,7 @@ textarea { resize: vertical; }
 
 .nav-row { display: flex; gap: 0.375rem; margin-bottom: 0.375rem; align-items: center; }
 
-.back-btn { background: none; border: none; cursor: pointer; color: var(--muted-fg); font-family: var(--font-body); font-size: 0.875rem; padding: 0; display: flex; align-items: center; gap: 0.25rem; }
+.back-btn { background: none; border: none; cursor: pointer; color: var(--muted-fg); font-family: var(--font-body); font-size: 0.875rem; padding: 0; display: flex; align-items: center; gap: 0.25rem; white-space: nowrap; }
 .back-btn:hover { color: var(--foreground); }
 
 .loading { display: flex; align-items: center; justify-content: center; gap: 0.625rem; padding: 4rem 1rem; color: var(--muted-fg); }
@@ -169,6 +176,12 @@ textarea { resize: vertical; }
 .flex { display: flex; }
 .gap-2 { gap: 0.5rem; }
 
+/* Nav step */
+.nav-step-option { border: 1px solid var(--border); border-radius: var(--radius); padding: 0.875rem 1rem; display: flex; flex-direction: column; gap: 0.5rem; background: white; }
+.nav-step-option + .nav-step-option { margin-top: 0.5rem; }
+.nav-step-row { display: flex; align-items: center; gap: 0.75rem; }
+.nav-step-row input[type="text"] { flex: 1; }
+
 @media (max-width: 600px) {
   .app-header { padding: 0.625rem 1rem; }
   .main { padding: 1.25rem 1rem 5rem; }
@@ -185,134 +198,157 @@ textarea { resize: vertical; }
 
 const SECTION_SCHEMA = {
   'hero-split': [
-    { key: 'eyebrow',   label: 'Ögonbrynstext',       type: 'text' },
-    { key: 'title',     label: 'Rubrik',               type: 'text', required: true },
+    { key: 'eyebrow',   label: 'Etikett',              type: 'text',     hint: 'Liten text ovanför rubriken, t.ex. "Välkommen"' },
+    { key: 'title',     label: 'Rubrik',               type: 'text',     required: true },
     { key: 'subtitle',  label: 'Underrubrik',          type: 'text' },
-    { key: 'image',     label: 'Bild',                 type: 'image' },
-    { key: 'alt',       label: 'Bildbeskrivning',      type: 'text' },
-    { key: 'cta1Label', label: 'Knapp 1 text',         type: 'text' },
-    { key: 'cta1Href',  label: 'Knapp 1 länk',         type: 'text' },
-    { key: 'cta2Label', label: 'Knapp 2 text',         type: 'text' },
-    { key: 'cta2Href',  label: 'Knapp 2 länk',         type: 'text' },
+    { key: 'image',     label: 'Bild (höger sida)',    type: 'image' },
+    { key: 'alt',       label: 'Alt-text',             type: 'text',     hint: 'Beskriv bilden för synskadade och sökmotorer' },
+    { key: 'cta1Label', label: 'Knapp 1: text',        type: 'text' },
+    { key: 'cta1Href',  label: 'Knapp 1: länk',        type: 'text' },
+    { key: 'cta2Label', label: 'Knapp 2: text',        type: 'text' },
+    { key: 'cta2Href',  label: 'Knapp 2: länk',        type: 'text' },
     { key: 'footnote',  label: 'Fotnot',               type: 'text' },
   ],
   'hero-overlay': [
-    { key: 'eyebrow',   label: 'Ögonbrynstext',        type: 'text' },
-    { key: 'title',     label: 'Rubrik',               type: 'text', required: true },
+    { key: 'eyebrow',   label: 'Etikett',              type: 'text',     hint: 'Liten text ovanför rubriken' },
+    { key: 'title',     label: 'Rubrik',               type: 'text',     required: true },
     { key: 'subtitle',  label: 'Underrubrik',          type: 'text' },
     { key: 'image',     label: 'Bakgrundsbild',        type: 'image' },
-    { key: 'alt',       label: 'Bildbeskrivning',      type: 'text' },
-    { key: 'cta1Label', label: 'Knapp 1 text',         type: 'text' },
-    { key: 'cta1Href',  label: 'Knapp 1 länk',         type: 'text' },
-    { key: 'cta2Label', label: 'Knapp 2 text',         type: 'text' },
-    { key: 'cta2Href',  label: 'Knapp 2 länk',         type: 'text' },
+    { key: 'alt',       label: 'Alt-text',             type: 'text',     hint: 'Beskriv bilden för synskadade och sökmotorer' },
+    { key: 'cta1Label', label: 'Knapp 1: text',        type: 'text' },
+    { key: 'cta1Href',  label: 'Knapp 1: länk',        type: 'text' },
+    { key: 'cta2Label', label: 'Knapp 2: text',        type: 'text' },
+    { key: 'cta2Href',  label: 'Knapp 2: länk',        type: 'text' },
   ],
   'hero-portrait': [
-    { key: 'eyebrow',   label: 'Ögonbrynstext',        type: 'text' },
-    { key: 'title',     label: 'Rubrik',               type: 'text', required: true },
+    { key: 'eyebrow',   label: 'Etikett',              type: 'text',     hint: 'Liten text ovanför rubriken' },
+    { key: 'title',     label: 'Rubrik',               type: 'text',     required: true },
     { key: 'subtitle',  label: 'Underrubrik',          type: 'text' },
-    { key: 'body',      label: 'Brödtext',             type: 'textarea' },
-    { key: 'image',     label: 'Porträttbild',         type: 'image' },
-    { key: 'alt',       label: 'Bildbeskrivning',      type: 'text' },
-    { key: 'cta1Label', label: 'Knapptext',            type: 'text' },
-    { key: 'cta1Href',  label: 'Knappens länk',        type: 'text' },
+    { key: 'body',      label: 'Text',                 type: 'textarea' },
+    { key: 'image',     label: 'Porträttbild (vänster)', type: 'image' },
+    { key: 'alt',       label: 'Alt-text',             type: 'text',     hint: 'Beskriv bilden för synskadade och sökmotorer' },
+    { key: 'cta1Label', label: 'Knapp: text',          type: 'text' },
+    { key: 'cta1Href',  label: 'Knapp: länk',          type: 'text' },
     { key: 'footnote',  label: 'Fotnot',               type: 'text' },
   ],
   'page-header': [
-    { key: 'eyebrow',   label: 'Ögonbrynstext',        type: 'text' },
-    { key: 'title',     label: 'Rubrik (H1)',           type: 'text', required: true },
+    { key: 'eyebrow',   label: 'Etikett',              type: 'text',     hint: 'Liten text ovanför rubriken' },
+    { key: 'title',     label: 'Rubrik',               type: 'text',     required: true },
     { key: 'subtitle',  label: 'Underrubrik',          type: 'text' },
   ],
   'text': [
-    { key: 'title',     label: 'Rubrik (H2)',           type: 'text' },
-    { key: 'body',      label: 'Brödtext (markdown)',   type: 'textarea', required: true },
+    { key: 'title',     label: 'Rubrik',               type: 'text' },
+    { key: 'body',      label: 'Text',                 type: 'textarea', required: true },
   ],
   'gallery': [
-    { key: 'eyebrow',   label: 'Ögonbrynstext',        type: 'text' },
+    { key: 'eyebrow',   label: 'Etikett',              type: 'text',     hint: 'Liten text ovanför rubriken' },
     { key: 'title',     label: 'Rubrik',               type: 'text' },
     { key: 'images',    label: 'Bilder',               type: 'image-list' },
   ],
   'services-grid': [
-    { key: 'eyebrow',   label: 'Ögonbrynstext',        type: 'text' },
+    { key: 'eyebrow',   label: 'Etikett',              type: 'text',     hint: 'Liten text ovanför rubriken' },
     { key: 'title',     label: 'Rubrik',               type: 'text' },
     { key: 'subtitle',  label: 'Underrubrik',          type: 'text' },
     { key: 'items',     label: 'Kort',                 type: 'service-list' },
   ],
   'about-band': [
-    { key: 'eyebrow',   label: 'Ögonbrynstext',        type: 'text' },
-    { key: 'title',     label: 'Rubrik',               type: 'text', required: true },
-    { key: 'body',      label: 'Brödtext (markdown)',  type: 'textarea' },
+    { key: 'eyebrow',   label: 'Etikett',              type: 'text',     hint: 'Liten text ovanför rubriken' },
+    { key: 'title',     label: 'Rubrik',               type: 'text',     required: true },
+    { key: 'body',      label: 'Text',                 type: 'textarea' },
     { key: 'image',     label: 'Bild',                 type: 'image' },
-    { key: 'alt',       label: 'Bildbeskrivning',      type: 'text' },
+    { key: 'alt',       label: 'Alt-text',             type: 'text',     hint: 'Beskriv bilden för synskadade och sökmotorer' },
   ],
   'method-cards': [
-    { key: 'items',     label: 'Kort (3-kolumn)',       type: 'card-list' },
+    { key: 'items',     label: 'Kort',                 type: 'card-list' },
   ],
   'two-cards': [
-    { key: 'items',     label: 'Kort (2-kolumn)',       type: 'card-list' },
+    { key: 'items',     label: 'Kort',                 type: 'card-list' },
   ],
   'booking-grid': [
-    { key: 'id',        label: 'Ankar-ID (valfritt)',   type: 'text' },
-    { key: 'body',      label: 'Text (markdown)',       type: 'textarea', required: true },
+    { key: 'id',        label: 'Länk-ID',              type: 'text',     hint: 'Valfritt. Gör att man kan länka direkt hit, t.ex. /sida#bokning' },
+    { key: 'body',      label: 'Text',                 type: 'textarea', required: true },
   ],
   'contact-card': [
     { key: 'showConfidentiality', label: 'Visa tystnadsplikt-text', type: 'checkbox' },
   ],
   'inquiry-form': [
-    { key: 'id',                  label: 'Ankar-ID',                        type: 'text' },
-    { key: 'eyebrow',             label: 'Ögonbrynstext',                   type: 'text' },
-    { key: 'title',               label: 'Rubrik',                          type: 'text' },
-    { key: 'intro',               label: 'Inledande text',                  type: 'text' },
-    { key: 'area',                label: 'Område',                          type: 'select', options: ['hantverk','homeopati','coachning','general'] },
-    { key: 'subjectLabel',        label: 'Ämnets etikett',                  type: 'text' },
-    { key: 'messagePlaceholder',  label: 'Meddelandets platshållare',       type: 'text' },
-    { key: 'submitLabel',         label: 'Knapptext',                       type: 'text' },
+    { key: 'id',                  label: 'Länk-ID',                  type: 'text',   hint: 'Valfritt. Gör att man kan länka direkt till formuläret' },
+    { key: 'eyebrow',             label: 'Etikett',                  type: 'text',   hint: 'Liten text ovanför rubriken' },
+    { key: 'title',               label: 'Rubrik',                   type: 'text' },
+    { key: 'intro',               label: 'Inledande text',           type: 'text' },
+    { key: 'area',                label: 'Kategori',                 type: 'select', options: ['hantverk','homeopati','coachning','general'] },
+    { key: 'subjectLabel',        label: 'Ämnesfältets text',        type: 'text' },
+    { key: 'messagePlaceholder',  label: 'Meddelandefältets text',   type: 'text' },
+    { key: 'submitLabel',         label: 'Skicka-knappens text',     type: 'text' },
   ],
   'cta': [
-    { key: 'title',       label: 'Rubrik',         type: 'text', required: true },
-    { key: 'body',        label: 'Brödtext',       type: 'text' },
-    { key: 'buttonLabel', label: 'Knapptext',      type: 'text' },
-    { key: 'buttonHref',  label: 'Knappens länk',  type: 'text' },
+    { key: 'title',       label: 'Rubrik',             type: 'text',     required: true },
+    { key: 'body',        label: 'Text',               type: 'text' },
+    { key: 'buttonLabel', label: 'Knapp: text',        type: 'text' },
+    { key: 'buttonHref',  label: 'Knapp: länk',        type: 'text' },
   ],
   'quote': [
-    { key: 'quote',       label: 'Citat',          type: 'textarea', required: true },
-    { key: 'attribution', label: 'Av',             type: 'text' },
+    { key: 'quote',       label: 'Citat',              type: 'textarea', required: true },
+    { key: 'attribution', label: 'Källa',              type: 'text' },
   ],
   'info-card': [
-    { key: 'title',       label: 'Rubrik',         type: 'text', required: true },
-    { key: 'body',        label: 'Text',           type: 'textarea', required: true },
-    { key: 'tone',        label: 'Ton',            type: 'select', options: ['soft','warm'] },
+    { key: 'title',       label: 'Rubrik',             type: 'text',     required: true },
+    { key: 'body',        label: 'Text',               type: 'textarea', required: true },
+    { key: 'tone',        label: 'Färg',               type: 'select',   options: ['soft','warm'] },
+  ],
+  'testimonials': [
+    { key: 'eyebrow',    label: 'Etikett',             type: 'text',     hint: 'Liten text ovanför rubriken, t.ex. "Vad klienterna säger"' },
+    { key: 'title',      label: 'Rubrik',              type: 'text' },
+    { key: 'items',      label: 'Berättelser',         type: 'testimonial-list' },
+  ],
+  'newsletter-signup': [
+    { key: 'eyebrow',    label: 'Etikett',             type: 'text',     hint: 'T.ex. "Håll dig uppdaterad"' },
+    { key: 'title',      label: 'Rubrik',              type: 'text' },
+    { key: 'body',       label: 'Inledande text',      type: 'text',     hint: 'Kort beskrivning av vad prenumeranterna kan förvänta sig' },
   ],
 };
 
+// Grouped for the add-section dropdown
+const SECTION_GROUPS = [
+  { label: 'Topsektion',             types: ['hero-split','hero-overlay','hero-portrait'] },
+  { label: 'Innehåll',               types: ['page-header','text','gallery'] },
+  { label: 'Tjänster & presentation', types: ['services-grid','about-band','method-cards','two-cards'] },
+  { label: 'Kontakt',                types: ['booking-grid','contact-card','inquiry-form'] },
+  { label: 'Övrigt',                 types: ['cta','quote','info-card','testimonials','newsletter-signup'] },
+];
+
 const SECTION_LABELS = {
-  'hero-split':    'Hero — delad',
-  'hero-overlay':  'Hero — overlay',
-  'hero-portrait': 'Hero — porträtt',
-  'page-header':   'Sidrubriken',
-  'text':          'Textblock',
+  'hero-split':    'Topsektion — text + bild',
+  'hero-overlay':  'Topsektion — bild i bakgrunden',
+  'hero-portrait': 'Topsektion — porträtt',
+  'page-header':   'Sidrubrik',
+  'text':          'Text',
   'gallery':       'Galleri',
-  'services-grid': 'Tjänster (rutnät)',
-  'about-band':    'Om-band',
-  'method-cards':  'Metodkort (3-kol)',
-  'two-cards':     'Kort (2-kol)',
-  'booking-grid':  'Bokningsrutnät',
-  'contact-card':  'Kontaktkort',
-  'inquiry-form':  'Förfrågningsformulär',
-  'cta':           'CTA-block',
+  'services-grid': 'Tjänstekort',
+  'about-band':    'Text med bild',
+  'method-cards':  'Tre kort med ikon',
+  'two-cards':     'Två kort med ikon',
+  'booking-grid':  'Bokningsinformation',
+  'contact-card':  'Kontaktuppgifter',
+  'inquiry-form':  'Kontaktformulär',
+  'cta':           'Knapp-sektion (mörk)',
   'quote':         'Citat',
-  'info-card':     'Infokort',
+  'info-card':     'Informationsruta',
+  'testimonials':       'Klientberättelser',
+  'newsletter-signup':  'Nyhetsbrevsprenumeration',
 };
 
 /* ── State ────────────────────────────────────────────────────── */
 
 let cfg = {};
-let pageData = null;
-let pageSlug = '';
-let pageSha = '';
+let pageData   = null;
+let pageSlug   = '';
+let pageSha    = '';
+let dirty      = false;
 let openSections = new Set();
-let settingsTab = 'contact';
+let settingsTab  = 'contact';
 let settingsData = {};
+let knownPages   = []; // { slug, title } — cached for nav suggestions
 
 /* ── GitHub API ───────────────────────────────────────────────── */
 
@@ -342,6 +378,10 @@ async function putFile(filePath, content, message, sha) {
   const body = { message, content: b64Encode(content), branch: cfg.branch };
   if (sha) body.sha = sha;
   return apiReq('PUT', `/contents/${filePath}`, body);
+}
+
+async function deleteFile(filePath, sha, message) {
+  return apiReq('DELETE', `/contents/${filePath}`, { message, sha, branch: cfg.branch });
 }
 
 async function getPageFiles() {
@@ -378,11 +418,26 @@ function toast(msg, isError = false) {
   toastTimer = setTimeout(() => { el.className = ''; }, 3800);
 }
 
+/* ── Dirty tracking ───────────────────────────────────────────── */
+
+function markDirty() {
+  dirty = true;
+  const btn = document.getElementById('publish-btn');
+  if (btn) { btn.className = 'btn btn-primary btn-sm'; btn.textContent = 'Publicera'; }
+}
+
+function clearDirty() {
+  dirty = false;
+  const btn = document.getElementById('publish-btn');
+  if (btn) { btn.className = 'btn btn-ghost btn-sm'; btn.textContent = 'Publicerat ✓'; }
+}
+
+function guardDirty(then) {
+  if (!dirty || confirm('Du har osparade ändringar. Lämna ändå?')) then();
+}
+
 /* ── Image helpers ────────────────────────────────────────────── */
 
-// Converts a stored path like /images/foo.jpg to a displayable URL.
-// The file is a local file:// so relative /images paths won't load —
-// we point directly at GitHub's raw content CDN instead.
 function rawUrl(storedPath) {
   if (!storedPath) return '';
   const repoPath = 'public' + (storedPath.startsWith('/') ? storedPath : '/' + storedPath);
@@ -404,8 +459,6 @@ function bufferToBase64(buffer) {
 async function uploadImage(file) {
   const buffer = await file.arrayBuffer();
 
-  // 4-byte content hash → same image always gets the same filename,
-  // different images with the same filename get different filenames.
   const hashBuf = await crypto.subtle.digest('SHA-1', buffer);
   const hash = Array.from(new Uint8Array(hashBuf)).slice(0, 4)
     .map(b => b.toString(16).padStart(2, '0')).join('');
@@ -462,71 +515,76 @@ function loading(msg = 'Laddar…') {
 
 function makeHeader(left, center, right) {
   return h('header', { className: 'app-header' },
-    left  || h('span', {}),
+    left   || h('span', {}),
     center ? h('span', { className: 'header-title' }, center) : h('span', {}),
-    right || h('span', {}),
+    right  || h('span', {}),
   );
 }
 
-/* ── View: Setup ──────────────────────────────────────────────── */
+/* ── Slug helper ──────────────────────────────────────────────── */
 
-function showSetup() {
-  app().innerHTML = '';
+function toSlug(title) {
+  return title.toLowerCase()
+    .replace(/[åä]/g, 'a').replace(/ö/g, 'o')
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
 
-  const form = h('form', { className: 'card', style: 'display:flex;flex-direction:column;gap:1rem;max-width:28rem;margin:3rem auto;' });
 
-  form.append(h('h2', { style: 'margin-bottom:0.5rem' }, 'Välkommen, Marie'));
-  form.append(h('p', { className: 'text-muted', style: 'margin-bottom:0.5rem' }, 'Fyll i dina GitHub-uppgifter för att komma igång.'));
+/* ── Delete page ──────────────────────────────────────────────── */
 
-  const fields = [
-    { name: 'pat',    label: 'GitHub Personal Access Token', type: 'password' },
-    { name: 'owner',  label: 'Repo-ägare (t.ex. emesan)',    type: 'text' },
-    { name: 'repo',   label: 'Repo-namn (t.ex. marie-uhrbom)', type: 'text' },
-    { name: 'branch', label: 'Branch (standard: main)',      type: 'text', placeholder: 'main' },
-  ];
+async function deletePage(p) {
+  if (!confirm(`Ta bort sidan "${p.title}" (/${p.slug})?\n\nDetta går inte att ångra.`)) return;
+  loading('Tar bort sida…');
+  try {
+    await deleteFile(p.filePath, p.sha, `Tar bort sida: ${p.slug}`);
 
-  fields.forEach(f => {
-    const inp = h('input', { type: f.type, name: f.name, placeholder: f.placeholder || '', value: cfg[f.name] || '' });
-    if (f.name !== 'branch') inp.required = true;
-    form.append(h('div', { className: 'field' }, h('label', {}, f.label), inp));
-  });
+    // Best-effort: remove from navigation
+    try {
+      const nf  = await getFile('src/content/settings/navigation.json');
+      const nav = JSON.parse(b64Decode(nf.content));
+      const href = '/' + p.slug;
+      let changed = false;
+      ['header', 'footer'].forEach(key => {
+        if (!nav[key]) return;
+        const before = nav[key].length;
+        nav[key] = nav[key].filter(item => item.href !== href);
+        if (nav[key].length !== before) changed = true;
+      });
+      if (changed) {
+        await putFile('src/content/settings/navigation.json', JSON.stringify(nav, null, 2), `Tar bort ${p.slug} från navigation`, nf.sha);
+      }
+    } catch { /* navigation update is best-effort */ }
 
-  const submitBtn = h('button', { type: 'submit', className: 'btn btn-primary', style: 'margin-top:0.25rem' }, 'Spara & fortsätt');
-  form.append(submitBtn);
-
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    const fd = new FormData(e.target);
-    cfg = {
-      pat:    fd.get('pat').trim(),
-      owner:  fd.get('owner').trim(),
-      repo:   fd.get('repo').trim(),
-      branch: fd.get('branch').trim() || 'main',
-    };
-    localStorage.setItem('marie-admin-cfg', JSON.stringify(cfg));
+    toast(`"${p.title}" togs bort.`);
     loadPageList();
-  });
-
-  const main = h('div', { className: 'main' }, form);
-  app().append(main);
+  } catch (err) {
+    toast('Fel vid borttagning: ' + err.message, true);
+    loadPageList();
+  }
 }
 
 /* ── View: Page List ──────────────────────────────────────────── */
 
 async function loadPageList() {
   loading('Laddar sidor…');
+  dirty = false;
   try {
     const files = await getPageFiles();
     const pages = await Promise.all(files.map(async filePath => {
       const slug = filePath.replace('src/content/pages/', '').replace('.json', '');
       const file = await getFile(filePath);
       const data = JSON.parse(b64Decode(file.content));
-      return { slug, title: data.meta?.title || slug, filePath };
+      return { slug, title: data.meta?.title || slug, filePath, sha: file.sha };
     }));
+    knownPages = pages.map(p => ({ slug: p.slug, title: p.title }));
     showPageList(pages);
   } catch (err) {
-    toast('Kunne ikke hämta sidor: ' + err.message, true);
-    showSetup();
+    toast('Kunde inte hämta sidor: ' + err.message, true);
+    settingsTab = 'konfiguration';
+    loadSettings();
   }
 }
 
@@ -536,20 +594,21 @@ function showPageList(pages) {
   const header = makeHeader(
     null,
     'Marie Uhrbom — Admin',
-    h('div', { className: 'flex gap-2' },
-      h('button', { className: 'btn btn-ghost btn-sm', onClick: loadSettings }, 'Inställningar'),
-      h('button', { className: 'btn btn-ghost btn-sm', onClick: () => { localStorage.removeItem('marie-admin-cfg'); cfg = {}; showSetup(); } }, 'Logga ut'),
-    ),
+    h('button', { className: 'btn btn-ghost btn-sm', onClick: loadSettings }, 'Inställningar'),
   );
 
   const list = h('div', {});
   pages.forEach(p => {
+    const isHome = p.slug === 'hem';
     list.append(h('div', { className: 'page-item' },
       h('div', {},
         h('div', { style: 'font-weight:500' }, p.title),
         h('div', { className: 'text-muted' }, '/' + p.slug),
       ),
-      h('button', { className: 'btn btn-primary btn-sm', onClick: () => loadEditor(p.slug, p.filePath) }, 'Redigera'),
+      h('div', { className: 'flex gap-2' },
+        !isHome && h('button', { className: 'btn btn-ghost btn-sm', style: 'color:var(--destructive)', onClick: () => deletePage(p) }, 'Ta bort'),
+        h('button', { className: 'btn btn-primary btn-sm', onClick: () => loadEditor(p.slug, p.filePath) }, 'Redigera'),
+      ),
     ));
   });
 
@@ -569,10 +628,11 @@ function showPageList(pages) {
 async function loadEditor(slug, filePath) {
   loading('Laddar sida…');
   pageSlug = slug;
+  dirty = false;
   try {
     const file = await getFile(filePath || `src/content/pages/${slug}.json`);
     pageData = JSON.parse(b64Decode(file.content));
-    pageSha = file.sha;
+    pageSha  = file.sha;
     openSections = new Set();
     showEditor();
   } catch (err) {
@@ -584,10 +644,10 @@ async function loadEditor(slug, filePath) {
 function showEditor() {
   app().innerHTML = '';
 
-  const publishBtn = h('button', { className: 'btn btn-primary btn-sm', onClick: publishPage }, 'Publicera');
+  const publishBtn = h('button', { id: 'publish-btn', className: 'btn btn-ghost btn-sm', onClick: publishPage }, 'Publicerat ✓');
 
   const header = makeHeader(
-    h('button', { className: 'back-btn', onClick: loadPageList }, '← Sidor'),
+    h('button', { className: 'back-btn', onClick: () => guardDirty(loadPageList) }, '← Sidor'),
     pageData.meta?.title || pageSlug,
     publishBtn,
   );
@@ -595,11 +655,11 @@ function showEditor() {
   const metaCard = h('div', { className: 'card', style: 'display:flex;flex-direction:column;gap:0.875rem;margin-bottom:1.5rem' },
     h('div', { className: 'field' },
       h('label', {}, 'Sidtitel'),
-      h('input', { type: 'text', value: pageData.meta?.title || '', onInput: e => { pageData.meta = pageData.meta || {}; pageData.meta.title = e.target.value; } }),
+      h('input', { type: 'text', value: pageData.meta?.title || '', onInput: e => { pageData.meta = pageData.meta || {}; pageData.meta.title = e.target.value; markDirty(); } }),
     ),
     h('div', { className: 'field' },
       h('label', {}, 'Meta-beskrivning (SEO)'),
-      h('input', { type: 'text', value: pageData.meta?.description || '', onInput: e => { pageData.meta = pageData.meta || {}; pageData.meta.description = e.target.value; } }),
+      h('input', { type: 'text', value: pageData.meta?.description || '', onInput: e => { pageData.meta = pageData.meta || {}; pageData.meta.description = e.target.value; markDirty(); } }),
     ),
   );
 
@@ -645,6 +705,11 @@ function makeSectionBlock(sec, i, total, listEl) {
     if (!confirm(`Ta bort "${label}"?`)) return;
     pageData.sections.splice(i, 1);
     openSections.delete(i);
+    // shift down all open indices above i
+    const shifted = new Set();
+    openSections.forEach(n => shifted.add(n > i ? n - 1 : n));
+    openSections = shifted;
+    markDirty();
     rebuildSectionList(listEl);
   }}, 'Radera');
 
@@ -662,7 +727,7 @@ function makeSectionBlock(sec, i, total, listEl) {
 
   if (isOpen) {
     const body = h('div', { className: 'section-body' });
-    schema.forEach(field => body.append(makeField(field, sec[field.key], val => { sec[field.key] = val; })));
+    schema.forEach(field => body.append(makeField(field, sec[field.key], val => { sec[field.key] = val; markDirty(); })));
     block.append(body);
   }
 
@@ -671,24 +736,37 @@ function makeSectionBlock(sec, i, total, listEl) {
 
 function swap(a, b) {
   [pageData.sections[a], pageData.sections[b]] = [pageData.sections[b], pageData.sections[a]];
-  openSections = new Set();
+  // carry open state with the moved sections
+  const aOpen = openSections.has(a);
+  const bOpen = openSections.has(b);
+  openSections.delete(a); openSections.delete(b);
+  if (aOpen) openSections.add(b);
+  if (bOpen) openSections.add(a);
+  markDirty();
 }
 
 function makeAddSectionBar(listEl) {
-  const sel = h('select', {},
-    h('option', { value: '' }, '— Välj sektionstyp —'),
-    ...Object.entries(SECTION_LABELS).map(([k, v]) => h('option', { value: k }, v)),
-  );
+  const sel = document.createElement('select');
+  sel.append(h('option', { value: '' }, '— Välj sektionstyp —'));
+  SECTION_GROUPS.forEach(group => {
+    const grp = document.createElement('optgroup');
+    grp.label = group.label;
+    group.types.forEach(type => {
+      grp.append(h('option', { value: type }, SECTION_LABELS[type] || type));
+    });
+    sel.append(grp);
+  });
 
   const addBtn = h('button', { className: 'btn btn-secondary', onClick: () => {
     if (!sel.value) return;
     pageData.sections = pageData.sections || [];
     pageData.sections.push({ type: sel.value });
     openSections.add(pageData.sections.length - 1);
+    markDirty();
     sel.value = '';
     rebuildSectionList(listEl);
     listEl.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }}, '+ Lägg till');
+  }}, '+ Lägg till sektion');
 
   return h('div', { className: 'add-row', style: 'margin-top:1rem' }, sel, addBtn);
 }
@@ -711,6 +789,7 @@ function makeField(field, value, onChange) {
   switch (field.type) {
     case 'text': {
       wrap.append(h('input', { type: 'text', value: value || '', onInput: e => onChange(e.target.value) }));
+      if (field.hint) wrap.append(h('span', { className: 'hint' }, field.hint));
       break;
     }
     case 'textarea': {
@@ -746,6 +825,10 @@ function makeField(field, value, onChange) {
       wrap.append(makeServiceList(value || [], onChange));
       break;
     }
+    case 'testimonial-list': {
+      wrap.append(makeTestimonialList(value || [], onChange));
+      break;
+    }
   }
 
   return wrap;
@@ -763,7 +846,7 @@ function makeImageField(value, onChange) {
   fileInput.accept = 'image/*';
   fileInput.style.display = 'none';
 
-  const uploadBtn = h('button', { className: 'btn btn-ghost btn-sm', onClick: () => fileInput.click() }, 'Välj bild');
+  const uploadBtn = h('button', { className: 'btn btn-ghost btn-sm', onClick: () => fileInput.click() }, value ? 'Byt bild' : 'Välj bild');
 
   fileInput.addEventListener('change', async e => {
     const file = e.target.files[0];
@@ -776,12 +859,13 @@ function makeImageField(value, onChange) {
       const newThumb = h('img', { src: rawUrl(url), className: 'image-thumb', alt: '' });
       wrap.replaceChild(newThumb, thumb);
       thumb = newThumb;
+      uploadBtn.textContent = 'Byt bild';
       toast('Bilden laddades upp!');
     } catch (err) {
       toast('Uppladdning misslyckades: ' + err.message, true);
+      uploadBtn.textContent = value ? 'Byt bild' : 'Välj bild';
     } finally {
       uploadBtn.disabled = false;
-      uploadBtn.textContent = 'Byt bild';
     }
   });
 
@@ -906,10 +990,35 @@ function makeServiceList(items, onChange) {
   return container;
 }
 
+function makeTestimonialList(items, onChange) {
+  const container = h('div', {});
+  const list = [...items];
+
+  const rerender = () => {
+    container.innerHTML = '';
+    list.forEach((item, idx) => {
+      const quoteTa = document.createElement('textarea');
+      quoteTa.rows = 3; quoteTa.placeholder = 'Citat från klienten'; quoteTa.value = item.quote || '';
+      quoteTa.addEventListener('input', e => { list[idx].quote = e.target.value; onChange([...list]); });
+      const attrInp = h('input', { type: 'text', placeholder: 'Namn eller "Klient, Homeopati"', value: item.attribution || '', onInput: e => { list[idx].attribution = e.target.value; onChange([...list]); } });
+      const delBtn = h('button', { className: 'btn btn-ghost btn-sm', style: 'color:var(--destructive)', onClick: () => { list.splice(idx, 1); onChange([...list]); rerender(); } }, '×');
+
+      container.append(h('div', { className: 'list-row' },
+        h('div', { className: 'list-row-fields' }, quoteTa, attrInp),
+        delBtn,
+      ));
+    });
+    container.append(h('button', { className: 'btn btn-ghost btn-sm', style: 'margin-top:0.375rem', onClick: () => { list.push({ quote: '', attribution: '' }); onChange([...list]); rerender(); } }, '+ Lägg till berättelse'));
+  };
+
+  rerender();
+  return container;
+}
+
 /* ── Publish ──────────────────────────────────────────────────── */
 
 async function publishPage() {
-  const btn = app().querySelector('header .btn-primary');
+  const btn = document.getElementById('publish-btn');
   if (!btn) return;
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>';
@@ -918,12 +1027,13 @@ async function publishPage() {
     const filePath = `src/content/pages/${pageSlug}.json`;
     const res = await putFile(filePath, json, `Uppdaterar ${pageSlug}`, pageSha);
     pageSha = res.content.sha;
+    clearDirty();
     toast('Publicerat! Sidan är live om ~2 minuter.');
   } catch (err) {
     toast('Fel vid publicering: ' + err.message, true);
+    markDirty();
   } finally {
     btn.disabled = false;
-    btn.textContent = 'Publicera';
   }
 }
 
@@ -938,15 +1048,19 @@ function showNewPage() {
     null,
   );
 
-  const form = h('div', { className: 'card', style: 'display:flex;flex-direction:column;gap:1rem' });
-
-  const slugInp = h('input', { type: 'text', placeholder: 'om-marie', pattern: '[a-z0-9-]+', required: true });
+  const slugInp  = h('input', { type: 'text', placeholder: 'om-marie', pattern: '[a-z0-9-]+', required: true });
   const titleInp = h('input', { type: 'text', required: true });
   const descInp  = h('input', { type: 'text' });
 
-  form.append(
-    h('div', { className: 'field' }, h('label', {}, 'Slug (URL-del) *'), slugInp, h('span', { className: 'hint' }, 'Gemener, siffror och bindestreck. T.ex. "om-marie"')),
+  let slugEdited = false;
+  slugInp.addEventListener('input', () => { slugEdited = true; });
+  titleInp.addEventListener('input', () => {
+    if (!slugEdited) slugInp.value = toSlug(titleInp.value);
+  });
+
+  const form = h('div', { className: 'card', style: 'display:flex;flex-direction:column;gap:1rem' },
     h('div', { className: 'field' }, h('label', {}, 'Sidtitel *'), titleInp),
+    h('div', { className: 'field' }, h('label', {}, 'Slug (URL-del) *'), slugInp, h('span', { className: 'hint' }, 'Genereras automatiskt — ändra vid behov. Gemener, siffror och bindestreck.')),
     h('div', { className: 'field' }, h('label', {}, 'Meta-beskrivning (SEO)'), descInp),
   );
 
@@ -954,7 +1068,7 @@ function showNewPage() {
   form.append(createBtn);
 
   createBtn.addEventListener('click', async () => {
-    const slug = slugInp.value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
+    const slug  = slugInp.value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
     const title = titleInp.value.trim();
     if (!slug || !title) { toast('Slug och sidtitel krävs.', true); return; }
 
@@ -964,8 +1078,8 @@ function showNewPage() {
       const data = { meta: { slug, title, description: descInp.value.trim() }, sections: [] };
       const filePath = `src/content/pages/${slug}.json`;
       await putFile(filePath, JSON.stringify(data, null, 2), `Skapar sida: ${slug}`, null);
-      toast('Sida skapad!');
-      await loadEditor(slug, filePath);
+      knownPages.push({ slug, title });
+      showNavStep(slug, title, filePath);
     } catch (err) {
       toast('Fel: ' + err.message, true);
       createBtn.disabled = false;
@@ -973,13 +1087,82 @@ function showNewPage() {
     }
   });
 
-  const main = h('div', { className: 'main' }, form);
-  app().append(header, main);
+  app().append(header, h('div', { className: 'main' }, form));
+}
+
+/* ── View: Nav step (after page create) ───────────────────────── */
+
+function showNavStep(slug, title, filePath) {
+  app().innerHTML = '';
+
+  const header = makeHeader(null, 'Sidan skapades', null);
+
+  // State for this step
+  const addToHeader = { checked: true, label: title };
+  const addToFooter = { checked: false, label: title };
+
+  const makeNavOption = (label, state) => {
+    const id = 'nav-' + Math.random().toString(36).slice(2);
+    const cb = h('input', { type: 'checkbox', id, checked: state.checked });
+    cb.addEventListener('change', e => { state.checked = e.target.checked; labelInp.disabled = !e.target.checked; });
+    const labelInp = h('input', { type: 'text', value: state.label, placeholder: 'Menytext', style: 'flex:1', onInput: e => { state.label = e.target.value; } });
+
+    return h('div', { className: 'nav-step-option' },
+      h('div', { className: 'nav-step-row' },
+        h('input', { type: 'checkbox', id, checked: state.checked, onChange: e => { state.checked = e.target.checked; labelInp.disabled = !e.target.checked; } }),
+        h('label', { htmlFor: id, style: 'font-weight:500;cursor:pointer' }, label),
+      ),
+      h('div', { className: 'nav-step-row', style: 'padding-left:1.5rem' },
+        h('span', { style: 'font-size:0.8125rem;color:var(--muted-fg);white-space:nowrap' }, 'Menytext'),
+        labelInp,
+      ),
+    );
+  };
+
+  const skipBtn = h('button', { className: 'btn btn-ghost', onClick: () => loadEditor(slug, filePath) }, 'Hoppa över');
+
+  const addBtn = h('button', { className: 'btn btn-primary', onClick: async () => {
+    if (!addToHeader.checked && !addToFooter.checked) {
+      loadEditor(slug, filePath);
+      return;
+    }
+    addBtn.disabled = true;
+    addBtn.innerHTML = '<span class="spinner"></span>';
+    try {
+      const nf = await getFile('src/content/settings/navigation.json');
+      const nav = JSON.parse(b64Decode(nf.content));
+      if (addToHeader.checked) (nav.header = nav.header || []).push({ label: addToHeader.label, href: '/' + slug });
+      if (addToFooter.checked) (nav.footer = nav.footer || []).push({ label: addToFooter.label, href: '/' + slug });
+      await putFile('src/content/settings/navigation.json', JSON.stringify(nav, null, 2), `Lägger till ${slug} i navigation`, nf.sha);
+      toast('Sidan och menyn uppdaterade!');
+    } catch (err) {
+      toast('Menyn kunde inte uppdateras: ' + err.message, true);
+    }
+    loadEditor(slug, filePath);
+  }}, 'Lägg till & öppna sida');
+
+  const card = h('div', { className: 'card', style: 'display:flex;flex-direction:column;gap:1.25rem' },
+    h('div', { className: 'card-success' },
+      h('div', { style: 'font-size:1.75rem;margin-bottom:0.375rem' }, '✓'),
+      h('div', { style: 'font-weight:500;font-size:1rem' }, `"${title}" skapades`),
+    ),
+    h('p', { style: 'font-size:0.9375rem;color:var(--muted-fg)' }, 'Vill du lägga till sidan i menyn?'),
+    makeNavOption('Topmeny', addToHeader),
+    makeNavOption('Fotmeny', addToFooter),
+    h('div', { style: 'display:flex;gap:0.75rem;justify-content:flex-end;padding-top:0.25rem' }, skipBtn, addBtn),
+  );
+
+  app().append(header, h('div', { className: 'main' }, card));
 }
 
 /* ── View: Settings ───────────────────────────────────────────── */
 
 async function loadSettings() {
+  // Konfiguration-fliken behöver inga GitHub-filer — visa den direkt utan att ladda
+  if (settingsTab === 'konfiguration' || !cfg.pat) {
+    showSettings();
+    return;
+  }
   loading('Laddar inställningar…');
   try {
     const [cf, nf, bf] = await Promise.all([
@@ -1012,18 +1195,41 @@ function showSettings() {
   const content = h('div', {});
 
   const TABS = [
-    { id: 'contact',    label: 'Kontakt' },
-    { id: 'navigation', label: 'Navigation' },
-    { id: 'banner',     label: 'Banner' },
+    { id: 'contact',       label: 'Kontakt' },
+    { id: 'navigation',    label: 'Navigation' },
+    { id: 'banner',        label: 'Banner' },
+    { id: 'konfiguration', label: 'Konfiguration' },
   ];
 
-  const switchTab = id => {
+  const switchTab = async id => {
+    // Ladda settings-filer om vi byter till en flik som behöver dem och de saknas
+    if (id !== 'konfiguration' && !settingsData.contact) {
+      loading('Laddar inställningar…');
+      try {
+        const [cf, nf, bf] = await Promise.all([
+          getFile('src/content/settings/contact.json'),
+          getFile('src/content/settings/navigation.json'),
+          getFile('src/content/settings/banner.json'),
+        ]);
+        settingsData = {
+          contact:    { data: JSON.parse(b64Decode(cf.content)), sha: cf.sha },
+          navigation: { data: JSON.parse(b64Decode(nf.content)), sha: nf.sha },
+          banner:     { data: JSON.parse(b64Decode(bf.content)), sha: bf.sha },
+        };
+        showSettings();
+        return;
+      } catch (err) {
+        toast('Fel: ' + err.message, true);
+        return;
+      }
+    }
     settingsTab = id;
     tabBar.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
     content.innerHTML = '';
-    if (id === 'contact')    content.append(makeContactTab());
-    if (id === 'navigation') content.append(makeNavTab());
-    if (id === 'banner')     content.append(makeBannerTab());
+    if (id === 'contact')       content.append(makeContactTab());
+    if (id === 'navigation')    content.append(makeNavTab());
+    if (id === 'banner')        content.append(makeBannerTab());
+    if (id === 'konfiguration') content.append(makeConfigTab());
   };
 
   TABS.forEach(t => {
@@ -1034,8 +1240,7 @@ function showSettings() {
 
   switchTab(settingsTab);
 
-  const main = h('div', { className: 'main' }, tabBar, content);
-  app().append(header, main);
+  app().append(header, h('div', { className: 'main' }, tabBar, content));
 }
 
 function makeContactTab() {
@@ -1061,8 +1266,10 @@ function makeContactTab() {
       const res = await putFile('src/content/settings/contact.json', JSON.stringify(d, null, 2), 'Uppdaterar kontaktuppgifter', settingsData.contact.sha);
       settingsData.contact.sha = res.content.sha;
       toast('Kontaktuppgifter sparade!');
-    } catch (err) { toast('Fel: ' + err.message, true); }
-    finally { saveBtn.disabled = false; saveBtn.textContent = 'Spara'; }
+      saveBtn.textContent = '✓ Sparat';
+      setTimeout(() => { if (saveBtn.isConnected) saveBtn.textContent = 'Spara'; }, 2000);
+    } catch (err) { toast('Fel: ' + err.message, true); saveBtn.textContent = 'Spara'; }
+    finally { saveBtn.disabled = false; }
   }}, 'Spara');
 
   card.append(saveBtn);
@@ -1072,17 +1279,23 @@ function makeContactTab() {
 function makeNavTab() {
   const d = settingsData.navigation.data;
 
+  // datalist of known pages for href suggestions
+  const listId = 'page-suggestions';
+  const datalist = h('datalist', { id: listId });
+  knownPages.forEach(p => datalist.append(h('option', { value: '/' + p.slug }, p.title)));
+
   const makeNavSection = (key, heading) => {
     const items = d[key] = d[key] || [];
-    const wrap = h('div', {});
+    const wrap  = h('div', {});
 
     const rerender = () => {
       wrap.innerHTML = '';
       wrap.append(h('p', { className: 'section-meta-label', style: 'margin-bottom:0.625rem' }, heading));
       items.forEach((item, idx) => {
+        const hrefInp = h('input', { type: 'text', placeholder: '/sida', value: item.href || '', list: listId, style: 'flex:1', onInput: e => { items[idx].href = e.target.value; } });
         wrap.append(h('div', { className: 'nav-row' },
-          h('input', { type: 'text', placeholder: 'Text', value: item.label || '', style: 'flex:1', onInput: e => { items[idx].label = e.target.value; } }),
-          h('input', { type: 'text', placeholder: 'URL', value: item.href || '', style: 'flex:1', onInput: e => { items[idx].href = e.target.value; } }),
+          h('input', { type: 'text', placeholder: 'Menytext', value: item.label || '', style: 'flex:1', onInput: e => { items[idx].label = e.target.value; } }),
+          hrefInp,
           h('button', { className: 'btn btn-ghost btn-sm', style: 'color:var(--destructive)', onClick: () => { items.splice(idx, 1); rerender(); } }, '×'),
         ));
       });
@@ -1094,6 +1307,7 @@ function makeNavTab() {
   };
 
   const card = h('div', { className: 'card', style: 'display:flex;flex-direction:column;gap:1.25rem' },
+    datalist,
     makeNavSection('header', 'Topmeny'),
     h('div', { className: 'divider', style: 'margin:0' }),
     makeNavSection('footer', 'Fotmeny'),
@@ -1106,8 +1320,10 @@ function makeNavTab() {
       const res = await putFile('src/content/settings/navigation.json', JSON.stringify(d, null, 2), 'Uppdaterar navigation', settingsData.navigation.sha);
       settingsData.navigation.sha = res.content.sha;
       toast('Navigation sparad!');
-    } catch (err) { toast('Fel: ' + err.message, true); }
-    finally { saveBtn.disabled = false; saveBtn.textContent = 'Spara'; }
+      saveBtn.textContent = '✓ Sparat';
+      setTimeout(() => { if (saveBtn.isConnected) saveBtn.textContent = 'Spara'; }, 2000);
+    } catch (err) { toast('Fel: ' + err.message, true); saveBtn.textContent = 'Spara'; }
+    finally { saveBtn.disabled = false; }
   }}, 'Spara');
 
   return h('div', {}, card, saveBtn);
@@ -1140,8 +1356,51 @@ function makeBannerTab() {
       const res = await putFile('src/content/settings/banner.json', JSON.stringify(d, null, 2), 'Uppdaterar banner', settingsData.banner.sha);
       settingsData.banner.sha = res.content.sha;
       toast('Banner sparad!');
-    } catch (err) { toast('Fel: ' + err.message, true); }
-    finally { saveBtn.disabled = false; saveBtn.textContent = 'Spara'; }
+      saveBtn.textContent = '✓ Sparat';
+      setTimeout(() => { if (saveBtn.isConnected) saveBtn.textContent = 'Spara'; }, 2000);
+    } catch (err) { toast('Fel: ' + err.message, true); saveBtn.textContent = 'Spara'; }
+    finally { saveBtn.disabled = false; }
+  }}, 'Spara');
+
+  card.append(saveBtn);
+  return card;
+}
+
+function makeConfigTab() {
+  const card = h('div', { className: 'card', style: 'display:flex;flex-direction:column;gap:1rem' });
+
+  card.append(h('p', { className: 'text-muted', style: 'font-size:0.875rem' }, 'Dessa uppgifter behövs för att admin-verktyget ska kunna spara ändringar till webbplatsen. Kontakta din webbutvecklare om du är osäker.'));
+
+  const fields = [
+    { name: 'pat',   label: 'GitHub Access Token', type: 'password', hint: 'Hemlig nyckel som ger åtkomst till webbplatsen' },
+    { name: 'owner', label: 'GitHub-konto',         type: 'text',     hint: 'T.ex. emesan' },
+    { name: 'repo',  label: 'Repo-namn',            type: 'text',     hint: 'T.ex. marie-uhrbom' },
+  ];
+
+  const inputs = {};
+  fields.forEach(f => {
+    const inp = h('input', { type: f.type, value: cfg[f.name] || '', placeholder: f.hint });
+    inputs[f.name] = inp;
+    card.append(h('div', { className: 'field' },
+      h('label', {}, f.label),
+      inp,
+      h('span', { className: 'hint' }, f.hint),
+    ));
+  });
+
+  const saveBtn = h('button', { className: 'btn btn-primary', style: 'margin-top:0.25rem', onClick: () => {
+    const pat   = inputs.pat.value.trim();
+    const owner = inputs.owner.value.trim();
+    const repo  = inputs.repo.value.trim();
+    if (!pat || !owner || !repo) { toast('Alla fält måste fyllas i.', true); return; }
+    cfg = { pat, owner, repo, branch: 'main' };
+    localStorage.setItem('marie-admin-cfg', JSON.stringify(cfg));
+    toast('Konfiguration sparad!');
+    saveBtn.textContent = '✓ Sparat';
+    setTimeout(() => {
+      if (saveBtn.isConnected) saveBtn.textContent = 'Spara';
+      loadPageList();
+    }, 800);
   }}, 'Spara');
 
   card.append(saveBtn);
@@ -1159,7 +1418,8 @@ function init() {
   if (cfg.pat && cfg.owner && cfg.repo) {
     loadPageList();
   } else {
-    showSetup();
+    settingsTab = 'konfiguration';
+    loadSettings();
   }
 }
 

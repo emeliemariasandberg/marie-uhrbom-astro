@@ -37,6 +37,12 @@
       "attribution": "Marie Uhrbom"
     },
     {
+      "type": "info-card",
+      "title": "Pris",
+      "body": "**600 kr / 60 minuter** (inklusive moms)\n\nDet inledande samtalet är kostnadsfritt och utan förpliktelse — ett tillfälle att berätta om vad du söker och se om vi passar ihop.",
+      "tone": "soft"
+    },
+    {
       "type": "inquiry-form",
       "id": "boka",
       "eyebrow": "Ta första steget",
