@@ -270,7 +270,7 @@ const SECTION_SCHEMA = {
     { key: 'layout',    label: 'Layout',               type: 'select',   options: [{ value: 'split', label: 'Delad — text + bild' }, { value: 'centered', label: 'Centrerad — rubriksida (ersätter Sidrubrik)' }], hint: 'Centrerad visar innehållet mitt på sidan utan bildkolumn.' },
     { key: 'eyebrow',   label: 'Etikett',              type: 'text',     hint: 'Liten text ovanför rubriken, t.ex. "Välkommen"' },
     { key: 'title',     label: 'Rubrik',               type: 'text',     required: true },
-    { key: 'subtitle',  label: 'Underrubrik',          type: 'text' },
+    { key: 'subtitle',  label: 'Underrubrik',          type: 'textarea' },
     { key: 'image',     label: 'Bild (höger sida)',    type: 'image',    hint: 'Visas ej i centrerat läge' },
     { key: 'alt',       label: 'Alt-text',             type: 'text',     hint: 'Beskriv bilden för synskadade och sökmotorer' },
     { key: 'bgImage',   label: 'Bakgrundsbild (tonad)', type: 'image',   hint: 'Valfri. Bilden tonas in bakom sektionen — texten syns tydligt tack vare en gradient.' },
@@ -283,7 +283,7 @@ const SECTION_SCHEMA = {
   'hero-overlay': [
     { key: 'eyebrow',   label: 'Etikett',              type: 'text',     hint: 'Liten text ovanför rubriken' },
     { key: 'title',     label: 'Rubrik',               type: 'text',     required: true },
-    { key: 'subtitle',  label: 'Underrubrik',          type: 'text' },
+    { key: 'subtitle',  label: 'Underrubrik',          type: 'textarea' },
     { key: 'image',     label: 'Bakgrundsbild',        type: 'image' },
     { key: 'alt',       label: 'Alt-text',             type: 'text',     hint: 'Beskriv bilden för synskadade och sökmotorer' },
     { key: 'cta1Label', label: 'Knapp 1: text',        type: 'text' },
@@ -294,7 +294,7 @@ const SECTION_SCHEMA = {
   'page-header': [
     { key: 'eyebrow',   label: 'Etikett',              type: 'text',     hint: 'Liten text ovanför rubriken' },
     { key: 'title',     label: 'Rubrik',               type: 'text',     required: true },
-    { key: 'subtitle',  label: 'Underrubrik',          type: 'text' },
+    { key: 'subtitle',  label: 'Underrubrik',          type: 'textarea' },
   ],
   'text': [
     { key: 'title',     label: 'Rubrik',               type: 'text' },
@@ -309,7 +309,7 @@ const SECTION_SCHEMA = {
   'services-grid': [
     { key: 'eyebrow',   label: 'Etikett',              type: 'text',     hint: 'Liten text ovanför rubriken' },
     { key: 'title',     label: 'Rubrik',               type: 'text' },
-    { key: 'subtitle',  label: 'Underrubrik',          type: 'text' },
+    { key: 'subtitle',  label: 'Underrubrik',          type: 'textarea' },
     { key: 'items',     label: 'Kort',                 type: 'service-list' },
   ],
   'about-band': [
@@ -336,14 +336,14 @@ const SECTION_SCHEMA = {
     { key: 'id',                  label: 'Länk-ID',                  type: 'text',     hint: 'Valfritt. Gör att man kan länka direkt till formuläret' },
     { key: 'eyebrow',             label: 'Etikett',                  type: 'text',     hint: 'Liten text ovanför rubriken' },
     { key: 'title',               label: 'Rubrik',                   type: 'text' },
-    { key: 'intro',               label: 'Inledande text',           type: 'text' },
+    { key: 'intro',               label: 'Inledande text',           type: 'textarea' },
     { key: 'area',                label: 'Kategori',                 type: 'select',   options: [{ value: 'hantverk', label: 'Hantverk' }, { value: 'homeopati', label: 'Homeopati' }, { value: 'coachning', label: 'Coaching / Vägledning' }, { value: 'general', label: 'Allmänt' }] },
     { key: 'showSubject',         label: 'Visa ämnesfält',           type: 'checkbox', hint: 'Bocka ur för att dölja ämnesfältet' },
     { key: 'nameLabel',           label: 'Namn-fältets etikett',     type: 'text',     hint: 'Standard: "Namn"' },
     { key: 'emailLabel',          label: 'E-post-fältets etikett',   type: 'text',     hint: 'Standard: "E-post"' },
     { key: 'subjectLabel',        label: 'Ämne-fältets etikett',     type: 'text',     hint: 'Standard: "Ämne"' },
     { key: 'messageLabel',        label: 'Meddelande-fältets etikett', type: 'text',   hint: 'Standard: "Meddelande"' },
-    { key: 'messagePlaceholder',  label: 'Meddelandefältets platshållartext', type: 'text' },
+    { key: 'messagePlaceholder',  label: 'Meddelandefältets platshållartext', type: 'textarea' },
     { key: 'submitLabel',         label: 'Skicka-knappens text',     type: 'text',     hint: 'Standard: "Skicka"' },
     { key: 'gdprText',            label: 'GDPR-samtyckestext',       type: 'textarea', hint: 'Lämna tomt för standardtext' },
     { key: 'successText',         label: 'Bekräftelsemeddelande',    type: 'text',     hint: 'Visas när formuläret skickats' },
@@ -351,7 +351,7 @@ const SECTION_SCHEMA = {
   ],
   'cta': [
     { key: 'title',       label: 'Rubrik',             type: 'text',     required: true },
-    { key: 'body',        label: 'Text',               type: 'text' },
+    { key: 'body',        label: 'Text',               type: 'textarea' },
     { key: 'theme',       label: 'Färgtema',           type: 'select',   options: [{ value: 'dark', label: 'Mörk (läderbrunt)' }, { value: 'light', label: 'Ljus (neutral)' }, { value: 'sage', label: 'Grön (skogsgrön)' }], hint: 'Välj bakgrundsfärg för sektionen' },
     { key: 'align',       label: 'Textjustering',      type: 'select',   options: [{ value: 'center', label: 'Centrerad' }, { value: 'left', label: 'Vänsterjusterad' }] },
     { key: 'buttonLabel', label: 'Knapp 1: text',      type: 'text' },
@@ -377,7 +377,7 @@ const SECTION_SCHEMA = {
   'newsletter-signup': [
     { key: 'eyebrow',    label: 'Etikett',             type: 'text',     hint: 'T.ex. "Håll dig uppdaterad"' },
     { key: 'title',      label: 'Rubrik',              type: 'text' },
-    { key: 'body',       label: 'Inledande text',      type: 'text',     hint: 'Kort beskrivning av vad prenumeranterna kan förvänta sig' },
+    { key: 'body',       label: 'Inledande text',      type: 'textarea', hint: 'Kort beskrivning av vad prenumeranterna kan förvänta sig' },
   ],
   'process-steps': [
     { key: 'eyebrow',    label: 'Etikett',             type: 'text' },
