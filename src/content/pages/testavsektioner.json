@@ -21,6 +21,49 @@
       "eyebrow": "etikett",
       "subtitle": "underrubrik",
       "cta1Label": "text"
+    },
+    {
+      "type": "page-header",
+      "title": "sidrubrik",
+      "eyebrow": "etikett",
+      "subtitle": "underrubrik"
+    },
+    {
+      "type": "text",
+      "title": "text",
+      "body": "masmmsma texttetetete"
+    },
+    {
+      "type": "gallery",
+      "title": "galleri",
+      "eyebrow": "etikett",
+      "images": [
+        {
+          "url": "/images/laderhanterverk6-00a986ad.jpeg",
+          "alt": "läderflärp"
+        },
+        {
+          "url": "/images/laderhanterverk7-a948483e.jpeg",
+          "alt": "läderbälte"
+        }
+      ]
+    },
+    {
+      "type": "process-steps",
+      "title": "processsteg",
+      "eyebrow": "etikett",
+      "steps": [
+        {
+          "number": "steg 1",
+          "title": "någon rubrik",
+          "body": "beskirvninng döe det"
+        },
+        {
+          "number": "2",
+          "title": "annan rubrik",
+          "body": "mer beskirvning för steg tp"
+        }
+      ]
     }
   ]
 }
