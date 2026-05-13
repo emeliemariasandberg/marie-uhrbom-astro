@@ -1,4 +1,7 @@
 ---
+import { makeUrlFn } from '@/utils/url';
+const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
+
 interface Props {
   title: string;
   body?: string;
@@ -17,7 +20,7 @@ const { title, body, buttonLabel, buttonHref } = Astro.props;
       )}
       {buttonLabel && buttonHref && (
         <a
-          href={buttonHref}
+          href={siteUrl(buttonHref)}
           class="inline-flex items-center px-8 py-3.5 rounded-lg bg-white text-[var(--color-leather-deep)] font-medium text-sm hover:bg-white/90 transition-colors shadow-[var(--shadow-soft)]"
         >
           {buttonLabel}

@@ -46,7 +46,7 @@ const { eyebrow, title, subtitle, items } = Astro.props;
           <p class="text-sm text-[var(--color-muted-foreground)] leading-relaxed flex-1">{item.body}</p>
           {item.linkLabel && item.href && (
             <a
-              href={item.href}
+              href={siteUrl(item.href)}
               class="mt-5 inline-flex items-center gap-1 text-sm font-medium text-[var(--color-leather)] hover:text-[var(--color-leather-deep)] transition-colors"
             >
               {item.linkLabel}

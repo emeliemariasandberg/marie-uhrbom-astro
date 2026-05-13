@@ -40,7 +40,7 @@ const { eyebrow, title, subtitle, image, alt, cta1Label, cta1Href, cta2Label, ct
       <div class="flex flex-wrap gap-3">
         {cta1Label && cta1Href && (
           <a
-            href={cta1Href}
+            href={siteUrl(cta1Href)}
             class="inline-flex items-center px-6 py-3 rounded-lg bg-white text-[var(--color-leather-deep)] font-medium text-sm hover:bg-white/90 transition-colors shadow-[var(--shadow-soft)]"
           >
             {cta1Label}
@@ -48,7 +48,7 @@ const { eyebrow, title, subtitle, image, alt, cta1Label, cta1Href, cta2Label, ct
         )}
         {cta2Label && cta2Href && (
           <a
-            href={cta2Href}
+            href={siteUrl(cta2Href)}
             class="inline-flex items-center px-6 py-3 rounded-lg border border-white/40 text-white font-medium text-sm hover:bg-white/10 transition-colors"
           >
             {cta2Label}
