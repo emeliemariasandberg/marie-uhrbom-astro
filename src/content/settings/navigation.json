@@ -1,17 +1,54 @@
 {
   "header": [
-    { "label": "Hem", "href": "/" },
-    { "label": "Hantverk", "href": "/hantverk" },
-    { "label": "Homeopati", "href": "/homeopati" },
-    { "label": "Hälsa & vägledning", "href": "/vagledning" },
-    { "label": "Om Marie", "href": "/om-marie" },
-    { "label": "Kontakt", "href": "/kontakt" }
+    {
+      "label": "Hem",
+      "href": "/"
+    },
+    {
+      "label": "Hantverk",
+      "href": "/hantverk"
+    },
+    {
+      "label": "Homeopati",
+      "href": "/homeopati"
+    },
+    {
+      "label": "Hälsa & vägledning",
+      "href": "/vagledning"
+    },
+    {
+      "label": "Om Marie",
+      "href": "/om-marie"
+    },
+    {
+      "label": "Kontakt",
+      "href": "/kontakt"
+    },
+    {
+      "label": "test",
+      "href": "/test"
+    }
   ],
   "footer": [
-    { "label": "Läderhantverk", "href": "/hantverk" },
-    { "label": "Klassisk Homeopati", "href": "/homeopati" },
-    { "label": "Hälsa & Livscoachning", "href": "/vagledning" },
-    { "label": "Om Marie", "href": "/om-marie" },
-    { "label": "Kontakt", "href": "/kontakt" }
+    {
+      "label": "Läderhantverk",
+      "href": "/hantverk"
+    },
+    {
+      "label": "Klassisk Homeopati",
+      "href": "/homeopati"
+    },
+    {
+      "label": "Hälsa & Livscoachning",
+      "href": "/vagledning"
+    },
+    {
+      "label": "Om Marie",
+      "href": "/om-marie"
+    },
+    {
+      "label": "Kontakt",
+      "href": "/kontakt"
+    }
   ]
 }
