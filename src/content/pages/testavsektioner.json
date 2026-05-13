@@ -64,6 +64,92 @@
           "body": "mer beskirvning för steg tp"
         }
       ]
+    },
+    {
+      "type": "services-grid",
+      "eyebrow": "etikett",
+      "title": "tjänstekort",
+      "subtitle": "underubri",
+      "items": [
+        {
+          "eyebrow": "ögonrbyrnstext",
+          "title": "rubrik",
+          "body": "beskrivning flr storlek emdium",
+          "linkLabel": "länktext",
+          "href": "",
+          "size": "medium"
+        },
+        {
+          "eyebrow": "anann",
+          "title": "ddd",
+          "body": "ddd small",
+          "linkLabel": "",
+          "href": "",
+          "size": "small"
+        }
+      ]
+    },
+    {
+      "type": "about-band",
+      "eyebrow": "etikett",
+      "title": "ddkdkdd",
+      "body": "dtedttedte <p>hdhdh</p> ",
+      "image": "/images/diplomhomeopati-f39798ce.jpeg"
+    },
+    {
+      "type": "method-cards",
+      "items": [
+        {
+          "icon": "info",
+          "title": "infokort",
+          "body": "text"
+        },
+        {
+          "icon": "sparkles",
+          "title": "sparkles",
+          "body": "text"
+        },
+        {
+          "icon": "shield",
+          "title": "shield",
+          "body": "text"
+        }
+      ]
+    },
+    {
+      "type": "credential-strip",
+      "items": [
+        {
+          "label": "läderhantverk",
+          "since": "1997",
+          "description": "kort beskirninv",
+          "href": ""
+        },
+        {
+          "label": "annan merit",
+          "since": "2611",
+          "description": "",
+          "href": ""
+        }
+      ]
+    },
+    {
+      "type": "booking-grid",
+      "body": "idididk något för bokninsinfromation"
+    },
+    {
+      "type": "contact-card",
+      "showConfidentiality": true
+    },
+    {
+      "type": "inquiry-form",
+      "eyebrow": "etikett",
+      "title": "rubrik",
+      "intro": "inledande text",
+      "area": "homeopati",
+      "subjectLabel": "t´ämefält text",
+      "messagePlaceholder": "meddelandefält text",
+      "submitLabel": "skicka text"
     }
   ]
 }
