@@ -7,13 +7,17 @@ interface Props {
   eyebrow?: string;
   title?: string;
   images: GalleryImage[];
+  columns?: 2 | 3 | 4;
 }
 import { makeUrlFn } from '@/utils/url';
 const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
-const { eyebrow, title, images } = Astro.props;
+const { eyebrow, title, images, columns = 3 } = Astro.props;
+
+const uid = Math.random().toString(36).slice(2, 7);
+const colClass = columns === 2 ? 'sm:grid-cols-2' : columns === 4 ? 'sm:grid-cols-2 lg:grid-cols-4' : 'sm:grid-cols-2 lg:grid-cols-3';
 ---
 
-<section class="py-16 md:py-20">
+<section class="py-16 md:py-20 bg-[var(--color-sage)]/8">
   <div class="container-prose">
     {(eyebrow || title) && (
       <div class="mb-10">
@@ -21,17 +25,119 @@ const { eyebrow, title, images } = Astro.props;
         {title && <h2 class="font-display text-3xl md:text-4xl font-medium leading-tight">{title}</h2>}
       </div>
     )}
-    <div class="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
-      {images.map((img) => (
-        <div class="break-inside-avoid rounded-xl overflow-hidden shadow-[var(--shadow-soft)]">
+
+    <div class:list={['grid grid-cols-1 gap-3 md:gap-4', colClass]}>
+      {images.map((img, i) => (
+        <button
+          class="group relative rounded-xl overflow-hidden aspect-[4/3] shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-warm)] transition-shadow cursor-zoom-in"
+          data-lb-id={uid}
+          data-lb-src={siteUrl(img.url)}
+          data-lb-alt={img.alt}
+          aria-label={`Förstora: ${img.alt || `Bild ${i + 1}`}`}
+        >
           <img
             src={siteUrl(img.url)}
             alt={img.alt}
-            class="w-full h-auto object-cover"
+            class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-400"
             loading="lazy"
           />
-        </div>
+          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300 flex items-center justify-center">
+            <svg class="opacity-0 group-hover:opacity-100 transition-opacity text-white drop-shadow" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6"/>
+            </svg>
+          </div>
+        </button>
       ))}
     </div>
   </div>
 </section>
+
+<!-- Lightbox -->
+<dialog
+  id={`lb-${uid}`}
+  class="gallery-lightbox"
+  aria-label="Bildvisare"
+>
+  <button class="lb-close" aria-label="Stäng bildvisare">
+    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>
+  </button>
+  <img id={`lb-img-${uid}`} class="lb-image" src="" alt="" />
+  <p id={`lb-caption-${uid}`} class="lb-caption"></p>
+</dialog>
+
+<style>
+  .gallery-lightbox {
+    padding: 0;
+    background: transparent;
+    border: none;
+    max-width: min(90vw, 1200px);
+    max-height: 92dvh;
+    outline: none;
+  }
+  .gallery-lightbox::backdrop {
+    background: rgba(0, 0, 0, 0.92);
+    backdrop-filter: blur(6px);
+  }
+  .lb-image {
+    display: block;
+    max-width: min(90vw, 1200px);
+    max-height: 85dvh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 0.75rem;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+  }
+  .lb-caption {
+    text-align: center;
+    color: rgba(255,255,255,0.65);
+    font-size: 0.8125rem;
+    margin-top: 0.75rem;
+    min-height: 1.2em;
+  }
+  .lb-close {
+    position: fixed;
+    top: 1rem;
+    right: 1.25rem;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: background 0.15s;
+  }
+  .lb-close:hover { background: rgba(255,255,255,0.25); }
+</style>
+
+<script define:vars={{ uid }}>
+  const dialog  = document.getElementById('lb-' + uid);
+  const lbImg   = document.getElementById('lb-img-' + uid);
+  const lbCap   = document.getElementById('lb-caption-' + uid);
+
+  document.querySelectorAll(`[data-lb-id="${uid}"]`).forEach(btn => {
+    btn.addEventListener('click', () => {
+      lbImg.src = btn.dataset.lbSrc;
+      lbImg.alt = btn.dataset.lbAlt || '';
+      lbCap.textContent = btn.dataset.lbAlt || '';
+      dialog.showModal();
+    });
+  });
+
+  dialog.querySelector('.lb-close').addEventListener('click', () => dialog.close());
+
+  dialog.addEventListener('click', e => {
+    if (e.target === dialog) dialog.close();
+  });
+
+  dialog.addEventListener('keydown', e => {
+    if (e.key === 'Escape') dialog.close();
+  });
+</script>

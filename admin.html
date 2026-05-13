@@ -267,10 +267,11 @@ textarea { resize: vertical; }
 
 const SECTION_SCHEMA = {
   'hero-split': [
+    { key: 'layout',    label: 'Layout',               type: 'select',   options: [{ value: 'split', label: 'Delad — text + bild' }, { value: 'centered', label: 'Centrerad — rubriksida (ersätter Sidrubrik)' }], hint: 'Centrerad visar innehållet mitt på sidan utan bildkolumn.' },
     { key: 'eyebrow',   label: 'Etikett',              type: 'text',     hint: 'Liten text ovanför rubriken, t.ex. "Välkommen"' },
     { key: 'title',     label: 'Rubrik',               type: 'text',     required: true },
     { key: 'subtitle',  label: 'Underrubrik',          type: 'text' },
-    { key: 'image',     label: 'Bild (höger sida)',    type: 'image' },
+    { key: 'image',     label: 'Bild (höger sida)',    type: 'image',    hint: 'Visas ej i centrerat läge' },
     { key: 'alt',       label: 'Alt-text',             type: 'text',     hint: 'Beskriv bilden för synskadade och sökmotorer' },
     { key: 'bgImage',   label: 'Bakgrundsbild (tonad)', type: 'image',   hint: 'Valfri. Bilden tonas in bakom sektionen — texten syns tydligt tack vare en gradient.' },
     { key: 'cta1Label', label: 'Knapp 1: text',        type: 'text' },
@@ -302,6 +303,7 @@ const SECTION_SCHEMA = {
   'gallery': [
     { key: 'eyebrow',   label: 'Etikett',              type: 'text',     hint: 'Liten text ovanför rubriken' },
     { key: 'title',     label: 'Rubrik',               type: 'text' },
+    { key: 'columns',   label: 'Antal kolumner',       type: 'select',   options: [{ value: '2', label: '2 kolumner' }, { value: '3', label: '3 kolumner (standard)' }, { value: '4', label: '4 kolumner' }] },
     { key: 'images',    label: 'Bilder',               type: 'image-list' },
   ],
   'services-grid': [
@@ -325,36 +327,47 @@ const SECTION_SCHEMA = {
   ],
   'booking-grid': [
     { key: 'id',        label: 'Länk-ID',              type: 'text',     hint: 'Valfritt. Gör att man kan länka direkt hit, t.ex. /sida#bokning' },
-    { key: 'body',      label: 'Text',                 type: 'textarea', required: true },
+    { key: 'body',      label: 'Informationstext',     type: 'textarea', required: true, hint: 'Stöder markdown. Kontaktuppgifter visas automatiskt i en sidebar till höger.' },
   ],
   'contact-card': [
     { key: 'showConfidentiality', label: 'Visa tystnadsplikt-text', type: 'checkbox' },
   ],
   'inquiry-form': [
-    { key: 'id',                  label: 'Länk-ID',                  type: 'text',   hint: 'Valfritt. Gör att man kan länka direkt till formuläret' },
-    { key: 'eyebrow',             label: 'Etikett',                  type: 'text',   hint: 'Liten text ovanför rubriken' },
+    { key: 'id',                  label: 'Länk-ID',                  type: 'text',     hint: 'Valfritt. Gör att man kan länka direkt till formuläret' },
+    { key: 'eyebrow',             label: 'Etikett',                  type: 'text',     hint: 'Liten text ovanför rubriken' },
     { key: 'title',               label: 'Rubrik',                   type: 'text' },
     { key: 'intro',               label: 'Inledande text',           type: 'text' },
-    { key: 'area',                label: 'Kategori',                 type: 'select', options: ['hantverk','homeopati','coachning','general'] },
-    { key: 'subjectLabel',        label: 'Ämnesfältets text',        type: 'text' },
-    { key: 'messagePlaceholder',  label: 'Meddelandefältets text',   type: 'text' },
-    { key: 'submitLabel',         label: 'Skicka-knappens text',     type: 'text' },
+    { key: 'area',                label: 'Kategori',                 type: 'select',   options: [{ value: 'hantverk', label: 'Hantverk' }, { value: 'homeopati', label: 'Homeopati' }, { value: 'coachning', label: 'Coaching / Vägledning' }, { value: 'general', label: 'Allmänt' }] },
+    { key: 'showSubject',         label: 'Visa ämnesfält',           type: 'checkbox', hint: 'Bocka ur för att dölja ämnesfältet' },
+    { key: 'nameLabel',           label: 'Namn-fältets etikett',     type: 'text',     hint: 'Standard: "Namn"' },
+    { key: 'emailLabel',          label: 'E-post-fältets etikett',   type: 'text',     hint: 'Standard: "E-post"' },
+    { key: 'subjectLabel',        label: 'Ämne-fältets etikett',     type: 'text',     hint: 'Standard: "Ämne"' },
+    { key: 'messageLabel',        label: 'Meddelande-fältets etikett', type: 'text',   hint: 'Standard: "Meddelande"' },
+    { key: 'messagePlaceholder',  label: 'Meddelandefältets platshållartext', type: 'text' },
+    { key: 'submitLabel',         label: 'Skicka-knappens text',     type: 'text',     hint: 'Standard: "Skicka"' },
+    { key: 'gdprText',            label: 'GDPR-samtyckestext',       type: 'textarea', hint: 'Lämna tomt för standardtext' },
+    { key: 'successText',         label: 'Bekräftelsemeddelande',    type: 'text',     hint: 'Visas när formuläret skickats' },
+    { key: 'errorText',           label: 'Felmeddelande',            type: 'text',     hint: 'Visas om något gick fel' },
   ],
   'cta': [
     { key: 'title',       label: 'Rubrik',             type: 'text',     required: true },
     { key: 'body',        label: 'Text',               type: 'text' },
-    { key: 'buttonLabel', label: 'Knapp: text',        type: 'text' },
-    { key: 'buttonHref',  label: 'Knapp: länk',        type: 'text' },
+    { key: 'theme',       label: 'Färgtema',           type: 'select',   options: [{ value: 'dark', label: 'Mörk (läderbrunt)' }, { value: 'light', label: 'Ljus (neutral)' }, { value: 'sage', label: 'Grön (skogsgrön)' }], hint: 'Välj bakgrundsfärg för sektionen' },
+    { key: 'align',       label: 'Textjustering',      type: 'select',   options: [{ value: 'center', label: 'Centrerad' }, { value: 'left', label: 'Vänsterjusterad' }] },
+    { key: 'buttonLabel', label: 'Knapp 1: text',      type: 'text' },
+    { key: 'buttonHref',  label: 'Knapp 1: länk',      type: 'text' },
+    { key: 'cta2Label',   label: 'Knapp 2: text',      type: 'text',     hint: 'Valfri andra knapp' },
+    { key: 'cta2Href',    label: 'Knapp 2: länk',      type: 'text' },
   ],
   'quote': [
-    { key: 'variant',     label: 'Stil',               type: 'select',   options: ['default','hero'], hint: '"hero" = stor mörk fullbredd, t.ex. som första sektion på en sida' },
+    { key: 'variant',     label: 'Stil',               type: 'select',   options: [{ value: 'default', label: 'Standard — sidbredd med grön vänsterkant' }, { value: 'hero', label: 'Hero — stor mörk fullbredd' }] },
     { key: 'quote',       label: 'Citat',              type: 'textarea', required: true },
-    { key: 'attribution', label: 'Källa',              type: 'text' },
+    { key: 'attribution', label: 'Källa / namn',       type: 'text' },
   ],
   'info-card': [
     { key: 'title',       label: 'Rubrik',             type: 'text',     required: true },
-    { key: 'body',        label: 'Text',               type: 'textarea', required: true },
-    { key: 'tone',        label: 'Färg',               type: 'select',   options: ['soft','warm'] },
+    { key: 'body',        label: 'Text',               type: 'textarea', required: true, hint: 'Stöder markdown' },
+    { key: 'tone',        label: 'Färgton',            type: 'select',   options: [{ value: 'soft', label: 'Mjuk (neutral grå)' }, { value: 'warm', label: 'Varm (kräm/läder)' }, { value: 'sage', label: 'Grön (sage)' }] },
   ],
   'testimonials': [
     { key: 'eyebrow',    label: 'Etikett',             type: 'text',     hint: 'Liten text ovanför rubriken, t.ex. "Vad klienterna säger"' },
@@ -378,28 +391,28 @@ const SECTION_SCHEMA = {
 
 // Grouped for the add-section dropdown
 const SECTION_GROUPS = [
-  { label: 'Topsektion',             types: ['hero-split','hero-overlay'] },
-  { label: 'Innehåll',               types: ['page-header','text','gallery','process-steps'] },
+  { label: 'Topsektion',              types: ['hero-split','hero-overlay','page-header'] },
+  { label: 'Innehåll',                types: ['text','gallery','process-steps'] },
   { label: 'Tjänster & presentation', types: ['services-grid','about-band','method-cards','credential-strip'] },
-  { label: 'Kontakt',                types: ['booking-grid','contact-card','inquiry-form'] },
-  { label: 'Övrigt',                 types: ['cta','quote','info-card','testimonials','newsletter-signup'] },
+  { label: 'Kontakt & formulär',      types: ['booking-grid','contact-card','inquiry-form'] },
+  { label: 'Övrigt',                  types: ['cta','quote','info-card','testimonials','newsletter-signup'] },
 ];
 
 const SECTION_LABELS = {
   'hero-split':        'Topsektion — text + bild',
   'hero-overlay':      'Topsektion — bild i bakgrunden',
-  'page-header':       'Sidrubrik',
-  'text':              'Text',
-  'gallery':           'Galleri',
+  'page-header':       'Sidrubrik (centrerad)',
+  'text':              'Textblock',
+  'gallery':           'Bildgalleri',
   'process-steps':     'Processsteg',
-  'services-grid':     'Tjänstekort',
+  'services-grid':     'Tjänste-/funktionskort',
   'about-band':        'Text med bild',
   'method-cards':      'Tre kort med ikon',
   'credential-strip':  'Meritrad',
-  'booking-grid':      'Bokningsinformation',
+  'booking-grid':      'Text med kontaktuppgifter',
   'contact-card':      'Kontaktuppgifter',
   'inquiry-form':      'Kontaktformulär',
-  'cta':               'Knapp-sektion (mörk)',
+  'cta':               'Knapp-sektion',
   'quote':             'Citat',
   'info-card':         'Informationsruta',
   'testimonials':      'Klientberättelser',
@@ -407,24 +420,24 @@ const SECTION_LABELS = {
 };
 
 const SECTION_DESCRIPTIONS = {
-  'hero-split':        'Text till vänster, bild till höger',
-  'hero-overlay':      'Helbredd bakgrundsbild med text ovanpå',
-  'page-header':       'Centrerad rubrik — passar sidans topp',
+  'hero-split':        'Text + valfri bild. Layout-val: delad eller centrerad sidrubrik',
+  'hero-overlay':      'Helbredd bakgrundsbild med text ovanpå (mörk overlay)',
+  'page-header':       'Enkel centrerad rubrik utan bild — för inre sidor',
   'text':              'Löpande text med valfri rubrik (stöder markdown)',
-  'gallery':           'Bildgalleri i masonry-rutnät',
-  'process-steps':     'Numrerade steg i horisontell rad',
-  'services-grid':     'Rutnät av tjänstekort med länk',
-  'about-band':        'Text och bild sida vid sida',
-  'method-cards':      'Tre kort med ikon och text',
-  'credential-strip':  'Tre statistik-kolumner med etikett, år och länk',
-  'booking-grid':      'Boknings- och prisinformation',
-  'contact-card':      'Kontaktuppgifter (e-post, telefon, plats)',
-  'inquiry-form':      'Kontaktformulär med namn, e-post och meddelande',
-  'cta':               'Mörkt band med rubrik och knapp',
-  'quote':             'Framlyft citat — normal eller stor hero-variant',
-  'info-card':         'Informationsruta (mjuk eller varm ton)',
-  'testimonials':      'Klientberättelser som citatkort',
-  'newsletter-signup': 'E-postprenumeration med intressefilter',
+  'gallery':           'Enhetligt bildrutnät med klickbar bildvisare',
+  'process-steps':     'Numrerade steg i horisontell rad — 2–4 steg',
+  'services-grid':     'Rutnät av kort med rubrik, text och valfri länk',
+  'about-band':        'Text och bild sida vid sida med valfri bakgrund',
+  'method-cards':      'Tre kort med ikon (info, stjärna eller sköld)',
+  'credential-strip':  'Meritrad med statistik, år/datum och beskrivning',
+  'booking-grid':      'Informationstext med kontaktuppgifter i sidebar',
+  'contact-card':      'Fristående kontaktkort med e-post, telefon och plats',
+  'inquiry-form':      'Kontaktformulär — fullt konfigurerbart med valfria fält',
+  'cta':               'Framlyft sektion med rubrik och knapp — mörk, ljus eller grön',
+  'quote':             'Framlyft citat — standard med grön kant eller stor mörk hero-variant',
+  'info-card':         'Inramad informationsruta — mjuk, varm eller grön ton',
+  'testimonials':      'Klientberättelser som citatkort i rutnät',
+  'newsletter-signup': 'E-postprenumeration med intressefilter (Homeopati/Hantverk)',
 };
 
 /* ── State ────────────────────────────────────────────────────── */
@@ -885,9 +898,9 @@ function makeWireframe(type) {
       break;
 
     case 'gallery':
-      el.style.cssText += ';display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:6px';
-      for (let i = 0; i < 4; i++)
-        el.append(h('div', { className: 'wf-img', style: 'border-radius:2px;aspect-ratio:1' }));
+      el.style.cssText += ';background:oklch(0.78 0.045 135 / 0.08);display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:6px';
+      for (let i = 0; i < 6; i++)
+        el.append(h('div', { className: 'wf-img', style: 'border-radius:2px;aspect-ratio:4/3' }));
       break;
 
     case 'services-grid':
@@ -962,12 +975,14 @@ function makeWireframe(type) {
       break;
 
     case 'cta':
-      el.className += ' wf-dark';
-      el.style.cssText += ';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:8px';
+      el.style.cssText += ';background:oklch(0.36 0.09 40);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:8px';
       el.append(
         h('div', { style: 'height:7px;width:44%;border-radius:999px;background:rgba(255,255,255,0.7)' }),
         h('div', { style: 'height:4px;width:62%;border-radius:999px;background:rgba(255,255,255,0.4)' }),
-        h('div', { style: 'height:11px;width:26%;border-radius:3px;background:rgba(255,255,255,0.22);margin-top:3px' }),
+        h('div', { style: 'display:flex;gap:4px;margin-top:3px' },
+          h('div', { style: 'height:11px;width:28%;border-radius:3px;background:rgba(255,255,255,0.22)' }),
+          h('div', { style: 'height:11px;width:20%;border-radius:3px;background:rgba(255,255,255,0.1)' }),
+        ),
       );
       break;
 
@@ -1004,7 +1019,7 @@ function makeWireframe(type) {
       el.style.cssText += ';display:flex;gap:5px;padding:6px;align-items:flex-start';
       for (let i = 0; i < 3; i++)
         el.append(h('div', { style: 'flex:1;display:flex;flex-direction:column;align-items:center;gap:3px' },
-          h('div', { style: 'width:18px;height:18px;border-radius:50%;background:oklch(0.36 0.09 40);display:flex;align-items:center;justify-content:center;font-size:8px;color:white;font-weight:600;flex-shrink:0' }, String(i + 1)),
+          h('div', { style: 'width:18px;height:18px;border-radius:50%;background:oklch(0.42 0.05 145);display:flex;align-items:center;justify-content:center;font-size:8px;color:white;font-weight:600;flex-shrink:0' }, String(i + 1)),
           h('div', { className: 'wf-line', style: 'width:70%;margin:0;height:4px' }),
           h('div', { className: 'wf-line', style: 'width:88%;margin:0;height:3px' }),
         ));
@@ -1016,7 +1031,7 @@ function makeWireframe(type) {
       for (let i = 0; i < 3; i++)
         el.append(h('div', { style: 'flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px;border-right:' + (i < 2 ? '1px solid oklch(0.88 0.022 70)' : 'none') },
           h('div', { className: 'wf-line wf-sm', style: 'width:40%;margin:0' }),
-          h('div', { style: 'height:10px;width:55%;border-radius:2px;background:oklch(0.36 0.09 40 / 0.6)' }),
+          h('div', { style: 'height:10px;width:55%;border-radius:2px;background:oklch(0.42 0.05 145 / 0.65)' }),
           h('div', { className: 'wf-line', style: 'width:62%;margin:0;height:3px' }),
         ));
       break;
@@ -1097,9 +1112,10 @@ function makeField(field, value, onChange) {
 
   if (field.type === 'checkbox') {
     const id = 'cb-' + Math.random().toString(36).slice(2);
-    const cb = h('input', { type: 'checkbox', id, checked: !!value });
+    const cb = h('input', { type: 'checkbox', id, checked: value === undefined ? true : !!value });
     cb.addEventListener('change', e => onChange(e.target.checked));
     wrap.append(h('div', { className: 'checkbox-row' }, cb, h('label', { htmlFor: id }, field.label)));
+    if (field.hint) wrap.append(h('span', { className: 'hint' }, field.hint));
     return wrap;
   }
 
@@ -1113,19 +1129,25 @@ function makeField(field, value, onChange) {
     }
     case 'textarea': {
       const ta = document.createElement('textarea');
-      ta.rows = 5;
+      ta.rows = field.rows || 5;
       ta.value = value || '';
       ta.addEventListener('input', e => onChange(e.target.value));
-      wrap.append(ta, h('span', { className: 'hint' }, 'Stöder markdown: **fetstil**, *kursiv*, - lista'));
+      const taHint = field.hint || 'Stöder markdown: **fetstil**, *kursiv*, - lista';
+      wrap.append(ta, h('span', { className: 'hint' }, taHint));
       break;
     }
     case 'select': {
       const sel = h('select', { onChange: e => onChange(e.target.value) },
         h('option', { value: '' }, '—'),
-        ...(field.options || []).map(o => h('option', { value: o, selected: o === value }, o)),
+        ...(field.options || []).map(o => {
+          const val = typeof o === 'object' ? o.value : o;
+          const lbl = typeof o === 'object' ? o.label : o;
+          return h('option', { value: val, selected: val === value }, lbl);
+        }),
       );
       if (value) sel.value = value;
       wrap.append(sel);
+      if (field.hint) wrap.append(h('span', { className: 'hint' }, field.hint));
       break;
     }
     case 'image': {
@@ -1286,7 +1308,7 @@ function makeCardList(items, onChange) {
 function makeServiceList(items, onChange) {
   const container = h('div', {});
   const list = [...items];
-  const SIZES = ['small', 'medium', 'large'];
+  const SIZES = [{ value: 'small', label: 'Liten' }, { value: 'medium', label: 'Mellanstor' }, { value: 'large', label: 'Stor (2 kolumner bred)' }];
 
   const rerender = () => {
     container.innerHTML = '';
@@ -1297,7 +1319,7 @@ function makeServiceList(items, onChange) {
       bodyTa.addEventListener('input', e => { list[idx].body = e.target.value; onChange([...list]); });
 
       const sizeSel = h('select', { style: 'width:auto;font-size:0.8125rem', onChange: e => { list[idx].size = e.target.value; onChange([...list]); } },
-        SIZES.map(o => h('option', { value: o, selected: o === item.size }, o)),
+        SIZES.map(o => h('option', { value: o.value, selected: o.value === item.size }, o.label)),
       );
       const delBtn = h('button', { className: 'btn btn-ghost btn-sm', style: 'color:var(--destructive)', onClick: () => { list.splice(idx, 1); onChange([...list]); rerender(); } }, '×');
 

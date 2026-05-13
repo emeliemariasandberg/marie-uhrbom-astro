@@ -3,6 +3,7 @@ import { makeUrlFn } from '@/utils/url';
 const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
 
 interface Props {
+  layout?: 'split' | 'centered';
   eyebrow?: string;
   title: string;
   subtitle?: string;
@@ -15,7 +16,9 @@ interface Props {
   cta2Href?: string;
   footnote?: string;
 }
-const { eyebrow, title, subtitle, image, alt, bgImage, cta1Label, cta1Href, cta2Label, cta2Href, footnote } = Astro.props;
+const { layout = 'split', eyebrow, title, subtitle, image, alt, bgImage, cta1Label, cta1Href, cta2Label, cta2Href, footnote } = Astro.props;
+
+const centered = layout === 'centered' || (!image && !cta1Label && !cta2Label && layout !== 'split');
 ---
 
 <section class="relative overflow-hidden py-20 md:py-28">
@@ -27,32 +30,28 @@ const { eyebrow, title, subtitle, image, alt, bgImage, cta1Label, cta1Href, cta2
     </>
   )}
   <div class="container-prose">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-      <div>
+    {centered ? (
+      <div class="max-w-3xl mx-auto text-center">
         {eyebrow && <p class="eyebrow mb-4">{eyebrow}</p>}
         <h1 class="font-display text-4xl md:text-5xl lg:text-6xl font-medium leading-[1.1] mb-6">
           {title}
         </h1>
         {subtitle && (
-          <p class="text-lg text-[var(--color-muted-foreground)] leading-relaxed mb-8 max-w-lg">
+          <p class="text-lg text-[var(--color-muted-foreground)] leading-relaxed mb-8 max-w-xl mx-auto">
             {subtitle}
           </p>
         )}
         {(cta1Label || cta2Label) && (
-          <div class="flex flex-wrap gap-3">
+          <div class="flex flex-wrap justify-center gap-3">
             {cta1Label && cta1Href && (
-              <a
-                href={siteUrl(cta1Href)}
-                class="inline-flex items-center px-6 py-3 rounded-lg bg-[var(--color-primary)] text-[var(--color-primary-foreground)] font-medium text-sm hover:opacity-90 transition-opacity shadow-[var(--shadow-soft)]"
-              >
+              <a href={siteUrl(cta1Href)}
+                class="inline-flex items-center px-6 py-3 rounded-lg bg-[var(--color-primary)] text-[var(--color-primary-foreground)] font-medium text-sm hover:opacity-90 transition-opacity shadow-[var(--shadow-soft)]">
                 {cta1Label}
               </a>
             )}
             {cta2Label && cta2Href && (
-              <a
-                href={siteUrl(cta2Href)}
-                class="inline-flex items-center px-6 py-3 rounded-lg border border-[var(--color-border)] text-[var(--color-foreground)] font-medium text-sm hover:bg-[var(--color-secondary)] transition-colors"
-              >
+              <a href={siteUrl(cta2Href)}
+                class="inline-flex items-center px-6 py-3 rounded-lg border border-[var(--color-border)] text-[var(--color-foreground)] font-medium text-sm hover:bg-[var(--color-secondary)] transition-colors">
                 {cta2Label}
               </a>
             )}
@@ -62,22 +61,55 @@ const { eyebrow, title, subtitle, image, alt, bgImage, cta1Label, cta1Href, cta2
           <p class="mt-6 text-xs text-[var(--color-muted-foreground)]">{footnote}</p>
         )}
       </div>
-
-      {image && (
-        <div class="relative">
-          {bgImage && (
-            <div class="absolute -inset-6 rounded-[2rem] bg-[var(--color-leather)]/10 blur-2xl"></div>
+    ) : (
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div>
+          {eyebrow && <p class="eyebrow mb-4">{eyebrow}</p>}
+          <h1 class="font-display text-4xl md:text-5xl lg:text-6xl font-medium leading-[1.1] mb-6">
+            {title}
+          </h1>
+          {subtitle && (
+            <p class="text-lg text-[var(--color-muted-foreground)] leading-relaxed mb-8 max-w-lg">
+              {subtitle}
+            </p>
           )}
-          <div class="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-[3/4] shadow-[var(--shadow-warm)]">
-            <img
-              src={siteUrl(image)}
-              alt={alt ?? ''}
-              class="w-full h-full object-cover"
-              loading="eager"
-            />
-          </div>
+          {(cta1Label || cta2Label) && (
+            <div class="flex flex-wrap gap-3">
+              {cta1Label && cta1Href && (
+                <a href={siteUrl(cta1Href)}
+                  class="inline-flex items-center px-6 py-3 rounded-lg bg-[var(--color-primary)] text-[var(--color-primary-foreground)] font-medium text-sm hover:opacity-90 transition-opacity shadow-[var(--shadow-soft)]">
+                  {cta1Label}
+                </a>
+              )}
+              {cta2Label && cta2Href && (
+                <a href={siteUrl(cta2Href)}
+                  class="inline-flex items-center px-6 py-3 rounded-lg border border-[var(--color-border)] text-[var(--color-foreground)] font-medium text-sm hover:bg-[var(--color-secondary)] transition-colors">
+                  {cta2Label}
+                </a>
+              )}
+            </div>
+          )}
+          {footnote && (
+            <p class="mt-6 text-xs text-[var(--color-muted-foreground)]">{footnote}</p>
+          )}
         </div>
-      )}
-    </div>
+
+        {image && (
+          <div class="relative">
+            {bgImage && (
+              <div class="absolute -inset-6 rounded-[2rem] bg-[var(--color-sage)]/15 blur-2xl"></div>
+            )}
+            <div class="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-[3/4] shadow-[var(--shadow-warm)]">
+              <img
+                src={siteUrl(image)}
+                alt={alt ?? ''}
+                class="w-full h-full object-cover"
+                loading="eager"
+              />
+            </div>
+          </div>
+        )}
+      </div>
+    )}
   </div>
 </section>

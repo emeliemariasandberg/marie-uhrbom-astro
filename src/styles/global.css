@@ -42,6 +42,7 @@
 
   --shadow-soft: 0 2px 8px -2px color-mix(in oklab, var(--leather-deep) 12%, transparent);
   --shadow-warm: 0 12px 40px -12px color-mix(in oklab, var(--leather-deep) 28%, transparent);
+  --shadow-sage: 0 12px 40px -12px color-mix(in oklab, var(--sage-deep) 22%, transparent);
 }
 
 :root {
@@ -128,7 +129,7 @@
     font-weight: 500;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    color: var(--color-leather);
+    color: var(--color-sage-deep);
   }
 
   /* Prose styles for markdown content */
@@ -178,7 +179,7 @@
     text-underline-offset: 2px;
   }
   .prose-warm blockquote {
-    border-left: 3px solid var(--color-leather);
+    border-left: 3px solid var(--color-sage);
     padding-left: 1rem;
     font-style: italic;
     color: var(--color-muted-foreground);

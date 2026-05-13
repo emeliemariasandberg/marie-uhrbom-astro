@@ -4,20 +4,21 @@ import { marked } from 'marked';
 interface Props {
   title: string;
   body: string;
-  tone?: 'warm' | 'soft';
+  tone?: 'soft' | 'warm' | 'sage';
 }
 const { title, body, tone = 'soft' } = Astro.props;
 const bodyHtml = marked.parse(body);
+
+const toneClass = {
+  soft: 'border-[var(--color-border)] bg-[var(--color-secondary)]/40',
+  warm: 'border-[var(--color-leather)]/30 bg-[var(--color-cream)]',
+  sage: 'border-[var(--color-sage)]/40 bg-[var(--color-sage)]/10',
+}[tone] ?? 'border-[var(--color-border)] bg-[var(--color-secondary)]/40';
 ---
 
 <section class="py-10">
   <div class="container-prose">
-    <div class:list={[
-      'rounded-2xl border p-6 md:p-8 max-w-3xl',
-      tone === 'warm'
-        ? 'border-[var(--color-leather)]/30 bg-[var(--color-cream)]'
-        : 'border-[var(--color-border)] bg-[var(--color-secondary)]/40'
-    ]}>
+    <div class:list={['rounded-2xl border p-6 md:p-8 max-w-3xl', toneClass]}>
       <h3 class="font-display text-xl font-medium mb-3">{title}</h3>
       <div class="prose-warm text-sm" set:html={bodyHtml} />
     </div>

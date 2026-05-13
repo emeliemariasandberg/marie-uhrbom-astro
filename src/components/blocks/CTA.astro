@@ -5,26 +5,67 @@ const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
 interface Props {
   title: string;
   body?: string;
+  theme?: 'dark' | 'light' | 'sage';
+  align?: 'center' | 'left';
   buttonLabel?: string;
   buttonHref?: string;
+  cta2Label?: string;
+  cta2Href?: string;
 }
-const { title, body, buttonLabel, buttonHref } = Astro.props;
+const { title, body, theme = 'dark', align = 'center', buttonLabel, buttonHref, cta2Label, cta2Href } = Astro.props;
+
+const wrapClass = {
+  dark:  'bg-[var(--color-leather-deep)] text-[var(--color-primary-foreground)] shadow-[var(--shadow-warm)]',
+  light: 'bg-[var(--color-secondary)]/60 text-[var(--color-foreground)] border border-[var(--color-border)] shadow-[var(--shadow-soft)]',
+  sage:  'bg-[var(--color-sage-deep)] text-[var(--color-primary-foreground)] shadow-[var(--shadow-sage)]',
+}[theme];
+
+const btn1Class = {
+  dark:  'bg-white text-[var(--color-leather-deep)] hover:bg-white/90',
+  light: 'bg-[var(--color-primary)] text-[var(--color-primary-foreground)] hover:opacity-90',
+  sage:  'bg-white text-[var(--color-sage-deep)] hover:bg-white/90',
+}[theme];
+
+const btn2Class = {
+  dark:  'border border-white/40 text-white hover:bg-white/10',
+  light: 'border border-[var(--color-border)] text-[var(--color-foreground)] hover:bg-[var(--color-secondary)]',
+  sage:  'border border-white/40 text-white hover:bg-white/10',
+}[theme];
+
+const bodyColor = theme === 'light' ? 'text-[var(--color-muted-foreground)]' : 'text-white/80';
+
+const alignClass = align === 'left' ? 'text-left' : 'text-center';
+const btnAlign   = align === 'left' ? 'flex-start' : 'center';
 ---
 
 <section class="py-16 md:py-20">
   <div class="container-prose">
-    <div class="rounded-2xl bg-[var(--color-leather-deep)] text-[var(--color-primary-foreground)] p-10 md:p-14 text-center shadow-[var(--shadow-warm)]">
+    <div class:list={['rounded-2xl p-10 md:p-14', wrapClass, alignClass]}>
       <h2 class="font-display text-3xl md:text-4xl font-medium mb-4">{title}</h2>
       {body && (
-        <p class="text-white/80 leading-relaxed mb-8 max-w-xl mx-auto">{body}</p>
+        <p class:list={['leading-relaxed mb-8 max-w-xl', align === 'center' && 'mx-auto', bodyColor]}>
+          {body}
+        </p>
       )}
-      {buttonLabel && buttonHref && (
-        <a
-          href={siteUrl(buttonHref)}
-          class="inline-flex items-center px-8 py-3.5 rounded-lg bg-white text-[var(--color-leather-deep)] font-medium text-sm hover:bg-white/90 transition-colors shadow-[var(--shadow-soft)]"
-        >
-          {buttonLabel}
-        </a>
+      {(buttonLabel || cta2Label) && (
+        <div class:list={['flex flex-wrap gap-3', align === 'center' ? 'justify-center' : 'justify-start']}>
+          {buttonLabel && buttonHref && (
+            <a
+              href={siteUrl(buttonHref)}
+              class:list={['inline-flex items-center px-8 py-3.5 rounded-lg font-medium text-sm transition-colors shadow-[var(--shadow-soft)]', btn1Class]}
+            >
+              {buttonLabel}
+            </a>
+          )}
+          {cta2Label && cta2Href && (
+            <a
+              href={siteUrl(cta2Href)}
+              class:list={['inline-flex items-center px-8 py-3.5 rounded-lg font-medium text-sm transition-colors', btn2Class]}
+            >
+              {cta2Label}
+            </a>
+          )}
+        </div>
       )}
     </div>
   </div>
