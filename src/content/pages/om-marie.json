@@ -6,15 +6,16 @@
   },
   "sections": [
     {
-      "type": "hero-portrait",
+      "type": "hero-overlay",
       "eyebrow": "Om Marie",
       "title": "Hantverkare, Homeopat & Livscoach",
       "subtitle": "Med rötterna i Västra Götaland och hjärtat i hantverket.",
-      "body": "Jag heter Marie Uhrbom och har ägnat stor del av mitt yrkesliv åt att möta människor och djur i olika behov — som hantverkare, homeopat och coach.\n\nMitt arbete bär ett gemensamt syfte: att bidra till välmående på ett genuint, hållbart och omsorgsfullt sätt. Oavsett om det handlar om ett handgjort läderbälte eller ett djupt samtal.",
       "image": "/images/marieuhrbom-c9d5f7b9.jpg",
       "alt": "Marie Uhrbom",
       "cta1Label": "Kom i kontakt",
-      "cta1Href": "/kontakt"
+      "cta1Href": "/kontakt",
+      "cta2Label": "Se hantverk",
+      "cta2Href": "/hantverk"
     },
     {
       "type": "credential-strip",

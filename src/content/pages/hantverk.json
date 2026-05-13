@@ -6,21 +6,9 @@
   },
   "sections": [
     {
-      "type": "hero-portrait",
+      "type": "gallery",
       "eyebrow": "Hantverk med själ",
       "title": "Handgjort läder av hög kvalitet",
-      "subtitle": "Gevärremmar, hundkoppel och sadelmakeri — tillverkat för hand med omsorg och beständighet.",
-      "body": "Varje produkt är unik och tillverkad i Sverige med traditionell sadelmakarteknink och vegetabilgarvat läder. Jag arbetar nära kunden för att ta fram det som passar just dig och ditt djur.",
-      "image": "/images/hero-leather.jpg",
-      "alt": "Handgjord gevärrem i naturbrunt Tärnsjö-läder",
-      "cta1Label": "Beställ eller fråga",
-      "cta1Href": "#bestall",
-      "footnote": "Leveranstid 1–4 veckor beroende på beställning."
-    },
-    {
-      "type": "gallery",
-      "eyebrow": "Galleri",
-      "title": "Exempel på arbeten",
       "images": [
         {
           "url": "/images/laderhantverk1.jpeg",
@@ -72,38 +60,6 @@
       "title": "Priser (inklusive moms)",
       "body": "- Rem med befintligt motiv och namn: **1 250 kr**\n- Färgad baksida: **+200 kr**\n- Kundens eget motiv: **från +400 kr**\n\nKontakta mig via formuläret nedan, SMS till 0703-266213 eller e-post till marieuhrbom@hotmail.com för att stämma av leveranstid och lägga din beställning.",
       "tone": "warm"
-    },
-    {
-      "type": "services-grid",
-      "eyebrow": "Sortiment",
-      "title": "Vad jag tillverkar",
-      "subtitle": "Alla produkter görs på beställning. Kontakta mig för detaljer och leveranstid.",
-      "items": [
-        {
-          "title": "Gevärremmar",
-          "body": "Handgjorda gevärremmar i vegetabilgarvat läder. Välj motiv, bredd, längd och beslag efter dina önskemål.",
-          "image": "/images/laderhantverk1.jpeg",
-          "size": "medium"
-        },
-        {
-          "title": "Hundkoppel & halsband",
-          "body": "Hållbara koppel och halsband för hund — tillverkade att hålla länge och bli vackrare med åren.",
-          "image": "/images/laderhantverk2.jpeg",
-          "size": "medium"
-        },
-        {
-          "title": "Sadelmakeri",
-          "body": "Reparationer och tillverkning av seldon, stigläder, tränsdelar och annan hästutrustning i läder.",
-          "image": "/images/hero-leather.jpg",
-          "size": "medium"
-        },
-        {
-          "title": "Bälten & accessoarer",
-          "body": "Enkla och hållbara bälten, nyckelringar och små lädertillbehör för vardagsbruk.",
-          "image": "/images/laderhanterverk4.png",
-          "size": "medium"
-        }
-      ]
     },
     {
       "type": "inquiry-form",

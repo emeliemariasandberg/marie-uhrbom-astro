@@ -1,7 +1,6 @@
 ---
 import HeroSplit from './blocks/HeroSplit.astro';
 import HeroOverlay from './blocks/HeroOverlay.astro';
-import HeroPortrait from './blocks/HeroPortrait.astro';
 import PageHeader from './blocks/PageHeader.astro';
 import TextSection from './blocks/TextSection.astro';
 import Gallery from './blocks/Gallery.astro';
@@ -31,8 +30,6 @@ const { sections } = Astro.props;
       return <HeroSplit {...section} />;
     case 'hero-overlay':
       return <HeroOverlay {...section} />;
-    case 'hero-portrait':
-      return <HeroPortrait {...section} />;
     case 'page-header':
       return <PageHeader {...section} />;
     case 'text':
@@ -44,8 +41,7 @@ const { sections } = Astro.props;
     case 'about-band':
       return <AboutBand {...section} />;
     case 'method-cards':
-    case 'two-cards':
-      return <MethodCards items={section.items ?? []} columns={section.type === 'two-cards' ? 2 : 3} />;
+      return <MethodCards items={section.items ?? []} columns={3} />;
     case 'booking-grid':
       return <BookingGrid id={section.id} body={section.body} area={section.area} />;
     case 'contact-card':
@@ -55,7 +51,7 @@ const { sections } = Astro.props;
     case 'cta':
       return <CTA {...section} />;
     case 'quote':
-      return <Quote quote={section.quote} attribution={section.attribution} />;
+      return <Quote quote={section.quote} attribution={section.attribution} variant={section.variant} />;
     case 'info-card':
       return <InfoCard title={section.title} body={section.body} tone={section.tone} />;
     case 'testimonials':

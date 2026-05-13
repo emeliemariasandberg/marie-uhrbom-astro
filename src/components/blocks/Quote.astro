@@ -2,19 +2,35 @@
 interface Props {
   quote: string;
   attribution?: string;
+  variant?: 'default' | 'hero';
 }
-const { quote, attribution } = Astro.props;
+const { quote, attribution, variant = 'default' } = Astro.props;
 ---
 
-<section class="py-16 md:py-20">
-  <div class="container-prose max-w-3xl">
-    <blockquote class="border-l-4 border-[var(--color-leather)] pl-8">
-      <p class="font-display text-2xl md:text-3xl font-medium leading-relaxed text-[var(--color-foreground)] italic mb-4">
-        "{quote}"
-      </p>
-      {attribution && (
-        <footer class="text-sm text-[var(--color-muted-foreground)]">— {attribution}</footer>
-      )}
-    </blockquote>
-  </div>
-</section>
+{variant === 'hero' ? (
+  <section class="py-24 md:py-32 bg-[var(--color-leather-deep)] text-[var(--color-primary-foreground)]">
+    <div class="container-prose max-w-3xl text-center">
+      <blockquote>
+        <p class="font-display text-3xl md:text-4xl lg:text-5xl font-medium leading-[1.2] italic mb-8 opacity-95">
+          "{quote}"
+        </p>
+        {attribution && (
+          <footer class="text-sm tracking-widest uppercase opacity-60">— {attribution}</footer>
+        )}
+      </blockquote>
+    </div>
+  </section>
+) : (
+  <section class="py-16 md:py-20">
+    <div class="container-prose max-w-3xl">
+      <blockquote class="border-l-4 border-[var(--color-leather)] pl-8">
+        <p class="font-display text-2xl md:text-3xl font-medium leading-relaxed text-[var(--color-foreground)] italic mb-4">
+          "{quote}"
+        </p>
+        {attribution && (
+          <footer class="text-sm text-[var(--color-muted-foreground)]">— {attribution}</footer>
+        )}
+      </blockquote>
+    </div>
+  </section>
+)}
