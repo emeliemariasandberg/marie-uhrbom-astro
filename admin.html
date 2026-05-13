@@ -616,7 +616,7 @@ function loading(msg = 'Laddar…') {
 /* ── Header builder ───────────────────────────────────────────── */
 
 function makeHeader(left, center, right) {
-  return h('header', { className: 'app-header' },
+  return h('header', { className: 'app-header', role: 'banner' },
     left   || h('span', {}),
     center ? h('span', { className: 'header-title' }, center) : h('span', {}),
     right  || h('span', {}),
@@ -714,7 +714,7 @@ function showPageList(pages) {
     ));
   });
 
-  const main = h('div', { className: 'main' },
+  const main = h('div', { className: 'main', role: 'main' },
     h('div', { style: 'display:flex;align-items:center;margin-bottom:1.5rem' },
       h('h2', {}, 'Sidor'),
       h('button', { className: 'btn btn-secondary btn-sm ml-auto', onClick: showNewPage }, '+ Ny sida'),
@@ -770,7 +770,7 @@ function showEditor() {
 
   const addBar = makeAddSectionBar(sectionsList);
 
-  const main = h('div', { className: 'main' },
+  const main = h('div', { className: 'main', role: 'main' },
     h('p', { className: 'section-meta-label' }, 'Sidinformation'),
     metaCard,
     h('p', { className: 'section-meta-label' }, 'Sektioner'),
@@ -1079,7 +1079,7 @@ function openSectionPicker(onPick) {
     body.append(grid);
   });
 
-  const modal = h('div', { className: 'modal' },
+  const modal = h('div', { className: 'modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Välj sektionstyp' },
     h('div', { className: 'modal-header' },
       h('span', { style: 'font-weight:500;font-size:0.9375rem' }, 'Välj sektionstyp'),
       h('button', { className: 'btn btn-ghost btn-sm', onClick: () => overlay.remove() }, 'Stäng'),
@@ -1089,6 +1089,13 @@ function openSectionPicker(onPick) {
 
   overlay.append(modal);
   document.body.append(overlay);
+
+  // Move focus into modal and trap it; restore on close
+  const firstFocusable = modal.querySelector('button');
+  firstFocusable?.focus();
+  overlay.addEventListener('keydown', e => {
+    if (e.key === 'Escape') overlay.remove();
+  });
 }
 
 function makeAddSectionBar(listEl) {
@@ -1256,12 +1263,25 @@ function makeImageList(items, onChange) {
         }
       });
 
-      const altInp = h('input', { type: 'text', placeholder: 'Bildbeskrivning (alt)', value: item.alt || '', onInput: e => { list[idx].alt = e.target.value; onChange([...list]); } });
+      const altWarn = h('span', {
+        style: 'font-size:0.7rem;color:var(--destructive);display:' + (item.alt ? 'none' : 'block'),
+        title: 'Alt-text saknas — lägg till en bildbeskrivning för tillgänglighet och SEO',
+      }, '⚠ Alt-text saknas');
+
+      const altInp = h('input', { type: 'text', placeholder: 'Bildbeskrivning (alt) — obligatorisk för tillgänglighet', value: item.alt || '',
+        style: item.alt ? '' : 'border-color:var(--destructive)',
+        onInput: e => {
+          list[idx].alt = e.target.value;
+          altWarn.style.display = e.target.value ? 'none' : 'block';
+          e.target.style.borderColor = e.target.value ? '' : 'var(--destructive)';
+          onChange([...list]);
+        },
+      });
       const delBtn = h('button', { className: 'btn btn-ghost btn-sm', style: 'color:var(--destructive)', onClick: () => { list.splice(idx, 1); onChange([...list]); rerender(); } }, '×');
 
       container.append(h('div', { className: 'list-row' },
         h('div', { style: 'display:flex;flex-direction:column;align-items:center;gap:0.375rem' }, thumb, pickBtn, fileInput),
-        h('div', { className: 'list-row-fields' }, altInp),
+        h('div', { className: 'list-row-fields' }, altInp, altWarn),
         delBtn,
       ));
     });
@@ -1516,7 +1536,7 @@ function showNewPage() {
     }
   });
 
-  app().append(header, h('div', { className: 'main' }, form));
+  app().append(header, h('div', { className: 'main', role: 'main' }, form));
 }
 
 /* ── View: Nav step (after page create) ───────────────────────── */
@@ -1581,7 +1601,7 @@ function showNavStep(slug, title, filePath) {
     h('div', { style: 'display:flex;gap:0.75rem;justify-content:flex-end;padding-top:0.25rem' }, skipBtn, addBtn),
   );
 
-  app().append(header, h('div', { className: 'main' }, card));
+  app().append(header, h('div', { className: 'main', role: 'main' }, card));
 }
 
 /* ── View: Settings ───────────────────────────────────────────── */
@@ -1594,15 +1614,17 @@ async function loadSettings() {
   }
   loading('Laddar inställningar…');
   try {
-    const [cf, nf, bf] = await Promise.all([
+    const [cf, nf, bf, sf] = await Promise.all([
       getFile('src/content/settings/contact.json'),
       getFile('src/content/settings/navigation.json'),
       getFile('src/content/settings/banner.json'),
+      getFile('src/content/settings/seo.json'),
     ]);
     settingsData = {
       contact:    { data: JSON.parse(b64Decode(cf.content)), sha: cf.sha },
       navigation: { data: JSON.parse(b64Decode(nf.content)), sha: nf.sha },
       banner:     { data: JSON.parse(b64Decode(bf.content)), sha: bf.sha },
+      seo:        { data: JSON.parse(b64Decode(sf.content)), sha: sf.sha },
     };
     showSettings();
   } catch (err) {
@@ -1627,6 +1649,7 @@ function showSettings() {
     { id: 'contact',       label: 'Kontakt' },
     { id: 'navigation',    label: 'Navigation' },
     { id: 'banner',        label: 'Banner' },
+    { id: 'seo',           label: 'SEO' },
     { id: 'konfiguration', label: 'Konfiguration' },
   ];
 
@@ -1635,15 +1658,17 @@ function showSettings() {
     if (id !== 'konfiguration' && !settingsData.contact) {
       loading('Laddar inställningar…');
       try {
-        const [cf, nf, bf] = await Promise.all([
+        const [cf, nf, bf, sf] = await Promise.all([
           getFile('src/content/settings/contact.json'),
           getFile('src/content/settings/navigation.json'),
           getFile('src/content/settings/banner.json'),
+          getFile('src/content/settings/seo.json'),
         ]);
         settingsData = {
           contact:    { data: JSON.parse(b64Decode(cf.content)), sha: cf.sha },
           navigation: { data: JSON.parse(b64Decode(nf.content)), sha: nf.sha },
           banner:     { data: JSON.parse(b64Decode(bf.content)), sha: bf.sha },
+          seo:        { data: JSON.parse(b64Decode(sf.content)), sha: sf.sha },
         };
         showSettings();
         return;
@@ -1658,6 +1683,7 @@ function showSettings() {
     if (id === 'contact')       content.append(makeContactTab());
     if (id === 'navigation')    content.append(makeNavTab());
     if (id === 'banner')        content.append(makeBannerTab());
+    if (id === 'seo')           content.append(makeSeoTab());
     if (id === 'konfiguration') content.append(makeConfigTab());
   };
 
@@ -1669,7 +1695,7 @@ function showSettings() {
 
   switchTab(settingsTab);
 
-  app().append(header, h('div', { className: 'main' }, tabBar, content));
+  app().append(header, h('div', { className: 'main', role: 'main' }, tabBar, content));
 }
 
 function makeContactTab() {
@@ -1785,6 +1811,39 @@ function makeBannerTab() {
       const res = await putFile('src/content/settings/banner.json', JSON.stringify(d, null, 2), 'Uppdaterar banner', settingsData.banner.sha);
       settingsData.banner.sha = res.content.sha;
       toast('Banner sparad!');
+      saveBtn.textContent = '✓ Sparat';
+      setTimeout(() => { if (saveBtn.isConnected) saveBtn.textContent = 'Spara'; }, 2000);
+    } catch (err) { toast('Fel: ' + err.message, true); saveBtn.textContent = 'Spara'; }
+    finally { saveBtn.disabled = false; }
+  }}, 'Spara');
+
+  card.append(saveBtn);
+  return card;
+}
+
+function makeSeoTab() {
+  const d = settingsData.seo.data;
+  const card = h('div', { className: 'card', style: 'display:flex;flex-direction:column;gap:1rem' });
+
+  card.append(h('p', { className: 'text-muted', style: 'font-size:0.875rem' }, 'Dessa inställningar visas i sökmotorer och vid delning i sociala medier.'));
+
+  [
+    { key: 'siteName',           label: 'Webbplatsnamn',              hint: 'T.ex. "Marie Uhrbom"' },
+    { key: 'defaultTitle',       label: 'Standardtitel',              hint: 'Används på sidor som saknar egen titel' },
+    { key: 'defaultDescription', label: 'Standardbeskrivning',        hint: 'Syns i Google och vid delning. Max 155 tecken.' },
+    { key: 'ogImage',            label: 'Standardbild för delning',   hint: 'Bildens sökväg, t.ex. /images/og-default.jpg' },
+  ].forEach(f => {
+    const inp = h('input', { type: 'text', value: d[f.key] || '', onInput: e => { d[f.key] = e.target.value; } });
+    card.append(h('div', { className: 'field' }, h('label', {}, f.label), inp, h('span', { className: 'hint' }, f.hint)));
+  });
+
+  const saveBtn = h('button', { className: 'btn btn-primary', style: 'margin-top:0.25rem', onClick: async () => {
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner"></span>';
+    try {
+      const res = await putFile('src/content/settings/seo.json', JSON.stringify(d, null, 2), 'Uppdaterar SEO-inställningar', settingsData.seo.sha);
+      settingsData.seo.sha = res.content.sha;
+      toast('SEO-inställningar sparade!');
       saveBtn.textContent = '✓ Sparat';
       setTimeout(() => { if (saveBtn.isConnected) saveBtn.textContent = 'Spara'; }, 2000);
     } catch (err) { toast('Fel: ' + err.message, true); saveBtn.textContent = 'Spara'; }

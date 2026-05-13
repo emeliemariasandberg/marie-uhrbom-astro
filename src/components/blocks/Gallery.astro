@@ -53,7 +53,7 @@ const slides = images.map(img => ({ src: siteUrl(img.url), alt: img.alt }));
 </section>
 
 <!-- Slideshow -->
-<dialog id={`ss-${uid}`} class="gallery-ss" aria-label="Bildspel">
+<dialog id={`ss-${uid}`} class="gallery-ss" aria-label="Bildspel" aria-modal="true">
   <button class="ss-close" aria-label="Stäng">
     <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
       <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
@@ -190,10 +190,12 @@ const slides = images.map(img => ({ src: siteUrl(img.url), alt: img.alt }));
   const ssImg   = document.getElementById('ss-img-' + uid);
   const ssCap   = document.getElementById('ss-cap-' + uid);
   const ssCnt   = document.getElementById('ss-cnt-' + uid);
+  const closeBtn = dialog.querySelector('.ss-close');
   const prevBtn = dialog.querySelector('.ss-prev');
   const nextBtn = dialog.querySelector('.ss-next');
 
   let current = 0;
+  let opener  = null;
 
   function show(idx, animate = false) {
     current = ((idx % slides.length) + slides.length) % slides.length;
@@ -216,14 +218,21 @@ const slides = images.map(img => ({ src: siteUrl(img.url), alt: img.alt }));
 
   document.querySelectorAll(`[data-gallery="${uid}"]`).forEach(btn => {
     btn.addEventListener('click', () => {
+      opener = btn;
       show(Number(btn.dataset.index));
       dialog.showModal();
+      closeBtn.focus();
     });
+  });
+
+  dialog.addEventListener('close', () => {
+    opener?.focus();
+    opener = null;
   });
 
   prevBtn.addEventListener('click', () => show(current - 1, true));
   nextBtn.addEventListener('click', () => show(current + 1, true));
-  dialog.querySelector('.ss-close').addEventListener('click', () => dialog.close());
+  closeBtn.addEventListener('click', () => dialog.close());
   dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
   dialog.addEventListener('keydown', e => {
     if (e.key === 'ArrowLeft')  show(current - 1, true);

@@ -6,6 +6,7 @@ import '@/styles/global.css';
 import { makeUrlFn } from '@/utils/url';
 import seoSettings from '@/content/settings/seo.json';
 import banner from '@/content/settings/banner.json';
+import contact from '@/content/settings/contact.json';
 
 const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
 
@@ -39,6 +40,8 @@ const canonicalUrl = new URL(slug ? `/${slug}` : '/', Astro.site ?? 'https://mar
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl.href} />
+    <meta property="og:locale" content="sv_SE" />
+    <meta property="og:site_name" content={seoSettings.siteName} />
     {seoSettings.ogImage && (
       <meta property="og:image" content={new URL(seoSettings.ogImage, Astro.site ?? 'https://marieuhrbom.se').href} />
     )}
@@ -46,8 +49,50 @@ const canonicalUrl = new URL(slug ? `/${slug}` : '/', Astro.site ?? 'https://mar
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    {seoSettings.ogImage && (
+      <meta name="twitter:image" content={new URL(seoSettings.ogImage, Astro.site ?? 'https://marieuhrbom.se').href} />
+    )}
 
     <link rel="icon" type="image/svg+xml" href={siteUrl('/favicon.svg')} />
+
+    <!-- Structured data -->
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": ["LocalBusiness", "HealthAndBeautyBusiness"],
+          "@id": "https://marieuhrbom.se/#business",
+          "name": "Marie Uhrbom",
+          "description": seoSettings.defaultDescription,
+          "url": "https://marieuhrbom.se",
+          "telephone": contact.phone,
+          "email": contact.email,
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Mellerud",
+            "addressRegion": "Västra Götaland",
+            "addressCountry": "SE"
+          },
+          "founder": { "@type": "Person", "@id": "https://marieuhrbom.se/#marie", "name": "Marie Uhrbom" },
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "itemListElement": [
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Klassisk Homeopati", "url": "https://marieuhrbom.se/homeopati" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Hälsa & Livscoachning", "url": "https://marieuhrbom.se/vagledning" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Läderhantverk", "url": "https://marieuhrbom.se/hantverk" } }
+            ]
+          }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://marieuhrbom.se/#marie",
+          "name": "Marie Uhrbom",
+          "jobTitle": "Homeopat, Livscoach & Sadelmakare",
+          "worksFor": { "@id": "https://marieuhrbom.se/#business" },
+          "url": "https://marieuhrbom.se/om-marie"
+        }
+      ]
+    })} />
 
     <!-- Google Fonts: Cormorant Garamond + Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -60,7 +105,7 @@ const canonicalUrl = new URL(slug ? `/${slug}` : '/', Astro.site ?? 'https://mar
   <body>
     {banner.enabled && <SiteBanner />}
     <SiteHeader />
-    <main>
+    <main id="main-content">
       <slot />
     </main>
     <SiteFooter />
