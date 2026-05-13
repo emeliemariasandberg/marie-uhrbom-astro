@@ -150,6 +150,51 @@
       "subjectLabel": "t´ämefält text",
       "messagePlaceholder": "meddelandefält text",
       "submitLabel": "skicka text"
+    },
+    {
+      "type": "cta",
+      "title": "knapp sketion mörk",
+      "body": "text",
+      "buttonLabel": "knapp text"
+    },
+    {
+      "type": "quote",
+      "variant": "default",
+      "quote": "citat i stil default"
+    },
+    {
+      "type": "quote",
+      "variant": "hero",
+      "quote": "citat i style hero"
+    },
+    {
+      "type": "info-card",
+      "title": "informationsruta",
+      "body": "text",
+      "tone": "soft"
+    },
+    {
+      "type": "info-card",
+      "title": "infromaiotnruta 2",
+      "body": "text",
+      "tone": "warm"
+    },
+    {
+      "type": "testimonials",
+      "title": "kliebtberötelse",
+      "eyebrow": "etikett",
+      "items": [
+        {
+          "quote": "bästa någonsin säger vi",
+          "attribution": "hehehe"
+        }
+      ]
+    },
+    {
+      "type": "newsletter-signup",
+      "eyebrow": "etikett",
+      "title": "nyhetsprebuermation",
+      "body": "detta kna du förvänta dig"
     }
   ]
 }
