@@ -12,11 +12,8 @@ const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
 
       <!-- Brand -->
       <div class="md:col-span-2">
-        <a href={siteUrl('/')} class="flex items-center gap-3 mb-4" aria-label="Marie Uhrbom — startsida">
-          <svg width="36" height="36" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <rect width="42" height="42" rx="6" fill="var(--color-leather-deep)"/>
-            <text x="21" y="27" font-family="Cormorant Garamond, Georgia, serif" font-size="18" font-weight="500" fill="var(--color-primary-foreground)" text-anchor="middle">M</text>
-          </svg>
+        <a href={siteUrl('/')} class="flex items-center gap-1 mb-4" aria-label="Marie Uhrbom — startsida">
+          <img src={siteUrl('/logo.svg')} width="56" height="46" alt="" aria-hidden="true" />
           <div>
             <div class="font-display text-lg leading-tight">Marie Uhrbom</div>
             <div class="text-[10px] tracking-[0.22em] uppercase text-[var(--color-muted-foreground)]">

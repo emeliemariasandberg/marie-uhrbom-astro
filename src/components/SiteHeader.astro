@@ -18,11 +18,8 @@ function isActive(href: string) {
   <div class="container-prose h-full flex items-center justify-between gap-6">
 
     <!-- Logo -->
-    <a href={siteUrl('/')} class="flex items-center gap-3 shrink-0 group" aria-label="Marie Uhrbom — startsida">
-      <svg width="42" height="42" viewBox="0 0 42 42" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <rect width="42" height="42" rx="6" fill="var(--color-leather-deep)"/>
-        <text x="21" y="27" font-family="Cormorant Garamond, Georgia, serif" font-size="18" font-weight="500" fill="var(--color-primary-foreground)" text-anchor="middle">M</text>
-      </svg>
+    <a href={siteUrl('/')} class="flex items-center gap-1 shrink-0 group" aria-label="Marie Uhrbom — startsida">
+      <img src={siteUrl('/logo.svg')} width="64" height="53" alt="" aria-hidden="true" />
       <div>
         <div class="font-display text-xl leading-tight">Marie Uhrbom</div>
         <div class="hidden sm:block text-[10px] tracking-[0.22em] uppercase text-[var(--color-muted-foreground)]">
