@@ -90,6 +90,22 @@
       "title": "Följ hantverket",
       "body": "Ungefär en gång i månaden delar jag bilder och berättelser från verkstaden — nya mönster, pågående arbeten och tankar om hantverk. Inga spam, avregistrera dig när som helst.",
       "area": "hantverk"
+    },
+    {
+      "type": "gallery",
+      "eyebrow": "Kundbilder och reparationer",
+      "title": "Hantverk ",
+      "columns": "3",
+      "images": [
+        {
+          "url": "/images/img4150-32a65027.jpeg",
+          "alt": "Remmar som hängt med sedan år 2000"
+        },
+        {
+          "url": "/images/9910b9c4-3043-49e5-aa2b-2eb70c6722ce1102o-c1d1471a.jpeg",
+          "alt": "Gevärsrem på sin plats"
+        }
+      ]
     }
   ]
 }
