@@ -1,0 +1,116 @@
+name: Form Handler
+
+on:
+  workflow_dispatch:
+    inputs:
+      type:
+        description: 'contact or subscribe'
+        required: true
+      name:
+        required: false
+        default: ''
+      email:
+        required: true
+      subject:
+        required: false
+        default: ''
+      message:
+        required: false
+        default: ''
+      area_label:
+        required: false
+        default: 'Förfrågan'
+      list_ids:
+        required: false
+        default: ''
+
+jobs:
+  handle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mask personal data
+        run: |
+          echo "::add-mask::${{ inputs.name }}"
+          echo "::add-mask::${{ inputs.email }}"
+          echo "::add-mask::${{ inputs.message }}"
+
+      - name: Send contact email
+        if: inputs.type == 'contact'
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          F_NAME: ${{ inputs.name }}
+          F_EMAIL: ${{ inputs.email }}
+          F_SUBJECT: ${{ inputs.subject }}
+          F_MESSAGE: ${{ inputs.message }}
+          F_AREA: ${{ inputs.area_label }}
+        run: |
+          python3 - <<'PYEOF'
+          import os, json, urllib.request, urllib.error
+
+          name    = os.environ['F_NAME']
+          email   = os.environ['F_EMAIL']
+          subject = os.environ.get('F_SUBJECT', '').strip()
+          message = os.environ['F_MESSAGE']
+          area    = os.environ.get('F_AREA', 'Förfrågan')
+
+          email_subject = f"[{area}] {subject}" if subject else f"[{area}] Förfrågan via marieuhrbom.se"
+
+          lines = [
+              "Ny förfrågan via marieuhrbom.se",
+              "----------------------------------------",
+              f"Område:   {area}",
+              f"Namn:     {name}",
+              f"E-post:   {email}",
+          ]
+          if subject:
+              lines.append(f"Ämne:     {subject}")
+          lines += ["", "Meddelande:", message, "", "----------------------------------------", "GDPR-samtycke: Ja"]
+
+          payload = json.dumps({
+              "sender":      {"name": "marieuhrbom.se", "email": "info@marieuhrbom.se"},
+              "to":          [{"email": "info@marieuhrbom.se", "name": "Marie Uhrbom"}],
+              "replyTo":     {"email": email, "name": name},
+              "subject":     email_subject,
+              "textContent": "\n".join(lines),
+          }).encode()
+
+          req = urllib.request.Request(
+              'https://api.brevo.com/v3/smtp/email',
+              data=payload,
+              headers={'api-key': os.environ['BREVO_API_KEY'], 'content-type': 'application/json'},
+              method='POST'
+          )
+          urllib.request.urlopen(req)
+          print("Email sent.")
+          PYEOF
+
+      - name: Add newsletter subscriber
+        if: inputs.type == 'subscribe'
+        env:
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          F_EMAIL: ${{ inputs.email }}
+          F_LIST_IDS: ${{ inputs.list_ids }}
+        run: |
+          python3 - <<'PYEOF'
+          import os, json, urllib.request, urllib.error
+
+          email    = os.environ['F_EMAIL']
+          list_ids = [int(x.strip()) for x in os.environ['F_LIST_IDS'].split(',') if x.strip()]
+
+          for lid in list_ids:
+              payload = json.dumps({"email": email, "listIds": [lid], "updateEnabled": True}).encode()
+              req = urllib.request.Request(
+                  'https://api.brevo.com/v3/contacts',
+                  data=payload,
+                  headers={'api-key': os.environ['BREVO_API_KEY'], 'content-type': 'application/json'},
+                  method='POST'
+              )
+              try:
+                  urllib.request.urlopen(req)
+                  print(f"Subscribed to list {lid}")
+              except urllib.error.HTTPError as e:
+                  if e.code == 204:
+                      print(f"List {lid}: already subscribed")
+                  else:
+                      raise
+          PYEOF

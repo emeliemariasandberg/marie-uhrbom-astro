@@ -34,10 +34,9 @@ const {
   errorText = 'Något gick fel. Försök igen eller skicka ett e-postmeddelande direkt.',
 } = Astro.props;
 
-const apiKey   = import.meta.env.PUBLIC_BREVO_API_KEY   ?? '';
-const sender   = import.meta.env.PUBLIC_BREVO_SENDER    ?? '';
-const recipient = import.meta.env.PUBLIC_BREVO_RECIPIENT ?? '';
-const formId   = `inquiry-form-${Math.random().toString(36).slice(2, 7)}`;
+const githubToken = import.meta.env.PUBLIC_GITHUB_TOKEN ?? '';
+const githubRepo  = import.meta.env.PUBLIC_GITHUB_REPO  ?? '';
+const formId = `inquiry-form-${Math.random().toString(36).slice(2, 7)}`;
 
 const areaLabel = {
   homeopati: 'Homeopati',
@@ -149,7 +148,7 @@ const areaLabel = {
   </div>
 </section>
 
-<script define:vars={{ formId, apiKey, sender, recipient, areaLabel }}>
+<script define:vars={{ formId, githubToken, githubRepo, areaLabel }}>
 (function () {
   const form = document.getElementById(formId);
   if (!form) return;
@@ -158,6 +157,14 @@ const areaLabel = {
     e.preventDefault();
 
     if (form.querySelector('[name="_honey"]')?.value) return;
+
+    const cooldownKey = 'form_last_submit';
+    const last = Number(localStorage.getItem(cooldownKey) ?? 0);
+    if (Date.now() - last < 60_000) {
+      errorMsg.classList.remove('hidden');
+      errorMsg.textContent = 'Vänta en stund innan du skickar igen.';
+      return;
+    }
 
     const submitBtn  = document.getElementById(`${formId}-submit`);
     const spinner    = document.getElementById(`${formId}-spinner`);
@@ -174,47 +181,30 @@ const areaLabel = {
     const subject = form.querySelector('[name="subject"]')?.value?.trim() ?? '';
     const message = form.querySelector('[name="message"]')?.value?.trim() ?? '';
 
-    const emailSubject = subject
-      ? `[${areaLabel}] ${subject}`
-      : `[${areaLabel}] Förfrågan via marieuhrbom.se`;
-
-    const body = [
-      `Ny förfrågan via marieuhrbom.se`,
-      `----------------------------------------`,
-      `Område:   ${areaLabel}`,
-      `Namn:     ${name}`,
-      `E-post:   ${email}`,
-      subject ? `Ämne:     ${subject}` : '',
-      ``,
-      `Meddelande:`,
-      message,
-      ``,
-      `----------------------------------------`,
-      `GDPR-samtycke: Ja`,
-    ].filter(line => line !== undefined && !(line === '' && false)).join('\n');
-
     try {
-      const res = await fetch('https://api.brevo.com/v3/smtp/email', {
-        method: 'POST',
-        headers: {
-          'api-key': apiKey,
-          'content-type': 'application/json',
-          'accept': 'application/json',
-        },
-        body: JSON.stringify({
-          sender:      { name: 'marieuhrbom.se', email: sender },
-          to:          [{ email: recipient, name: 'Marie Uhrbom' }],
-          replyTo:     { email, name },
-          subject:     emailSubject,
-          textContent: body,
-        }),
-      });
+      const res = await fetch(
+        `https://api.github.com/repos/${githubRepo}/actions/workflows/form-handler.yml/dispatches`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${githubToken}`,
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ref: 'main',
+            inputs: { type: 'contact', name, email, subject, message, area_label: areaLabel },
+          }),
+        }
+      );
 
-      if (res.ok) {
+      if (res.status === 204) {
+        localStorage.setItem('form_last_submit', String(Date.now()));
         successMsg.classList.remove('hidden');
         form.reset();
       } else {
-        throw new Error('API error');
+        throw new Error('Dispatch failed');
       }
     } catch {
       errorMsg.classList.remove('hidden');

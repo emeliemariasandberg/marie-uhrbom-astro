@@ -55,6 +55,10 @@ const canonicalUrl = new URL(slug ? `/${slug}` : '/', Astro.site ?? 'https://mar
 
     <link rel="icon" type="image/svg+xml" href={siteUrl('/favicon.svg')} />
 
+    <!-- Security (meta-tag equivalents — GitHub Pages cannot set HTTP headers) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.github.com;" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
     <!-- Structured data -->
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",

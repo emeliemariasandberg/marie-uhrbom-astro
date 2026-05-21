@@ -16,7 +16,8 @@ const {
   area = 'all',
 } = Astro.props;
 
-const apiKey = import.meta.env.PUBLIC_BREVO_API_KEY ?? '';
+const githubToken = import.meta.env.PUBLIC_GITHUB_TOKEN ?? '';
+const githubRepo  = import.meta.env.PUBLIC_GITHUB_REPO  ?? '';
 const listMap = {
   homeopati: Number(import.meta.env.PUBLIC_BREVO_LIST_HOMEOPATI),
   coachning: Number(import.meta.env.PUBLIC_BREVO_LIST_VAGLEDNING),
@@ -117,7 +118,7 @@ const formId = `nl-${Math.random().toString(36).slice(2, 7)}`;
   </div>
 </section>
 
-<script define:vars={{ formId, apiKey, singleListId, showCheckboxes, listMap }}>
+<script define:vars={{ formId, githubToken, githubRepo, singleListId, showCheckboxes, listMap }}>
 (function () {
   const form = document.getElementById(formId);
   if (!form) return;
@@ -127,8 +128,12 @@ const formId = `nl-${Math.random().toString(36).slice(2, 7)}`;
 
     if (form.querySelector('[name="_honey"]')?.value) return;
 
-    const email      = form.querySelector('[name="email"]')?.value?.trim();
-    const gdpr       = form.querySelector('[name="gdpr"]')?.checked;
+    const cooldownKey = 'nl_last_submit';
+    const last = Number(localStorage.getItem(cooldownKey) ?? 0);
+    if (Date.now() - last < 60_000) return;
+
+    const email       = form.querySelector('[name="email"]')?.value?.trim();
+    const gdpr        = form.querySelector('[name="gdpr"]')?.checked;
     const interestErr = document.getElementById(`${formId}-interest-err`);
     const successMsg  = document.getElementById(`${formId}-success`);
     const errorMsg    = document.getElementById(`${formId}-error`);
@@ -157,25 +162,29 @@ const formId = `nl-${Math.random().toString(36).slice(2, 7)}`;
     spinner.classList.remove('hidden');
 
     try {
-      const results = await Promise.all(
-        listIds.map(listId =>
-          fetch('https://api.brevo.com/v3/contacts', {
-            method: 'POST',
-            headers: {
-              'api-key': apiKey,
-              'content-type': 'application/json',
-              'accept': 'application/json',
-            },
-            body: JSON.stringify({ email, listIds: [listId], updateEnabled: true }),
-          })
-        )
+      const res = await fetch(
+        `https://api.github.com/repos/${githubRepo}/actions/workflows/form-handler.yml/dispatches`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${githubToken}`,
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ref: 'main',
+            inputs: { type: 'subscribe', email, list_ids: listIds.join(',') },
+          }),
+        }
       );
 
-      if (results.every(r => r.ok || r.status === 204)) {
+      if (res.status === 204) {
+        localStorage.setItem('nl_last_submit', String(Date.now()));
         successMsg.classList.remove('hidden');
         form.reset();
       } else {
-        throw new Error();
+        throw new Error('Dispatch failed');
       }
     } catch {
       errorMsg.classList.remove('hidden');

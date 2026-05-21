@@ -44,9 +44,8 @@ jobs:
         run: npm run build
         env:
           BASE_PATH: ${{ steps.base.outputs.value }}
-          PUBLIC_BREVO_API_KEY: ${{ secrets.PUBLIC_BREVO_API_KEY }}
-          PUBLIC_BREVO_SENDER: info@marieuhrbom.se
-          PUBLIC_BREVO_RECIPIENT: info@marieuhrbom.se
+          PUBLIC_GITHUB_TOKEN: ${{ secrets.FORM_DISPATCH_TOKEN }}
+          PUBLIC_GITHUB_REPO: ${{ github.repository }}
           PUBLIC_BREVO_LIST_HOMEOPATI: 3
           PUBLIC_BREVO_LIST_VAGLEDNING: 4
           PUBLIC_BREVO_LIST_HANTVERK: 5
