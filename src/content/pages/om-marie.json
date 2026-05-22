@@ -8,8 +8,8 @@
     {
       "type": "hero-overlay",
       "eyebrow": "Om Marie",
-      "title": "Hantverkare, Homeopat & Livscoach",
-      "subtitle": "Med rötterna i Västra Götaland och hjärtat i hantverket.",
+      "title": "Hantverkare, Homeopat & Vägledare",
+      "subtitle": "Med rötterna i naturen och hjärtat i hantverket.",
       "image": "/images/naturaker-b21fa6a6.jpeg",
       "alt": "Marie Uhrbom",
       "cta1Label": "Kom i kontakt",
@@ -27,7 +27,7 @@
           "href": "/hantverk"
         },
         {
-          "label": "Hälsa & Coaching",
+          "label": "Hälsa & Vägledning",
           "since": "sedan 2006",
           "description": "Livscoach & hälsovägledare",
           "href": "/vagledning"
