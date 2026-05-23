@@ -4,5 +4,47 @@
     "title": "Bok Vildväxande",
     "description": "Dan Uhrboms bok Vildväxande finns att köpa"
   },
-  "sections": []
+  "sections": [
+    {
+      "type": "hero-overlay",
+      "eyebrow": "Bok",
+      "title": "Vildväxande av Dan Uhrbom",
+      "image": "/images/img5956-cf242ceb.jpeg",
+      "alt": "Bild på boken Vildväxande omgiven av gröna blad"
+    },
+    {
+      "type": "text",
+      "title": "Vem var Dan Uhrbom",
+      "body": "Dan Uhrbom var min far, ingenjören som under hela sitt liv sökte kunskap om hälsa och välmående. Dan var nyfiken på såväl raw food som kvantfysik och samhällsutveckling. Han hade väldigt omtyckta Vilda-växtvandringar och kurser där detta var kursboken. \nNär Dan gick bort 2020 så valde jag och min bror att låta trycka upp hans bok i fler exemplar eftersom så många frågade efter den. Därför finns även möjlighet för dig att beställa den."
+    },
+    {
+      "type": "gallery",
+      "columns": "2",
+      "eyebrow": "Fram och baksida",
+      "title": "Vildväxande - storlek A4, 221 sidor",
+      "images": [
+        {
+          "url": "/images/img5956-cf242ceb.jpeg",
+          "alt": "Bild på boken Vildväxande omgiven av gröna blad"
+        },
+        {
+          "url": "/images/img5958-4c1187be.jpeg",
+          "alt": "Bild på boken Vildväxandes baksida"
+        }
+      ]
+    },
+    {
+      "type": "info-card",
+      "title": "Hur beställer jag? Kostnad?",
+      "body": "Du beställer genom att skicka ett meddelande via formuläret nedan. \n\nDu skriver antal böcker du vill köpa, ditt namn, adress, mobilnummer. Jag svarar dig inom 2 dagar och ger besked när paketet skickas samt vilka alternativ som finns för betalning.\n\nBoken kostar 220:- inklusive moms. Porto tillkommer om den ska skickas. ",
+      "tone": "sage"
+    },
+    {
+      "type": "inquiry-form",
+      "showSubject": false,
+      "title": "Beställ boken Vildväxande",
+      "eyebrow": "Vildväxande formulär",
+      "intro": "Fyll i formuläret så hör jag av mig inom ett par dagar. Du är också välkommen att ringa eller skicka ett e-postmeddelande direkt."
+    }
+  ]
 }
