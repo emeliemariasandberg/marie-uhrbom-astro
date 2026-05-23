@@ -9,7 +9,7 @@
       "type": "hero-split",
       "eyebrow": "Välkommen",
       "title": "Hantverk, Homeopati & Hälsa",
-      "subtitle": "Jag gör gevärremmar för hand, hjälper din kropp att läka och lyssnar när livet behöver ett samtal. Tre verksamheter — ett engagemang.",
+      "subtitle": "Jag gör gevärsremmar för hand, hjälper din kropp att läka och lyssnar när livet behöver ett samtal. Tre verksamheter — ett engagemang.",
       "image": "/images/laderhantverk5-0ffeb56a.jpeg",
       "alt": "Marie Uhrbom",
       "cta1Label": "Kom i kontakt",
@@ -26,7 +26,8 @@
       "image": "/images/marieuhrbom-c9d5f7b9.jpg",
       "alt": "Marie Uhrbom",
       "linkLabel": "Läs mer om mig",
-      "linkHref": "/om-marie"
+      "linkHref": "/om-marie",
+      "bgImage": "/images/img5819-7bc4e208.jpeg"
     },
     {
       "type": "services-grid",
@@ -44,7 +45,7 @@
           "size": "large"
         },
         {
-          "eyebrow": "Hälsa",
+          "eyebrow": "Homeopati",
           "title": "Klassisk Homeopati",
           "body": "Homeopati stärker kroppens egna läkningsförmåga på ett skonsamt och naturligt sätt. Jag tar emot människor och djur — online, via telefon eller nära Mellerud.",
           "linkLabel": "Om homeopati",
@@ -53,26 +54,26 @@
           "image": "/images/diplomhomeopati-f39798ce.jpeg"
         },
         {
-          "eyebrow": "Vägledning",
+          "eyebrow": "Hälsa & Vägledning",
           "title": "Hälsa & Vägledning",
           "body": "Samtal och vägledning för dig som vill hitta din riktning, stärka välmåendet och skapa verklig förändring. Det inledande samtalet är kostnadsfritt.",
           "linkLabel": "Om vägledning",
           "href": "/vagledning",
           "size": "wide",
-          "image": "/images/bokvildvaxande2-cf242ceb.jpeg"
+          "image": "/images/img5280-1079f070.jpeg"
         }
       ]
     },
     {
       "type": "quote",
-      "quote": "Det handlar om att skapa något beständigt — oavsett om det är ett läderstycke, en kropp i balans eller ett liv i riktning.",
+      "quote": "Det handlar om att skapa något beständigt — oavsett om det är en kropp i balans, ett liv i rätt riktning eller ett läderhantverk.",
       "attribution": "Marie Uhrbom"
     },
     {
       "type": "newsletter-signup",
       "eyebrow": "Nyhetsbrev",
       "title": "Håll dig uppdaterad",
-      "body": "Ungefär en gång i månaden delar jag tankar om hälsa, homeopati, vägledning och läderhantverk. Välj vad du är intresserad av.",
+      "body": "Ungefär en gång i månaden delar jag tankar om hälsa, homeopati och vägledning. \nÄr du intresserad av det så är du välkommen att prenumerera på nyhetsbrevet. Du kan närsomhelst avregistrera dig.",
       "area": "all"
     },
     {
