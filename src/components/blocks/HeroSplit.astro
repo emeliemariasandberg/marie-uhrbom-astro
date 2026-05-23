@@ -1,5 +1,5 @@
 ---
-import { makeUrlFn } from '@/utils/url';
+import { makeUrlFn, isExternal } from '@/utils/url';
 const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
 
 interface Props {
@@ -45,12 +45,14 @@ const centered = layout === 'centered' || (!image && !cta1Label && !cta2Label &&
           <div class="flex flex-wrap justify-center gap-3">
             {cta1Label && cta1Href && (
               <a href={siteUrl(cta1Href)}
+                {...(isExternal(cta1Href) ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                 class="inline-flex items-center px-6 py-3 rounded-lg bg-[var(--color-primary)] text-[var(--color-primary-foreground)] font-medium text-sm hover:opacity-90 transition-opacity shadow-[var(--shadow-soft)]">
                 {cta1Label}
               </a>
             )}
             {cta2Label && cta2Href && (
               <a href={siteUrl(cta2Href)}
+                {...(isExternal(cta2Href) ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                 class="inline-flex items-center px-6 py-3 rounded-lg border border-[var(--color-border)] text-[var(--color-foreground)] font-medium text-sm hover:bg-[var(--color-secondary)] transition-colors">
                 {cta2Label}
               </a>

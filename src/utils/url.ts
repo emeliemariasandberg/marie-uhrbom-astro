@@ -5,3 +5,7 @@ export function makeUrlFn(base: string) {
     return b + path.replace(/^\//, '');
   };
 }
+
+export function isExternal(href: string | undefined): boolean {
+  return !!href && /^https?:\/\//.test(href);
+}

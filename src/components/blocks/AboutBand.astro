@@ -1,6 +1,6 @@
 ---
 import { marked } from 'marked';
-import { makeUrlFn } from '@/utils/url';
+import { makeUrlFn, isExternal } from '@/utils/url';
 const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
 
 interface Props {
@@ -49,6 +49,7 @@ const bodyHtml = marked.parse(body);
         {linkLabel && linkHref && (
           <a
             href={siteUrl(linkHref)}
+            {...(isExternal(linkHref) ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
             class="mt-6 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--color-leather)] hover:text-[var(--color-leather-deep)] transition-colors"
           >
             {linkLabel}

@@ -258,11 +258,52 @@ textarea { resize: vertical; }
 .wf-dark { background: oklch(0.3 0.045 40); }
 .wf-muted-bg { background: oklch(0.95 0.014 80); }
 
+/* Preview accordion */
+#preview-pane-wrap {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+.preview-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  background: var(--muted);
+  cursor: pointer;
+  user-select: none;
+}
+.preview-bar:hover { background: var(--border); }
+.preview-bar-label { font-size: 0.8125rem; font-weight: 500; color: var(--foreground); flex: 1; }
+.preview-bar-arrow { font-size: 0.7rem; color: var(--muted-fg); transition: transform 0.15s; }
+.preview-bar-arrow.open { transform: rotate(180deg); }
+#preview-iframe { width: 100%; height: 62vh; border: none; display: block; border-top: 1px solid var(--border); }
+#preview-pane-wrap.mobile { background: oklch(0.92 0.01 75); }
+#preview-pane-wrap.mobile #preview-iframe { width: 390px; margin: 0 auto; border-radius: 12px 12px 0 0; border: 1px solid var(--border); border-bottom: none; }
+.preview-viewport-btn { font-size: 0.75rem; padding: 0.25rem 0.625rem; }
+.preview-viewport-btn.active { background: var(--muted); color: var(--foreground); border-color: var(--border); }
+
 @media (max-width: 600px) {
   .app-header { padding: 0.625rem 1rem; }
   .main { padding: 1.25rem 1rem 5rem; }
   .sp-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
 }
+
+/* Link badges & button-group fields */
+.link-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  white-space: nowrap;
+  display: inline-block;
+}
+.link-badge-intern { background: oklch(0.91 0.05 145); color: oklch(0.32 0.09 145); }
+.link-badge-extern { background: oklch(0.91 0.06 230); color: oklch(0.35 0.12 230); }
+.link-badge-empty  { background: var(--muted); color: var(--muted-fg); }
+.button-group-fields { display: flex; flex-direction: column; gap: 0.5rem; }
 </style>
 </head>
 <body>
@@ -282,11 +323,9 @@ const SECTION_SCHEMA = {
     { key: 'image',     label: 'Bild (höger sida)',    type: 'image',    hint: 'Visas ej i centrerat läge' },
     { key: 'alt',       label: 'Alt-text',             type: 'text',     hint: 'Beskriv bilden för synskadade och sökmotorer' },
     { key: 'bgImage',   label: 'Bakgrundsbild (tonad)', type: 'image',   hint: 'Valfri. Bilden tonas in bakom sektionen — texten syns tydligt tack vare en gradient.' },
-    { key: 'cta1Label', label: 'Knapp 1: text',        type: 'text' },
-    { key: 'cta1Href',  label: 'Knapp 1: länk',        type: 'text' },
-    { key: 'cta2Label', label: 'Knapp 2: text',        type: 'text' },
-    { key: 'cta2Href',  label: 'Knapp 2: länk',        type: 'text' },
-    { key: 'footnote',  label: 'Fotnot',               type: 'text' },
+    { type: 'button-group', label: 'Knapp 1 (valfri)', labelKey: 'cta1Label', hrefKey: 'cta1Href' },
+    { type: 'button-group', label: 'Knapp 2 (valfri)', labelKey: 'cta2Label', hrefKey: 'cta2Href' },
+    { key: 'footnote',  label: 'Fotnot',               type: 'textarea', rows: 2 },
   ],
   'hero-overlay': [
     { key: 'eyebrow',   label: 'Etikett',              type: 'text',     hint: 'Liten text ovanför rubriken' },
@@ -294,10 +333,8 @@ const SECTION_SCHEMA = {
     { key: 'subtitle',  label: 'Underrubrik',          type: 'textarea' },
     { key: 'image',     label: 'Bakgrundsbild',        type: 'image' },
     { key: 'alt',       label: 'Alt-text',             type: 'text',     hint: 'Beskriv bilden för synskadade och sökmotorer' },
-    { key: 'cta1Label', label: 'Knapp 1: text',        type: 'text' },
-    { key: 'cta1Href',  label: 'Knapp 1: länk',        type: 'text' },
-    { key: 'cta2Label', label: 'Knapp 2: text',        type: 'text' },
-    { key: 'cta2Href',  label: 'Knapp 2: länk',        type: 'text' },
+    { type: 'button-group', label: 'Knapp 1 (valfri)', labelKey: 'cta1Label', hrefKey: 'cta1Href' },
+    { type: 'button-group', label: 'Knapp 2 (valfri)', labelKey: 'cta2Label', hrefKey: 'cta2Href' },
   ],
   'page-header': [
     { key: 'eyebrow',   label: 'Etikett',              type: 'text',     hint: 'Liten text ovanför rubriken' },
@@ -327,8 +364,7 @@ const SECTION_SCHEMA = {
     { key: 'image',     label: 'Bild (vänster)',       type: 'image' },
     { key: 'alt',       label: 'Alt-text',             type: 'text',     hint: 'Beskriv bilden för synskadade och sökmotorer' },
     { key: 'bgImage',   label: 'Bakgrundsbild (tonad)', type: 'image',   hint: 'Valfri. Bilden tonas in bakom sektionen med en gradient från höger.' },
-    { key: 'linkLabel', label: 'Länktext (valfri)',    type: 'text',    hint: 'T.ex. "Läs mer"' },
-    { key: 'linkHref',  label: 'Länk-URL',             type: 'text' },
+    { type: 'button-group', label: 'Länk (valfri)', labelKey: 'linkLabel', hrefKey: 'linkHref', variant: 'link' },
   ],
   'method-cards': [
     { key: 'items',     label: 'Kort',                 type: 'card-list' },
@@ -354,18 +390,16 @@ const SECTION_SCHEMA = {
     { key: 'messagePlaceholder',  label: 'Meddelandefältets platshållartext', type: 'textarea' },
     { key: 'submitLabel',         label: 'Skicka-knappens text',     type: 'text',     hint: 'Standard: "Skicka"' },
     { key: 'gdprText',            label: 'GDPR-samtyckestext',       type: 'textarea', hint: 'Lämna tomt för standardtext' },
-    { key: 'successText',         label: 'Bekräftelsemeddelande',    type: 'text',     hint: 'Visas när formuläret skickats' },
-    { key: 'errorText',           label: 'Felmeddelande',            type: 'text',     hint: 'Visas om något gick fel' },
+    { key: 'successText',         label: 'Bekräftelsemeddelande',    type: 'textarea', rows: 2, hint: 'Visas när formuläret skickats' },
+    { key: 'errorText',           label: 'Felmeddelande',            type: 'textarea', rows: 2, hint: 'Visas om något gick fel' },
   ],
   'cta': [
     { key: 'title',       label: 'Rubrik',             type: 'text',     required: true },
     { key: 'body',        label: 'Text',               type: 'textarea' },
     { key: 'theme',       label: 'Färgtema',           type: 'select',   options: [{ value: 'dark', label: 'Mörk (läderbrunt)' }, { value: 'light', label: 'Ljus (neutral)' }, { value: 'sage', label: 'Grön (skogsgrön)' }], hint: 'Välj bakgrundsfärg för sektionen' },
     { key: 'align',       label: 'Textjustering',      type: 'select',   options: [{ value: 'center', label: 'Centrerad' }, { value: 'left', label: 'Vänsterjusterad' }] },
-    { key: 'buttonLabel', label: 'Knapp 1: text',      type: 'text' },
-    { key: 'buttonHref',  label: 'Knapp 1: länk',      type: 'text' },
-    { key: 'cta2Label',   label: 'Knapp 2: text',      type: 'text',     hint: 'Valfri andra knapp' },
-    { key: 'cta2Href',    label: 'Knapp 2: länk',      type: 'text' },
+    { type: 'button-group', label: 'Knapp 1',           labelKey: 'buttonLabel', hrefKey: 'buttonHref' },
+    { type: 'button-group', label: 'Knapp 2 (valfri)', labelKey: 'cta2Label',   hrefKey: 'cta2Href' },
   ],
   'quote': [
     { key: 'variant',     label: 'Stil',               type: 'select',   options: [{ value: 'default', label: 'Standard — sidbredd med grön vänsterkant' }, { value: 'hero', label: 'Hero — stor mörk fullbredd' }] },
@@ -459,6 +493,8 @@ let openSections = new Set();
 let settingsTab  = 'contact';
 let settingsData = {};
 let knownPages   = []; // { slug, title } — cached for nav suggestions
+let previewOpen   = false;
+let previewMobile = false;
 
 /* ── GitHub API ───────────────────────────────────────────────── */
 
@@ -534,6 +570,7 @@ function markDirty() {
   dirty = true;
   const btn = document.getElementById('publish-btn');
   if (btn) { btn.className = 'btn btn-primary btn-sm'; btn.textContent = 'Publicera'; }
+  schedulePreviewUpdate();
 }
 
 function clearDirty() {
@@ -762,14 +799,36 @@ function showEditor() {
     publishBtn,
   );
 
+  const titleVal = pageData.meta?.title || '';
+  const titleCounter = h('span', { className: 'hint', style: 'text-align:right' }, `${titleVal.length} / 60`);
+  const titleInp = h('input', { type: 'text', maxlength: '60', value: titleVal, onInput: e => {
+    pageData.meta = pageData.meta || {}; pageData.meta.title = e.target.value; markDirty();
+    const len = e.target.value.length;
+    titleCounter.textContent = `${len} / 60`;
+    titleCounter.style.color = len >= 57 ? 'var(--destructive)' : len >= 50 ? 'oklch(0.55 0.15 55)' : '';
+  }});
+
+  const descVal = pageData.meta?.description || '';
+  const descCounter = h('span', { className: 'hint', style: 'text-align:right' }, `${descVal.length} / 155`);
+  const descInp = h('input', { type: 'text', maxlength: '155', value: descVal, onInput: e => {
+    pageData.meta = pageData.meta || {}; pageData.meta.description = e.target.value; markDirty();
+    const len = e.target.value.length;
+    descCounter.textContent = `${len} / 155`;
+    descCounter.style.color = len >= 148 ? 'var(--destructive)' : len >= 132 ? 'oklch(0.55 0.15 55)' : '';
+  }});
+
   const metaCard = h('div', { className: 'card', style: 'display:flex;flex-direction:column;gap:0.875rem;margin-bottom:1.5rem' },
     h('div', { className: 'field' },
-      h('label', {}, 'Sidtitel'),
-      h('input', { type: 'text', value: pageData.meta?.title || '', onInput: e => { pageData.meta = pageData.meta || {}; pageData.meta.title = e.target.value; markDirty(); } }),
+      h('label', {}, 'Meta-titel'),
+      titleInp,
+      titleCounter,
+      h('span', { className: 'hint' }, 'Syns i webbläsarfliken och i Googles sökresultat — inte på själva sidan. Sikta på 50–60 tecken. Lämnar du fältet tomt används standardtiteln från Inställningar → SEO.'),
     ),
     h('div', { className: 'field' },
       h('label', {}, 'Meta-beskrivning (SEO)'),
-      h('input', { type: 'text', value: pageData.meta?.description || '', onInput: e => { pageData.meta = pageData.meta || {}; pageData.meta.description = e.target.value; markDirty(); } }),
+      descInp,
+      descCounter,
+      h('span', { className: 'hint' }, 'Syns under sidtiteln i Googles sökresultat och vid delning i sociala medier. Sikta på 140–155 tecken. Lämnar du fältet tomt används standardbeskrivningen från Inställningar → SEO.'),
     ),
   );
 
@@ -786,7 +845,63 @@ function showEditor() {
     addBar,
   );
 
+  const liveUrl = '/' + (pageSlug === 'hem' ? '' : pageSlug);
+  const arrow = h('span', { className: 'preview-bar-arrow' + (previewOpen ? ' open' : '') }, '▼');
+  const previewIframe = h('iframe', { id: 'preview-iframe', style: previewOpen ? '' : 'display:none' });
+
+  const desktopBtn = h('button', {
+    className: 'btn btn-ghost btn-sm preview-viewport-btn' + (!previewMobile ? ' active' : ''),
+    title: 'Skrivbordsvy',
+    onClick: e => { e.stopPropagation(); if (previewMobile) togglePreviewMobile(); },
+  }, 'Skrivbord');
+  const mobileBtn = h('button', {
+    className: 'btn btn-ghost btn-sm preview-viewport-btn' + (previewMobile ? ' active' : ''),
+    title: 'Mobilvy (390 px)',
+    onClick: e => { e.stopPropagation(); if (!previewMobile) togglePreviewMobile(); },
+  }, 'Mobil');
+
+  const previewPane = h('div', { id: 'preview-pane-wrap', className: previewMobile ? 'mobile' : '' },
+    h('div', { className: 'preview-bar', onClick: togglePreview },
+      h('span', { className: 'preview-bar-label' }, 'Förhandsgranskning'),
+      h('div', { style: 'display:flex;gap:0.25rem', onClick: e => e.stopPropagation() }, desktopBtn, mobileBtn),
+      h('button', { className: 'btn btn-ghost btn-sm', style: 'font-size:0.75rem', title: 'Uppdatera',
+        onClick: e => { e.stopPropagation(); updatePreview(); },
+      }, '↺'),
+      h('a', { href: liveUrl, target: '_blank', className: 'btn btn-ghost btn-sm', style: 'font-size:0.75rem', title: 'Öppna publicerad sida',
+        onClick: e => e.stopPropagation(),
+      }, '↗'),
+      arrow,
+    ),
+    previewIframe,
+  );
+
+  main.insertBefore(previewPane, main.firstChild);
   app().append(header, main);
+  if (previewOpen) updatePreview();
+}
+
+function togglePreview() {
+  previewOpen = !previewOpen;
+  const iframe = document.getElementById('preview-iframe');
+  const arrow  = document.querySelector('.preview-bar-arrow');
+  if (previewOpen) {
+    if (iframe) iframe.style.display = '';
+    if (arrow)  arrow.classList.add('open');
+    updatePreview();
+  } else {
+    if (iframe) iframe.style.display = 'none';
+    if (arrow)  arrow.classList.remove('open');
+  }
+}
+
+function togglePreviewMobile() {
+  previewMobile = !previewMobile;
+  const pane = document.getElementById('preview-pane-wrap');
+  if (pane) pane.classList.toggle('mobile', previewMobile);
+  document.querySelectorAll('.preview-viewport-btn').forEach(btn => {
+    const isDesktop = btn.textContent === 'Skrivbord';
+    btn.classList.toggle('active', isDesktop ? !previewMobile : previewMobile);
+  });
 }
 
 function rebuildSectionList(container) {
@@ -837,7 +952,13 @@ function makeSectionBlock(sec, i, total, listEl) {
 
   if (isOpen) {
     const body = h('div', { className: 'section-body' });
-    schema.forEach(field => body.append(makeField(field, sec[field.key], val => { sec[field.key] = val; markDirty(); })));
+    schema.forEach(field => {
+      if (field.type === 'button-group') {
+        body.append(makeButtonGroup(field, sec, markDirty));
+      } else {
+        body.append(makeField(field, sec[field.key], val => { sec[field.key] = val; markDirty(); }));
+      }
+    });
     block.append(body);
   }
 
@@ -1120,6 +1241,118 @@ function makeAddSectionBar(listEl) {
   return btn;
 }
 
+/* ── Link helpers ─────────────────────────────────────────────── */
+
+function detectLinkType(href) {
+  if (!href) return 'empty';
+  if (/^https?:\/\//.test(href)) return 'extern';
+  return 'intern';
+}
+
+function updateLinkBadge(badge, hintEl, href) {
+  const t = detectLinkType(href);
+  if (t === 'extern') {
+    badge.textContent = '↗ extern länk';
+    badge.className = 'link-badge link-badge-extern';
+    hintEl.textContent = 'Extern webbplats — öppnas automatiskt i nytt fönster';
+  } else if (t === 'intern') {
+    badge.textContent = '↩ intern sida';
+    badge.className = 'link-badge link-badge-intern';
+    hintEl.textContent = 'Intern länk — ange sökvägen, t.ex. /kontakt eller /om-marie';
+  } else {
+    badge.textContent = '';
+    badge.className = 'link-badge link-badge-empty';
+    hintEl.textContent = 'Intern länk: skriv /sidnamn (t.ex. /kontakt). Extern länk: skriv hela adressen med https://';
+  }
+}
+
+function makeButtonGroup(field, sec, onDirty) {
+  const lk = field.labelKey;
+  const hk = field.hrefKey;
+  const isLink = field.variant === 'link';
+
+  const wrap = h('div', { className: 'field' });
+  wrap.append(h('label', {}, field.label));
+
+  // Datalist with known pages for URL autocomplete
+  const dlId = 'pdl-' + Math.random().toString(36).slice(2);
+  const dl = document.createElement('datalist');
+  dl.id = dlId;
+  knownPages.forEach(p => {
+    const o = document.createElement('option');
+    o.value = '/' + (p.slug === 'hem' ? '' : p.slug);
+    o.textContent = p.title;
+    dl.append(o);
+  });
+
+  const badge  = h('span', { className: 'link-badge link-badge-empty' });
+  const hintEl = h('span', { className: 'hint' });
+  updateLinkBadge(badge, hintEl, sec[hk] || '');
+
+  // Validation error elements
+  const labelErr = h('span', { className: 'hint', style: 'color:var(--destructive);display:none' }, '⚠ Text saknas — knappen visas inte utan text');
+  const hrefErr  = h('span', { className: 'hint', style: 'color:var(--destructive);display:none' }, '⚠ Länk saknas — knappen visas inte utan destination');
+
+  function validate() {
+    const hasLabel = !!(sec[lk] || '').trim();
+    const hasHref  = !!(sec[hk] || '').trim();
+    const mismatch = hasLabel !== hasHref;
+    labelInp.style.borderColor = (mismatch && !hasLabel) ? 'var(--destructive)' : '';
+    hrefInp.style.borderColor  = (mismatch && !hasHref)  ? 'var(--destructive)' : '';
+    labelErr.style.display = (mismatch && !hasLabel) ? '' : 'none';
+    hrefErr.style.display  = (mismatch && !hasHref)  ? '' : 'none';
+  }
+
+  const hrefInp = h('input', {
+    type: 'text',
+    placeholder: '/kontakt  eller  https://...',
+    value: sec[hk] || '',
+    list: dlId,
+    onInput: e => {
+      sec[hk] = e.target.value;
+      updateLinkBadge(badge, hintEl, e.target.value);
+      validate();
+      onDirty();
+    },
+  });
+
+  const labelInp = h('input', {
+    type: 'text',
+    placeholder: isLink ? 'Länktext, t.ex. "Läs mer om mig"' : 'Knapptext',
+    value: sec[lk] || '',
+    onInput: e => {
+      sec[lk] = e.target.value;
+      validate();
+      onDirty();
+    },
+  });
+
+  // Run once on load to catch already-broken data
+  validate();
+
+  wrap.append(
+    h('div', { className: 'button-group-fields' },
+      h('div', { className: 'field', style: 'gap:0.25rem' },
+        h('label', { style: 'font-size:0.75rem;font-weight:500;color:var(--muted-fg)' }, 'Text'),
+        labelInp,
+        labelErr,
+      ),
+      h('div', { className: 'field', style: 'gap:0.25rem' },
+        h('div', { style: 'display:flex;align-items:center;gap:0.5rem' },
+          h('label', { style: 'font-size:0.75rem;font-weight:500;color:var(--muted-fg)' }, 'Länk'),
+          badge,
+        ),
+        hrefInp,
+        hrefErr,
+        hintEl,
+        dl,
+      ),
+    ),
+  );
+
+  return wrap;
+}
+
 /* ── Field editors ────────────────────────────────────────────── */
 
 function makeField(field, value, onChange) {
@@ -1380,7 +1613,22 @@ function makeServiceList(items, onChange) {
         imgWrap,
         h('div', { className: 'list-row-fields' },
           inp('eyebrow', 'Ögonbrynstext'), inp('title', 'Rubrik'), bodyTa,
-          inp('linkLabel', 'Länktext'), inp('href', 'URL'),
+          inp('linkLabel', 'Länktext'),
+          (() => {
+            const badge2 = h('span', { className: 'link-badge link-badge-empty' });
+            const hint2  = h('span', { className: 'hint', style: 'font-size:0.72rem' });
+            updateLinkBadge(badge2, hint2, item.href || '');
+            const dlId2 = 'pdl-' + Math.random().toString(36).slice(2);
+            const dl2 = document.createElement('datalist');
+            dl2.id = dlId2;
+            knownPages.forEach(p => { const o = document.createElement('option'); o.value = '/' + (p.slug === 'hem' ? '' : p.slug); o.textContent = p.title; dl2.append(o); });
+            const hrefInp2 = h('input', { type: 'text', placeholder: '/sida  eller  https://...', value: item.href || '', list: dlId2,
+              onInput: e => { list[idx].href = e.target.value; updateLinkBadge(badge2, hint2, e.target.value); onChange([...list]); } });
+            return h('div', {},
+              h('div', { style: 'display:flex;align-items:center;gap:0.375rem;margin-bottom:0.25rem' },
+                h('span', { style: 'font-size:0.8125rem;color:var(--muted-fg)' }, 'Länk-URL'), badge2),
+              hrefInp2, hint2, dl2);
+          })(),
           h('div', { style: 'display:flex;align-items:center;gap:0.5rem' }, h('span', { style: 'font-size:0.8125rem;color:var(--muted-fg)' }, 'Storlek'), sizeSel),
         ),
         delBtn,
@@ -1460,7 +1708,21 @@ function makeCredentialList(items, onChange) {
           inp('label', 'Etikett (t.ex. Läderhantverk)'),
           inp('since', 'År/text (t.ex. sedan 1996)'),
           inp('description', 'Kort beskrivning (valfri)'),
-          inp('href', 'Länk-URL (valfri)'),
+          (() => {
+            const badge3 = h('span', { className: 'link-badge link-badge-empty' });
+            const hint3  = h('span', { className: 'hint', style: 'font-size:0.72rem' });
+            updateLinkBadge(badge3, hint3, item.href || '');
+            const dlId3 = 'pdl-' + Math.random().toString(36).slice(2);
+            const dl3 = document.createElement('datalist');
+            dl3.id = dlId3;
+            knownPages.forEach(p => { const o = document.createElement('option'); o.value = '/' + (p.slug === 'hem' ? '' : p.slug); o.textContent = p.title; dl3.append(o); });
+            const hrefInp3 = h('input', { type: 'text', placeholder: '/sida  eller  https://... (valfri)', value: item.href || '', list: dlId3,
+              onInput: e => { list[idx].href = e.target.value; updateLinkBadge(badge3, hint3, e.target.value); onChange([...list]); } });
+            return h('div', {},
+              h('div', { style: 'display:flex;align-items:center;gap:0.375rem;margin-bottom:0.25rem' },
+                h('span', { style: 'font-size:0.8125rem;color:var(--muted-fg)' }, 'Länk-URL (valfri)'), badge3),
+              hrefInp3, hint3, dl3);
+          })(),
         ),
         delBtn,
       ));
@@ -1527,7 +1789,7 @@ function showNewPage() {
   createBtn.addEventListener('click', async () => {
     const slug  = slugInp.value.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-');
     const title = titleInp.value.trim();
-    if (!slug || !title) { toast('Slug och sidtitel krävs.', true); return; }
+    if (!slug || !title) { toast('Slug och meta-titel krävs.', true); return; }
 
     createBtn.disabled = true;
     createBtn.innerHTML = '<span class="spinner"></span>';
@@ -1711,16 +1973,24 @@ function makeContactTab() {
   const card = h('div', { className: 'card', style: 'display:flex;flex-direction:column;gap:1rem' });
 
   [
-    { key: 'email',           label: 'E-post' },
-    { key: 'phone',           label: 'Telefon' },
-    { key: 'location',        label: 'Plats' },
-    { key: 'confidentiality', label: 'Tystnadsplikt-text' },
+    { key: 'email',    label: 'E-post' },
+    { key: 'phone',    label: 'Telefon' },
+    { key: 'location', label: 'Plats' },
   ].forEach(f => {
     card.append(h('div', { className: 'field' },
       h('label', {}, f.label),
       h('input', { type: 'text', value: d[f.key] || '', onInput: e => { d[f.key] = e.target.value; } }),
     ));
   });
+
+  const confTa = document.createElement('textarea');
+  confTa.rows = 3; confTa.value = d.confidentiality || '';
+  confTa.addEventListener('input', e => { d.confidentiality = e.target.value; });
+  card.append(h('div', { className: 'field' },
+    h('label', {}, 'Tystnadsplikt-text'),
+    confTa,
+    h('span', { className: 'hint' }, 'Visas på kontaktsidan när "Visa tystnadsplikt-text" är aktiverat.' ),
+  ));
 
   const saveBtn = h('button', { className: 'btn btn-primary', style: 'margin-top:0.25rem', onClick: async () => {
     saveBtn.disabled = true;
@@ -1801,8 +2071,16 @@ function makeBannerTab() {
   cb.addEventListener('change', e => { d.enabled = e.target.checked; });
   card.append(h('div', { className: 'checkbox-row' }, cb, h('label', { htmlFor: cbId }, 'Visa banner')));
 
+  const msgTa = document.createElement('textarea');
+  msgTa.rows = 3; msgTa.value = d.message || '';
+  msgTa.addEventListener('input', e => { d.message = e.target.value; });
+  card.append(h('div', { className: 'field' },
+    h('label', {}, 'Meddelande'),
+    msgTa,
+    h('span', { className: 'hint' }, 'Visas i en smal banner längst upp på alla sidor.' ),
+  ));
+
   [
-    { key: 'message',   label: 'Meddelande' },
     { key: 'linkLabel', label: 'Länktext (valfritt)' },
     { key: 'linkHref',  label: 'Länk-URL (valfritt)' },
   ].forEach(f => {
@@ -1833,16 +2111,36 @@ function makeSeoTab() {
   const d = settingsData.seo.data;
   const card = h('div', { className: 'card', style: 'display:flex;flex-direction:column;gap:1rem' });
 
-  card.append(h('p', { className: 'text-muted', style: 'font-size:0.875rem' }, 'Dessa inställningar visas i sökmotorer och vid delning i sociala medier.'));
+  card.append(h('p', { className: 'text-muted', style: 'font-size:0.875rem' }, 'Reservvärden för hela sajten. Varje sida kan sätta egna titel och beskrivning under "Sidinformation" — de tar alltid över dessa. Webbplatsnamnet och delningsbilden gäller alltid för hela sajten.'));
 
   [
-    { key: 'siteName',           label: 'Webbplatsnamn',              hint: 'T.ex. "Marie Uhrbom"' },
-    { key: 'defaultTitle',       label: 'Standardtitel',              hint: 'Används på sidor som saknar egen titel' },
-    { key: 'defaultDescription', label: 'Standardbeskrivning',        hint: 'Syns i Google och vid delning. Max 155 tecken.' },
-    { key: 'ogImage',            label: 'Standardbild för delning',   hint: 'Bildens sökväg, t.ex. /images/og-default.jpg' },
+    { key: 'siteName',           label: 'Webbplatsnamn',                maxLength: 60,  hint: 'T.ex. "Marie Uhrbom" — används bl.a. i Googles kunskapsruta och vid delning.' },
+    { key: 'defaultTitle',       label: 'Standardtitel (reserv)',       maxLength: 60,  hint: 'Används bara på sidor som saknar egen meta-titel. Bör beskriva sajten som helhet.' },
+    { key: 'defaultDescription', label: 'Standardbeskrivning (reserv)', maxLength: 155, hint: 'Används bara om en sidas meta-beskrivning är tom.' },
+    { key: 'ogImage',            label: 'Delningsbild (hela sajten)',                   hint: 'Visas vid delning i sociala medier. Gäller alla sidor — kan inte åsidosättas per sida. Sökväg, t.ex. /images/og-social.webp' },
   ].forEach(f => {
-    const inp = h('input', { type: 'text', value: d[f.key] || '', onInput: e => { d[f.key] = e.target.value; } });
-    card.append(h('div', { className: 'field' }, h('label', {}, f.label), inp, h('span', { className: 'hint' }, f.hint)));
+    const currentVal = d[f.key] || '';
+    const inpAttrs = { type: 'text', value: currentVal };
+    if (f.maxLength) inpAttrs.maxlength = String(f.maxLength);
+    let counter = null;
+    if (f.maxLength) {
+      counter = h('span', { className: 'hint', style: 'text-align:right' }, `${currentVal.length} / ${f.maxLength}`);
+    }
+    inpAttrs.onInput = e => {
+      d[f.key] = e.target.value;
+      if (counter) {
+        const len = e.target.value.length;
+        const warn = Math.round(f.maxLength * 0.83);
+        const danger = Math.round(f.maxLength * 0.95);
+        counter.textContent = `${len} / ${f.maxLength}`;
+        counter.style.color = len >= danger ? 'var(--destructive)' : len >= warn ? 'oklch(0.55 0.15 55)' : '';
+      }
+    };
+    const inp = h('input', inpAttrs);
+    const fieldChildren = [h('label', {}, f.label), inp];
+    if (counter) fieldChildren.push(counter);
+    fieldChildren.push(h('span', { className: 'hint' }, f.hint));
+    card.append(h('div', { className: 'field' }, ...fieldChildren));
   });
 
   const saveBtn = h('button', { className: 'btn btn-primary', style: 'margin-top:0.25rem', onClick: async () => {
@@ -1933,6 +2231,606 @@ function showLoginScreen() {
       form,
     )
   );
+}
+
+/* ── Live Preview Renderer ────────────────────────────────────── */
+
+let previewDebounce;
+
+function schedulePreviewUpdate() {
+  if (!previewOpen) return;
+  clearTimeout(previewDebounce);
+  previewDebounce = setTimeout(updatePreview, 350);
+}
+
+function updatePreview() {
+  const iframe = document.getElementById('preview-iframe');
+  if (!iframe) return;
+  const contact = settingsData.contact?.data || {
+    email: 'info@marieuhrbom.se', phone: '0703266213',
+    location: 'Utanför Mellerud, online och via telefon.',
+    confidentiality: 'Jag har tystnadsplikt, f-skatt och är ansvarsförsäkrad via Gjensidige.',
+  };
+  iframe.srcdoc = buildPreviewHtml(pageData, contact);
+}
+
+function md(text) {
+  if (!text) return '';
+  let t = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  t = t.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  t = t.replace(/^## (.+)$/gm,  '<h2>$1</h2>');
+  t = t.replace(/^# (.+)$/gm,   '<h1>$1</h1>');
+  t = t.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  t = t.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  t = t.replace(/((?:^[-*] .+(?:\n|$))+)/gm, m =>
+    '<ul>' + m.replace(/^[-*] (.+)$/gm, '<li>$1</li>') + '</ul>');
+  const blocks = t.split(/\n\n+/);
+  return blocks.map(b => {
+    b = b.trim();
+    if (!b) return '';
+    if (/^<[huo]/.test(b)) return b;
+    return '<p>' + b.replace(/\n/g, '<br>') + '</p>';
+  }).join('');
+}
+
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function imgEl(src, alt, style) {
+  if (!src) return '';
+  return `<img src="${esc(rawUrl(src))}" alt="${esc(alt||'')}"${style?` style="${style}"`:''}>`;
+}
+function btnHtml(label, href, cls) { if (!label) return ''; return `<a href="${esc(href||'#')}" class="${cls||'btn-primary'}">${esc(label)}</a>`; }
+
+function buildPreviewHtml(data, contact) {
+  const sections = (data.sections || []).map(s => renderSection(s, contact)).join('');
+  const css = `
+    :root{--cream:oklch(0.972 0.014 80);--leather:oklch(0.55 0.13 45);--leather-deep:oklch(0.36 0.09 40);--sage:oklch(0.78 0.045 135);--sage-deep:oklch(0.42 0.05 145);--clay:oklch(0.65 0.105 50);--background:oklch(0.978 0.011 85);--foreground:oklch(0.24 0.04 40);--primary:oklch(0.42 0.1 40);--muted:oklch(0.95 0.014 80);--muted-fg:oklch(0.48 0.025 50);--border:oklch(0.88 0.022 70);--font-display:"Cormorant Garamond",Georgia,serif;--font-body:"Inter",system-ui,sans-serif}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--background);color:var(--foreground);font-family:var(--font-body);font-size:1rem;line-height:1.6;-webkit-font-smoothing:antialiased}
+    img{max-width:100%;height:auto;display:block}
+    h1,h2,h3,h4{font-family:var(--font-display);font-weight:500;line-height:1.15}
+    a{color:var(--leather)}
+    .wrap{max-width:72rem;margin:0 auto;padding:0 1.25rem}
+    .eyebrow{display:block;font-size:.75rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--sage-deep);margin-bottom:.75rem}
+    .btn-primary{display:inline-flex;align-items:center;gap:.5rem;background:var(--primary);color:white;padding:.75rem 1.75rem;border-radius:9999px;font-family:var(--font-body);font-size:.9375rem;font-weight:500;text-decoration:none;border:none;cursor:default}
+    .btn-outline{display:inline-flex;align-items:center;gap:.5rem;border:1.5px solid currentColor;color:var(--primary);padding:.6875rem 1.75rem;border-radius:9999px;font-family:var(--font-body);font-size:.9375rem;font-weight:500;text-decoration:none;cursor:default}
+    .prose{line-height:1.8}
+    .prose h2{font-family:var(--font-display);font-size:1.875rem;font-weight:500;margin:2rem 0 1rem}
+    .prose h3{font-family:var(--font-display);font-size:1.5rem;font-weight:500;margin:1.5rem 0 .75rem}
+    .prose p{margin-bottom:1.25rem}
+    .prose ul{margin:0 0 1.25rem 1.5rem}
+    .prose li{margin-bottom:.375rem}
+    .prose strong{font-weight:600}
+
+    /* Site header */
+    .site-header{background:white;border-bottom:1px solid var(--border);padding:1rem 1.25rem}
+    .site-header-inner{max-width:72rem;margin:0 auto;display:flex;align-items:center}
+    .site-brand{font-family:var(--font-display);font-size:1.625rem;font-weight:500;color:var(--leather-deep);text-decoration:none}
+
+    /* Hero split */
+    .hero-split{padding:5rem 0 4rem;position:relative;overflow:hidden}
+    .hero-split-inner{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+    .hero-split-title{font-size:clamp(2.25rem,5vw,3.5rem);font-weight:500;margin-bottom:1.25rem}
+    .hero-split-sub{font-size:1.125rem;color:var(--muted-fg);margin-bottom:2rem;line-height:1.7}
+    .hero-split-ctas{display:flex;gap:.75rem;flex-wrap:wrap}
+    .hero-split-img{border-radius:.75rem;overflow:hidden;aspect-ratio:3/4}
+    .hero-split-img img{width:100%;height:100%;object-fit:cover}
+    .hero-split.centered .hero-split-inner{grid-template-columns:1fr;max-width:44rem;margin:0 auto;text-align:center}
+    .hero-split.centered .hero-split-ctas{justify-content:center}
+    .hero-footnote{font-size:.8125rem;color:var(--muted-fg);margin-top:1rem}
+
+    /* Hero overlay */
+    .hero-overlay{position:relative;min-height:70vh;display:flex;align-items:flex-end}
+    .hero-overlay-bg{position:absolute;inset:0}
+    .hero-overlay-bg img{width:100%;height:100%;object-fit:cover}
+    .hero-overlay-grad{position:absolute;inset:0;background:linear-gradient(to top,oklch(0 0 0/.7) 0%,oklch(0 0 0/.3) 45%,transparent 70%)}
+    .hero-overlay-content{position:relative;z-index:1;width:100%;padding:4rem 1.25rem}
+    .hero-overlay-inner{max-width:48rem}
+    .hero-overlay-title{font-size:clamp(2.5rem,5vw,4rem);color:white;margin-bottom:1rem}
+    .hero-overlay-sub{font-size:1.125rem;color:rgba(255,255,255,.85);margin-bottom:2rem;line-height:1.7}
+    .hero-overlay .btn-primary{background:white;color:var(--leather-deep)}
+    .hero-overlay .btn-outline{border-color:rgba(255,255,255,.6);color:white}
+
+    /* Page header */
+    .page-header{padding:5rem 0;text-align:center}
+    .page-header-inner{max-width:48rem;margin:0 auto}
+    .page-header-title{font-size:clamp(2rem,4vw,3rem);margin-bottom:1rem}
+    .page-header-sub{font-size:1.125rem;color:var(--muted-fg);line-height:1.7}
+
+    /* Text section */
+    .text-section{padding:4rem 0}
+    .text-section-inner{max-width:44rem;margin:0 auto}
+    .text-section-title{font-size:2rem;margin-bottom:1.5rem}
+
+    /* About band */
+    .about-band{padding:5rem 0;position:relative;overflow:hidden}
+    .about-band-grid{display:grid;grid-template-columns:2fr 3fr;gap:4rem;align-items:center}
+    .about-band-img{border-radius:.75rem;overflow:hidden;aspect-ratio:3/4}
+    .about-band-img img{width:100%;height:100%;object-fit:cover}
+    .about-band-title{font-size:clamp(1.75rem,3vw,2.5rem);margin-bottom:1.25rem}
+    .about-band-link{display:inline-flex;align-items:center;gap:.5rem;color:var(--leather);font-weight:500;text-decoration:none;margin-top:1.5rem}
+
+    /* Services grid */
+    .services-grid{padding:5rem 0}
+    .services-grid-header{margin-bottom:3rem}
+    .services-grid-title{font-size:clamp(1.75rem,3vw,2.5rem);margin-bottom:.75rem}
+    .services-grid-sub{color:var(--muted-fg);max-width:36rem}
+    .services-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+    .service-card{background:white;border:1px solid var(--border);border-radius:1rem;overflow:hidden;display:flex;flex-direction:column}
+    .service-card-img{aspect-ratio:4/3;overflow:hidden}
+    .service-card-img img{width:100%;height:100%;object-fit:cover}
+    .service-card-body{padding:1.5rem;flex:1;display:flex;flex-direction:column}
+    .service-card-eyebrow{font-size:.6875rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--sage-deep);margin-bottom:.5rem}
+    .service-card-title{font-family:var(--font-display);font-size:1.375rem;font-weight:500;margin-bottom:.75rem}
+    .service-card-text{font-size:.9375rem;color:var(--muted-fg);line-height:1.65;flex:1}
+    .service-card-link{font-size:.875rem;font-weight:500;color:var(--leather);margin-top:1.25rem;text-decoration:none}
+    .service-card.large{grid-column:span 2}
+    .service-card.wide{grid-column:1/-1;flex-direction:row}
+    .service-card.wide .service-card-img{width:40%;flex-shrink:0;aspect-ratio:auto}
+
+    /* Gallery */
+    .gallery{padding:4rem 0}
+    .gallery-header{margin-bottom:2rem}
+    .gallery-title{font-size:2rem}
+    .gallery-grid{display:grid;gap:.5rem}
+    .gallery-grid.cols-2{grid-template-columns:repeat(2,1fr)}
+    .gallery-grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    .gallery-grid.cols-4{grid-template-columns:repeat(4,1fr)}
+    .gallery-item{aspect-ratio:1;overflow:hidden;border-radius:.25rem}
+    .gallery-item img{width:100%;height:100%;object-fit:cover}
+
+    /* CTA */
+    .cta-section{padding:5rem 0}
+    .cta-card{border-radius:1.5rem;padding:3.5rem}
+    .cta-card.dark{background:var(--leather-deep);color:white}
+    .cta-card.light{background:var(--muted);color:var(--foreground)}
+    .cta-card.sage{background:var(--sage-deep);color:white}
+    .cta-card.center{text-align:center}
+    .cta-card.center .cta-btns{justify-content:center}
+    .cta-title{font-size:clamp(1.75rem,3vw,2.5rem);margin-bottom:1rem}
+    .cta-body{font-size:1.0625rem;opacity:.85;margin-bottom:2rem;line-height:1.7}
+    .cta-btns{display:flex;gap:.75rem;flex-wrap:wrap}
+    .cta-card.dark .btn-primary,.cta-card.sage .btn-primary{background:white;color:var(--leather-deep)}
+    .cta-card.dark .btn-outline,.cta-card.sage .btn-outline{border-color:rgba(255,255,255,.5);color:white}
+
+    /* Quote */
+    .quote-default{padding:4rem 0}
+    .quote-default blockquote{max-width:48rem;padding-left:2rem;border-left:3px solid var(--sage)}
+    .quote-default p{font-family:var(--font-display);font-size:1.75rem;font-style:italic;line-height:1.45}
+    .quote-default footer{margin-top:1rem;font-size:.875rem;color:var(--muted-fg)}
+    .quote-hero{padding:6rem 1.25rem;background:var(--leather-deep);text-align:center}
+    .quote-hero blockquote{max-width:52rem;margin:0 auto}
+    .quote-hero p{font-family:var(--font-display);font-size:clamp(1.75rem,4vw,2.75rem);font-style:italic;color:white;line-height:1.4}
+    .quote-hero footer{margin-top:1.5rem;font-size:.875rem;color:rgba(255,255,255,.6)}
+
+    /* Info card */
+    .info-card-section{padding:4rem 0}
+    .info-card{max-width:48rem;margin:0 auto;border-radius:1rem;padding:2rem 2.5rem}
+    .info-card.soft{background:var(--muted);border:1px solid var(--border)}
+    .info-card.warm{background:oklch(0.97 0.018 65);border:1px solid oklch(0.88 0.035 60)}
+    .info-card.sage{background:oklch(0.97 0.018 135);border:1px solid oklch(0.88 0.04 135)}
+    .info-card-title{font-size:1.5rem;margin-bottom:1rem}
+
+    /* Method cards */
+    .method-cards{padding:5rem 0}
+    .method-cards-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+    .method-card{background:white;border:1px solid var(--border);border-radius:1rem;padding:2rem}
+    .method-card-icon{width:3rem;height:3rem;border-radius:.75rem;background:oklch(0.97 0.025 140);display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;color:var(--sage-deep)}
+    .method-card-title{font-size:1.25rem;font-family:var(--font-display);font-weight:500;margin-bottom:.75rem}
+    .method-card-body{font-size:.9375rem;color:var(--muted-fg);line-height:1.65}
+
+    /* Contact card */
+    .contact-card-section{padding:4rem 0}
+    .contact-card{max-width:32rem;margin:0 auto;background:white;border:1px solid var(--border);border-radius:1rem;padding:2rem}
+    .contact-card-title{font-size:1.375rem;margin-bottom:1.5rem}
+    .contact-row{display:flex;align-items:flex-start;gap:.875rem;padding:.875rem 0;border-top:1px solid var(--border)}
+    .contact-icon{width:2.25rem;height:2.25rem;border-radius:50%;background:var(--muted);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--leather);font-size:.875rem}
+    .contact-label{font-size:.75rem;color:var(--muted-fg);margin-bottom:.125rem}
+    .contact-value{font-size:.9375rem}
+    .contact-conf{margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border);font-size:.8125rem;color:var(--muted-fg);line-height:1.6}
+
+    /* Booking grid */
+    .booking-grid-section{padding:5rem 0}
+    .booking-grid-inner{display:grid;grid-template-columns:2fr 1fr;gap:4rem;align-items:start}
+
+    /* Testimonials */
+    .testimonials{padding:5rem 0;background:var(--muted)}
+    .testimonials-header{margin-bottom:3rem;text-align:center}
+    .testimonials-title{font-size:2rem}
+    .testimonials-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+    .testimonial-card{background:white;border:1px solid var(--border);border-radius:1rem;padding:2rem}
+    .testimonial-quote{font-family:var(--font-display);font-size:1.375rem;font-style:italic;line-height:1.55;margin-bottom:1.25rem}
+    .testimonial-attr{font-size:.875rem;color:var(--muted-fg)}
+
+    /* Process steps */
+    .process-steps{padding:5rem 0}
+    .process-steps-header{margin-bottom:3rem;text-align:center}
+    .process-steps-title{font-size:2rem}
+    .steps-grid{display:grid;gap:2rem}
+    .step{text-align:center}
+    .step-badge{width:3rem;height:3rem;border-radius:50%;background:var(--sage-deep);color:white;font-family:var(--font-display);font-size:1.25rem;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem}
+    .step-title{font-size:1.25rem;font-family:var(--font-display);font-weight:500;margin-bottom:.625rem}
+    .step-body{font-size:.9375rem;color:var(--muted-fg)}
+
+    /* Credential strip */
+    .credential-strip{padding:3rem 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+    .credential-grid{display:grid}
+    .credential-item{padding:1.5rem;text-align:center}
+    .credential-item+.credential-item{border-left:1px solid var(--border)}
+    .credential-since{font-size:.75rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--sage-deep);margin-bottom:.5rem}
+    .credential-label{font-family:var(--font-display);font-size:1.375rem;font-weight:500}
+    .credential-desc{font-size:.875rem;color:var(--muted-fg);margin-top:.375rem}
+
+    /* Newsletter */
+    .newsletter{padding:5rem 0;background:var(--muted);text-align:center}
+    .newsletter-inner{max-width:36rem;margin:0 auto}
+    .newsletter-title{font-size:2rem;margin-bottom:1rem}
+    .newsletter-body{color:var(--muted-fg);margin-bottom:2rem}
+    .newsletter-form{display:flex;gap:.75rem;justify-content:center}
+    .newsletter-input{flex:1;max-width:20rem;padding:.625rem 1rem;border:1px solid var(--border);border-radius:9999px;font-family:var(--font-body);font-size:.9375rem}
+
+    /* Inquiry form */
+    .inquiry-form-section{padding:5rem 0}
+    .inquiry-form-inner{max-width:44rem;margin:0 auto}
+    .inquiry-title{font-size:2rem;margin-bottom:1rem}
+    .inquiry-intro{color:var(--muted-fg);margin-bottom:2rem}
+    .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+    .form-field{display:flex;flex-direction:column;gap:.375rem;margin-bottom:1rem}
+    .form-field label{font-size:.8125rem;font-weight:500;color:var(--muted-fg)}
+    .form-field input,.form-field textarea{padding:.625rem 1rem;border:1px solid var(--border);border-radius:.5rem;font-family:var(--font-body);font-size:.9375rem;background:white}
+    .form-field textarea{min-height:8rem;resize:vertical}
+
+    /* Desktop-only grid columns (not set above) */
+    .steps-grid{grid-template-columns:repeat(3,1fr)}
+    .credential-grid{grid-template-columns:repeat(3,1fr)}
+
+    /* Mobile breakpoint — mirrors Tailwind sm: (640px) & lg: (1024px) */
+    @media(max-width:640px){
+      .wrap{padding:0 1rem}
+      /* Hero split: text stacks above image */
+      .hero-split-inner{grid-template-columns:1fr}
+      .hero-split-img{aspect-ratio:4/3;margin-top:1.5rem}
+      /* About band: text below image */
+      .about-band-grid{grid-template-columns:1fr}
+      /* Services: 1 column on phone (sm: gives 2, but below 640px → 1) */
+      .services-cards{grid-template-columns:1fr}
+      .service-card.large{grid-column:span 1}
+      .service-card.wide{flex-direction:column}
+      .service-card.wide .service-card-img{width:100%;aspect-ratio:4/3}
+      /* Gallery: 3 and 4 col → 2 col on mobile (matches grid-cols-2 lg:grid-cols-3/4) */
+      .gallery-grid.cols-3,.gallery-grid.cols-4{grid-template-columns:repeat(2,1fr)}
+      .gallery-grid.cols-2{grid-template-columns:1fr}
+      /* Method cards */
+      .method-cards-grid{grid-template-columns:1fr}
+      /* Booking grid */
+      .booking-grid-inner{grid-template-columns:1fr}
+      /* Testimonials */
+      .testimonials-grid{grid-template-columns:1fr}
+      /* Credentials */
+      .credential-grid{grid-template-columns:1fr}
+      .credential-item+.credential-item{border-left:none;border-top:1px solid var(--border)}
+      /* Process steps */
+      .steps-grid{grid-template-columns:1fr}
+      /* Inquiry form: name + email on separate rows */
+      .form-row{grid-template-columns:1fr}
+      /* CTA less padding */
+      .cta-card{padding:2rem 1.25rem}
+      /* Newsletter form stacks */
+      .newsletter-form{flex-direction:column;align-items:stretch}
+      .newsletter-input{max-width:100%}
+    }
+  `;
+
+  return `<!DOCTYPE html><html lang="sv"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<base href="${location.origin}/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>${css}</style></head>
+<body>
+<header class="site-header"><div class="site-header-inner"><a class="site-brand" href="/">Marie Uhrbom</a></div></header>
+<main>${sections}</main>
+</body></html>`;
+}
+
+function renderSection(sec, contact) {
+  switch (sec.type) {
+    case 'hero-split':       return renderHeroSplit(sec);
+    case 'hero-overlay':     return renderHeroOverlay(sec);
+    case 'page-header':      return renderPageHeader(sec);
+    case 'text':             return renderText(sec);
+    case 'about-band':       return renderAboutBand(sec);
+    case 'services-grid':    return renderServicesGrid(sec);
+    case 'gallery':          return renderGallery(sec);
+    case 'cta':              return renderCta(sec);
+    case 'quote':            return renderQuote(sec);
+    case 'info-card':        return renderInfoCard(sec);
+    case 'method-cards':     return renderMethodCards(sec);
+    case 'contact-card':     return renderContactCard(contact, sec);
+    case 'booking-grid':     return renderBookingGrid(sec, contact);
+    case 'inquiry-form':     return renderInquiryForm(sec);
+    case 'testimonials':     return renderTestimonials(sec);
+    case 'process-steps':    return renderProcessSteps(sec);
+    case 'credential-strip': return renderCredentialStrip(sec);
+    case 'newsletter-signup':return renderNewsletter(sec);
+    default: return `<section style="padding:2rem;text-align:center;color:var(--muted-fg);font-size:.875rem;border-bottom:1px solid var(--border)">— ${esc(sec.type)} —</section>`;
+  }
+}
+
+function renderHeroSplit(sec) {
+  const centered = sec.layout === 'centered';
+  const bgOverlay = sec.bgImage ? `<div style="position:absolute;inset:0;z-index:0">${imgEl(sec.bgImage,'','width:100%;height:100%;object-fit:cover')}<div style="position:absolute;inset:0;background:linear-gradient(to right,var(--background) 35%,oklch(0.978 0.011 85/.6) 65%,transparent)"></div></div>` : '';
+  const imageCol = (!centered && sec.image) ? `<div class="hero-split-img">${imgEl(sec.image, sec.alt)}</div>` : '';
+  return `<section class="hero-split${centered?' centered':''}" style="position:relative">
+    ${bgOverlay}
+    <div class="wrap" style="position:relative;z-index:1">
+      <div class="hero-split-inner">
+        <div>
+          ${sec.eyebrow?`<span class="eyebrow">${esc(sec.eyebrow)}</span>`:''}
+          <h1 class="hero-split-title">${esc(sec.title||'')}</h1>
+          ${sec.subtitle?`<p class="hero-split-sub">${esc(sec.subtitle)}</p>`:''}
+          ${sec.cta1Label||sec.cta2Label?`<div class="hero-split-ctas">${btnHtml(sec.cta1Label,sec.cta1Href)}${btnHtml(sec.cta2Label,sec.cta2Href,'btn-outline')}</div>`:''}
+          ${sec.footnote?`<p class="hero-footnote">${esc(sec.footnote)}</p>`:''}
+        </div>
+        ${imageCol}
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderHeroOverlay(sec) {
+  const bg = sec.image
+    ? `<div class="hero-overlay-bg">${imgEl(sec.image,sec.alt)}</div><div class="hero-overlay-grad"></div>`
+    : `<div class="hero-overlay-bg" style="background:var(--leather-deep)"></div>`;
+  return `<section class="hero-overlay">
+    ${bg}
+    <div class="hero-overlay-content">
+      <div class="hero-overlay-inner">
+        ${sec.eyebrow?`<span class="eyebrow" style="color:rgba(255,255,255,.7)">${esc(sec.eyebrow)}</span>`:''}
+        <h1 class="hero-overlay-title">${esc(sec.title||'')}</h1>
+        ${sec.subtitle?`<p class="hero-overlay-sub">${esc(sec.subtitle)}</p>`:''}
+        ${sec.cta1Label||sec.cta2Label?`<div style="display:flex;gap:.75rem;flex-wrap:wrap">${btnHtml(sec.cta1Label,sec.cta1Href)}${btnHtml(sec.cta2Label,sec.cta2Href,'btn-outline')}</div>`:''}
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderPageHeader(sec) {
+  return `<section class="page-header">
+    <div class="wrap"><div class="page-header-inner">
+      ${sec.eyebrow?`<span class="eyebrow">${esc(sec.eyebrow)}</span>`:''}
+      <h1 class="page-header-title">${esc(sec.title||'')}</h1>
+      ${sec.subtitle?`<p class="page-header-sub">${esc(sec.subtitle)}</p>`:''}
+    </div></div>
+  </section>`;
+}
+
+function renderText(sec) {
+  return `<section class="text-section">
+    <div class="wrap"><div class="text-section-inner prose">
+      ${sec.title?`<h2 class="text-section-title">${esc(sec.title)}</h2>`:''}
+      ${md(sec.body)}
+    </div></div>
+  </section>`;
+}
+
+function renderAboutBand(sec) {
+  const hasImg = !!sec.image;
+  const bgOverlay = sec.bgImage ? `<div style="position:absolute;inset:0;z-index:0">${imgEl(sec.bgImage,'','width:100%;height:100%;object-fit:cover')}<div style="position:absolute;inset:0;background:linear-gradient(to left,var(--background) 40%,oklch(0.978 0.011 85/.5))"></div></div>` : '';
+  const imgCol = hasImg ? `<div class="about-band-img">${imgEl(sec.image,sec.alt)}</div>` : '';
+  const gridStyle = hasImg ? '' : 'grid-template-columns:1fr;max-width:44rem;margin:0 auto';
+  return `<section class="about-band" style="position:relative">
+    ${bgOverlay}
+    <div class="wrap" style="position:relative;z-index:1">
+      <div class="about-band-grid" style="${gridStyle}">
+        ${imgCol}
+        <div>
+          ${sec.eyebrow?`<span class="eyebrow">${esc(sec.eyebrow)}</span>`:''}
+          <h2 class="about-band-title">${esc(sec.title||'')}</h2>
+          ${sec.body?`<div class="prose">${md(sec.body)}</div>`:''}
+          ${sec.linkLabel?`<a href="${esc(sec.linkHref||'#')}" class="about-band-link">${esc(sec.linkLabel)} →</a>`:''}
+        </div>
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderServicesGrid(sec) {
+  const cards = (sec.items||[]).map(item => {
+    const cls = item.size==='large'?' large':item.size==='wide'?' wide':'';
+    return `<div class="service-card${cls}">
+      ${item.image?`<div class="service-card-img">${imgEl(item.image,item.title)}</div>`:''}
+      <div class="service-card-body">
+        ${item.eyebrow?`<div class="service-card-eyebrow">${esc(item.eyebrow)}</div>`:''}
+        <h3 class="service-card-title">${esc(item.title||'')}</h3>
+        ${item.body?`<p class="service-card-text">${esc(item.body)}</p>`:''}
+        ${item.linkLabel?`<a href="${esc(item.href||'#')}" class="service-card-link">${esc(item.linkLabel)} →</a>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  return `<section class="services-grid">
+    <div class="wrap">
+      ${sec.eyebrow||sec.title||sec.subtitle?`<div class="services-grid-header">
+        ${sec.eyebrow?`<span class="eyebrow">${esc(sec.eyebrow)}</span>`:''}
+        ${sec.title?`<h2 class="services-grid-title">${esc(sec.title)}</h2>`:''}
+        ${sec.subtitle?`<p class="services-grid-sub">${esc(sec.subtitle)}</p>`:''}
+      </div>`:''}
+      <div class="services-cards">${cards}</div>
+    </div>
+  </section>`;
+}
+
+function renderGallery(sec) {
+  const cols = sec.columns||'3';
+  const items = (sec.images||[]).map(img=>`<div class="gallery-item">${imgEl(img.url,img.alt)}</div>`).join('');
+  return `<section class="gallery">
+    <div class="wrap">
+      ${sec.eyebrow||sec.title?`<div class="gallery-header">
+        ${sec.eyebrow?`<span class="eyebrow">${esc(sec.eyebrow)}</span>`:''}
+        ${sec.title?`<h2 class="gallery-title">${esc(sec.title)}</h2>`:''}
+      </div>`:''}
+      <div class="gallery-grid cols-${cols}">${items}</div>
+    </div>
+  </section>`;
+}
+
+function renderCta(sec) {
+  const theme = sec.theme||'dark', align = sec.align||'center';
+  return `<section class="cta-section">
+    <div class="wrap">
+      <div class="cta-card ${theme} ${align}">
+        <h2 class="cta-title">${esc(sec.title||'')}</h2>
+        ${sec.body?`<p class="cta-body">${esc(sec.body)}</p>`:''}
+        ${sec.buttonLabel||sec.cta2Label?`<div class="cta-btns">${btnHtml(sec.buttonLabel,sec.buttonHref)}${btnHtml(sec.cta2Label,sec.cta2Href,'btn-outline')}</div>`:''}
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderQuote(sec) {
+  return sec.variant==='hero'
+    ? `<section class="quote-hero"><blockquote><p>${esc(sec.quote||'')}</p>${sec.attribution?`<footer>— ${esc(sec.attribution)}</footer>`:''}</blockquote></section>`
+    : `<section class="quote-default"><div class="wrap"><blockquote><p>${esc(sec.quote||'')}</p>${sec.attribution?`<footer>— ${esc(sec.attribution)}</footer>`:''}</blockquote></div></section>`;
+}
+
+function renderInfoCard(sec) {
+  return `<section class="info-card-section">
+    <div class="wrap">
+      <div class="info-card ${sec.tone||'soft'}">
+        <h3 class="info-card-title">${esc(sec.title||'')}</h3>
+        <div class="prose">${md(sec.body)}</div>
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderMethodCards(sec) {
+  const icons = {
+    info: `<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>`,
+    sparkles: `<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>`,
+    shield: `<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`,
+  };
+  const cards = (sec.items||[]).map(item=>`<div class="method-card">
+    <div class="method-card-icon">${icons[item.icon]||icons.info}</div>
+    <h3 class="method-card-title">${esc(item.title||'')}</h3>
+    <div class="method-card-body prose">${md(item.body)}</div>
+  </div>`).join('');
+  return `<section class="method-cards"><div class="wrap"><div class="method-cards-grid">${cards}</div></div></section>`;
+}
+
+function renderContactCard(contact, sec) {
+  const showConf = sec.showConfidentiality !== false;
+  return `<section class="contact-card-section">
+    <div class="wrap">
+      <div class="contact-card">
+        <h2 class="contact-card-title">Kontakt</h2>
+        ${contact.email?`<div class="contact-row"><div class="contact-icon">✉</div><div><div class="contact-label">E-post</div><div class="contact-value">${esc(contact.email)}</div></div></div>`:''}
+        ${contact.phone?`<div class="contact-row"><div class="contact-icon">☎</div><div><div class="contact-label">Telefon</div><div class="contact-value">${esc(contact.phone)}</div></div></div>`:''}
+        ${contact.location?`<div class="contact-row"><div class="contact-icon">⌖</div><div><div class="contact-label">Plats</div><div class="contact-value">${esc(contact.location)}</div></div></div>`:''}
+        ${showConf&&contact.confidentiality?`<div class="contact-conf">${esc(contact.confidentiality)}</div>`:''}
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderBookingGrid(sec, contact) {
+  const sidebar = `<div class="contact-card">
+    <h3 class="contact-card-title" style="font-size:1.125rem">Kontakt</h3>
+    ${contact.email?`<div class="contact-row"><div class="contact-icon">✉</div><div><div class="contact-label">E-post</div><div class="contact-value">${esc(contact.email)}</div></div></div>`:''}
+    ${contact.phone?`<div class="contact-row"><div class="contact-icon">☎</div><div><div class="contact-label">Telefon</div><div class="contact-value">${esc(contact.phone)}</div></div></div>`:''}
+    ${contact.location?`<div class="contact-row"><div class="contact-icon">⌖</div><div><div class="contact-label">Plats</div><div class="contact-value">${esc(contact.location)}</div></div></div>`:''}
+  </div>`;
+  return `<section class="booking-grid-section"${sec.id?` id="${esc(sec.id)}"`:''}>
+    <div class="wrap">
+      <div class="booking-grid-inner">
+        <div class="prose">${md(sec.body)}</div>
+        <div style="position:sticky;top:2rem">${sidebar}</div>
+      </div>
+    </div>
+  </section>`;
+}
+
+function renderInquiryForm(sec) {
+  const nl = sec.nameLabel||'Namn', el = sec.emailLabel||'E-post';
+  const sl = sec.subjectLabel||'Ämne', ml = sec.messageLabel||'Meddelande';
+  const showSubject = sec.showSubject !== false;
+  return `<section class="inquiry-form-section"${sec.id?` id="${esc(sec.id)}"`:''}>
+    <div class="wrap"><div class="inquiry-form-inner">
+      ${sec.eyebrow?`<span class="eyebrow">${esc(sec.eyebrow)}</span>`:''}
+      ${sec.title?`<h2 class="inquiry-title">${esc(sec.title)}</h2>`:''}
+      ${sec.intro?`<p class="inquiry-intro">${esc(sec.intro)}</p>`:''}
+      <div class="form-row">
+        <div class="form-field"><label>${esc(nl)}</label><input type="text" placeholder="${esc(nl)}"></div>
+        <div class="form-field"><label>${esc(el)}</label><input type="email" placeholder="${esc(el)}"></div>
+      </div>
+      ${showSubject?`<div class="form-field"><label>${esc(sl)}</label><input type="text" placeholder="${esc(sl)}"></div>`:''}
+      <div class="form-field"><label>${esc(ml)}</label><textarea placeholder="${esc(sec.messagePlaceholder||ml)}"></textarea></div>
+      <button type="button" class="btn-primary">${esc(sec.submitLabel||'Skicka')}</button>
+    </div></div>
+  </section>`;
+}
+
+function renderTestimonials(sec) {
+  const cards = (sec.items||[]).map(item=>`<div class="testimonial-card">
+    <p class="testimonial-quote">"${esc(item.quote||'')}"</p>
+    ${item.attribution?`<footer class="testimonial-attr">— ${esc(item.attribution)}</footer>`:''}
+  </div>`).join('');
+  return `<section class="testimonials">
+    <div class="wrap">
+      ${sec.eyebrow||sec.title?`<div class="testimonials-header">
+        ${sec.eyebrow?`<span class="eyebrow">${esc(sec.eyebrow)}</span>`:''}
+        ${sec.title?`<h2 class="testimonials-title">${esc(sec.title)}</h2>`:''}
+      </div>`:''}
+      <div class="testimonials-grid">${cards||`<p style="color:var(--muted-fg);text-align:center">Inga berättelser ännu.</p>`}</div>
+    </div>
+  </section>`;
+}
+
+function renderProcessSteps(sec) {
+  const steps = sec.steps||[];
+  const cols = Math.min(Math.max(steps.length,1),4);
+  const cards = steps.map(s=>`<div class="step">
+    <div class="step-badge">${esc(s.number||'')}</div>
+    <h3 class="step-title">${esc(s.title||'')}</h3>
+    ${s.body?`<p class="step-body">${esc(s.body)}</p>`:''}
+  </div>`).join('');
+  return `<section class="process-steps">
+    <div class="wrap">
+      ${sec.eyebrow||sec.title?`<div class="process-steps-header">
+        ${sec.eyebrow?`<span class="eyebrow">${esc(sec.eyebrow)}</span>`:''}
+        ${sec.title?`<h2 class="process-steps-title">${esc(sec.title)}</h2>`:''}
+      </div>`:''}
+      <div class="steps-grid" style="grid-template-columns:repeat(${cols},1fr)">${cards}</div>
+    </div>
+  </section>`;
+}
+
+function renderCredentialStrip(sec) {
+  const items = sec.items||[];
+  const cells = items.map(item=>`<div class="credential-item">
+    ${item.since?`<div class="credential-since">${esc(item.since)}</div>`:''}
+    <div class="credential-label">${item.href?`<a href="${esc(item.href)}" style="color:inherit;text-decoration:none">${esc(item.label||'')}</a>`:esc(item.label||'')}</div>
+    ${item.description?`<div class="credential-desc">${esc(item.description)}</div>`:''}
+  </div>`).join('');
+  return `<section class="credential-strip">
+    <div class="wrap">
+      <div class="credential-grid" style="grid-template-columns:repeat(${Math.max(1,items.length)},1fr)">${cells}</div>
+    </div>
+  </section>`;
+}
+
+function renderNewsletter(sec) {
+  return `<section class="newsletter">
+    <div class="newsletter-inner">
+      ${sec.eyebrow?`<span class="eyebrow">${esc(sec.eyebrow)}</span>`:''}
+      ${sec.title?`<h2 class="newsletter-title">${esc(sec.title)}</h2>`:''}
+      ${sec.body?`<p class="newsletter-body">${esc(sec.body)}</p>`:''}
+      <div class="newsletter-form">
+        <input class="newsletter-input" type="email" placeholder="din@epost.se">
+        <button type="button" class="btn-primary">Prenumerera</button>
+      </div>
+    </div>
+  </section>`;
 }
 
 /* ── Init ─────────────────────────────────────────────────────── */
