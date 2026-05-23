@@ -9,6 +9,7 @@
       "type": "gallery",
       "eyebrow": "Hantverk med själ",
       "title": "Handgjort läder av hög kvalitet",
+      "showCaptions": true,
       "images": [
         {
           "url": "/images/laderhantverk1.jpeg",

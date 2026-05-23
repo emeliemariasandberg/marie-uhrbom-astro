@@ -8,10 +8,11 @@ interface Props {
   title?: string;
   images: GalleryImage[];
   columns?: 2 | 3 | 4;
+  showCaptions?: boolean;
 }
 import { makeUrlFn } from '@/utils/url';
 const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
-const { eyebrow, title, images, columns = 3 } = Astro.props;
+const { eyebrow, title, images, columns = 3, showCaptions = false } = Astro.props;
 
 const uid = Math.random().toString(36).slice(2, 7);
 const colClass =
@@ -46,6 +47,11 @@ const slides = images.map(img => ({ src: siteUrl(img.url), alt: img.alt }));
             loading="lazy"
           />
           <div class="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-300" />
+          {showCaptions && img.alt && (
+            <div class="gallery-caption absolute bottom-0 inset-x-0 px-3 py-2 pointer-events-none">
+              <p class="text-white text-xs leading-snug line-clamp-2">{img.alt}</p>
+            </div>
+          )}
         </button>
       ))}
     </div>
@@ -83,6 +89,11 @@ const slides = images.map(img => ({ src: siteUrl(img.url), alt: img.alt }));
 </dialog>
 
 <style>
+  .gallery-caption {
+    background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0) 100%);
+    padding-top: 1.5rem;
+  }
+
   .gallery-ss {
     padding: 0;
     background: transparent;

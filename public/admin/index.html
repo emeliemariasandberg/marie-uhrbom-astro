@@ -304,6 +304,44 @@ textarea { resize: vertical; }
 .link-badge-extern { background: oklch(0.91 0.06 230); color: oklch(0.35 0.12 230); }
 .link-badge-empty  { background: var(--muted); color: var(--muted-fg); }
 .button-group-fields { display: flex; flex-direction: column; gap: 0.5rem; }
+
+/* Image library */
+.img-lib-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.img-lib-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.img-lib-thumb {
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--muted);
+  flex-shrink: 0;
+}
+.img-lib-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.img-lib-name {
+  font-size: 0.7rem;
+  color: var(--muted-fg);
+  padding: 0.375rem 0.5rem 0.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.img-lib-actions {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0 0.5rem 0.5rem;
+}
+.img-lib-actions .btn { flex: 1; font-size: 0.75rem; padding: 0.25rem 0.375rem; }
 </style>
 </head>
 <body>
@@ -346,10 +384,11 @@ const SECTION_SCHEMA = {
     { key: 'body',      label: 'Text',                 type: 'textarea', required: true },
   ],
   'gallery': [
-    { key: 'eyebrow',   label: 'Etikett',              type: 'text',     hint: 'Liten text ovanför rubriken' },
-    { key: 'title',     label: 'Rubrik',               type: 'text' },
-    { key: 'columns',   label: 'Antal kolumner',       type: 'select',   options: [{ value: '2', label: '2 kolumner' }, { value: '3', label: '3 kolumner (standard)' }, { value: '4', label: '4 kolumner' }] },
-    { key: 'images',    label: 'Bilder',               type: 'image-list' },
+    { key: 'eyebrow',      label: 'Etikett',                    type: 'text',     hint: 'Liten text ovanför rubriken' },
+    { key: 'title',        label: 'Rubrik',                     type: 'text' },
+    { key: 'columns',      label: 'Antal kolumner',             type: 'select',   options: [{ value: '2', label: '2 kolumner' }, { value: '3', label: '3 kolumner (standard)' }, { value: '4', label: '4 kolumner' }] },
+    { key: 'showCaptions', label: 'Visa bildtexter i rutnätet', type: 'checkbox', hint: 'Visar bildtexten (alt-texten) som en synlig etikett längst ner på varje bild. Bra för gallerier där beskrivningen är viktig, t.ex. motiv på gevärsremmar.' },
+    { key: 'images',       label: 'Bilder',                     type: 'image-list' },
   ],
   'services-grid': [
     { key: 'eyebrow',   label: 'Etikett',              type: 'text',     hint: 'Liten text ovanför rubriken' },
@@ -420,7 +459,7 @@ const SECTION_SCHEMA = {
     { key: 'eyebrow',    label: 'Etikett',             type: 'text',     hint: 'T.ex. "Håll dig uppdaterad"' },
     { key: 'title',      label: 'Rubrik',              type: 'text' },
     { key: 'body',       label: 'Inledande text',      type: 'textarea', hint: 'Kort beskrivning av vad prenumeranterna kan förvänta sig' },
-    { key: 'area',       label: 'Intressefilter',      type: 'select',   options: [{ value: 'all', label: 'Alla tre — visar kryssrutor' }, { value: 'homeopati', label: 'Endast Homeopati' }, { value: 'coachning', label: 'Endast Livscoachning' }, { value: 'hantverk', label: 'Endast Läderhantverk' }], hint: '"Alla tre" visar kryssrutor för Homeopati, Livscoachning och Läderhantverk. Välj ett specifikt ämne för att dölja kryssrutorna.' },
+    { key: 'area',       label: 'Intressefilter',      type: 'select',   options: () => [{ value: 'all', label: 'Alla — visar kryssrutor' }, ...(settingsData.newsletter?.data?.interests || []).map(i => ({ value: i.value, label: `Endast ${i.label}` }))], hint: '"Alla" visar kryssrutor för alla kategorier. Välj ett specifikt ämne för att dölja kryssrutorna.' },
     { key: 'id',         label: 'Länk-ID',             type: 'text',     hint: 'Valfritt — gör att man kan länka direkt hit, t.ex. /sida#nyheter' },
   ],
   'process-steps': [
@@ -605,16 +644,124 @@ function bufferToBase64(buffer) {
   return btoa(bin);
 }
 
-async function uploadImage(file) {
+function buildSeoName(file) {
+  return file.name.replace(/\.[^.]+$/, '')
+    .toLowerCase()
+    .replace(/[åä]/g, 'a').replace(/ö/g, 'o')
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '') || 'bild';
+}
+
+function fmtSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(0) + ' KB';
+  return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+}
+
+function fileExt(file) {
+  if (file.type === 'image/jpeg') return 'jpg';
+  if (file.type === 'image/png')  return 'png';
+  if (file.type === 'image/webp') return 'webp';
+  if (file.type === 'image/gif')  return 'gif';
+  return file.name.split('.').pop().toLowerCase() || 'jpg';
+}
+
+
+function showUploadConfirm(initialFile, onUpload) {
+  const previewUrl = URL.createObjectURL(initialFile);
+  const previewImg = h('img', { src: previewUrl, style: 'width:100%;max-height:180px;object-fit:contain;border-radius:var(--radius);background:var(--muted);display:block' });
+
+  const nameInp = h('input', { type: 'text', value: buildSeoName(initialFile), placeholder: 'seo-vanligt-filnamn',
+    style: 'border:none;border-radius:0;outline:none;box-shadow:none;flex:1;min-width:0' });
+  const extSpan = h('span', { style: 'padding:0.5rem 0.625rem;background:var(--muted);border-left:1px solid var(--border);font-size:0.875rem;color:var(--muted-fg);white-space:nowrap;flex-shrink:0' }, '.' + fileExt(initialFile));
+
+  const sizeEl = h('span', { style: 'font-size:0.8125rem;font-weight:500' });
+  const warnEl = h('div', { style: 'display:none;padding:0.5rem 0.75rem;border-radius:var(--radius);font-size:0.8125rem;line-height:1.5' });
+  const uploadBtn = h('button', { className: 'btn btn-primary' }, 'Ladda upp');
+
+  const kb = initialFile.size / 1024;
+  sizeEl.textContent = fmtSize(initialFile.size);
+  extSpan.textContent = '.' + fileExt(initialFile);
+
+  if (kb > 1500) {
+    sizeEl.style.color = 'var(--destructive)';
+    warnEl.style.display = '';
+    warnEl.style.background = 'oklch(0.97 0.025 25)';
+    warnEl.style.color = 'oklch(0.42 0.18 25)';
+    warnEl.append(
+      'Bilden är ', h('strong', {}, fmtSize(initialFile.size)),
+      ' — det är väldigt stor för en webbsida. Komprimera den först på ',
+      h('a', { href: 'https://squoosh.app', target: '_blank', rel: 'noopener', style: 'color:inherit;font-weight:600' }, 'squoosh.app'),
+      ', ladda sedan upp den komprimerade versionen.',
+    );
+  } else if (kb > 500) {
+    sizeEl.style.color = 'oklch(0.55 0.15 55)';
+    warnEl.style.display = '';
+    warnEl.style.background = 'oklch(0.97 0.04 80)';
+    warnEl.style.color = 'oklch(0.45 0.1 55)';
+    warnEl.append(
+      'Bilden är ', h('strong', {}, fmtSize(initialFile.size)),
+      ' — komprimering rekommenderas. Använd ',
+      h('a', { href: 'https://squoosh.app', target: '_blank', rel: 'noopener', style: 'color:inherit;font-weight:600' }, 'squoosh.app'),
+      ' för att minska filstorleken, och ladda upp igen.',
+    );
+  } else {
+    sizeEl.style.color = 'oklch(0.45 0.12 145)';
+  }
+
+  uploadBtn.addEventListener('click', () => {
+    const base = nameInp.value.trim()
+      .toLowerCase()
+      .replace(/[åä]/g, 'a').replace(/ö/g, 'o')
+      .replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+      .replace(/-+/g, '-').replace(/^-|-$/g, '') || 'bild';
+    overlay.remove();
+    URL.revokeObjectURL(previewUrl);
+    onUpload(initialFile, base);
+  });
+
+  const close = () => { overlay.remove(); URL.revokeObjectURL(previewUrl); };
+
+  const overlay = h('div', { className: 'modal-overlay', onClick: e => { if (e.target === overlay) close(); } },
+    h('div', { className: 'modal', style: 'max-width:26rem' },
+      h('div', { className: 'modal-header' },
+        h('span', { style: 'font-weight:500' }, 'Ladda upp bild'),
+        h('button', { className: 'btn btn-ghost btn-sm', onClick: close }, '✕'),
+      ),
+      h('div', { className: 'modal-body', style: 'display:flex;flex-direction:column;gap:0.875rem' },
+        previewImg,
+        h('div', { className: 'field' },
+          h('label', {}, 'SEO-filnamn'),
+          h('div', { style: 'display:flex;align-items:center;overflow:hidden;border:1px solid var(--border);border-radius:var(--radius)' },
+            nameInp, extSpan,
+          ),
+          h('span', { className: 'hint' }, 'Beskriv bilden med ord sökmotorer förstår, t.ex. "laeder-axelremsak-handgjord"'),
+        ),
+        h('div', { style: 'display:flex;align-items:center;gap:0.5rem' },
+          h('span', { style: 'font-size:0.8125rem;color:var(--muted-fg)' }, 'Filstorlek:'), sizeEl,
+        ),
+        warnEl,
+        h('div', { style: 'display:flex;gap:0.5rem;justify-content:flex-end;padding-top:0.25rem' },
+          h('button', { className: 'btn btn-ghost', onClick: close }, 'Avbryt'),
+          uploadBtn,
+        ),
+      ),
+    ),
+  );
+  document.body.append(overlay);
+}
+
+async function uploadImage(file, customBaseName) {
   const buffer = await file.arrayBuffer();
 
   const hashBuf = await crypto.subtle.digest('SHA-1', buffer);
   const hash = Array.from(new Uint8Array(hashBuf)).slice(0, 4)
     .map(b => b.toString(16).padStart(2, '0')).join('');
 
-  const ext  = file.name.split('.').pop().toLowerCase();
-  const base = file.name.replace(/\.[^.]+$/, '').toLowerCase()
-    .replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  const ext  = fileExt(file);
+  const base = customBaseName || buildSeoName(file);
   const name    = `${base}-${hash}.${ext}`;
   const apiPath = `public/images/${name}`;
 
@@ -717,10 +864,288 @@ async function deletePage(p) {
 
 /* ── View: Page List ──────────────────────────────────────────── */
 
+/* ── Image Library ────────────────────────────────────────────── */
+
+async function findImageReferences(imagePath) {
+  const results = [];
+  const tree = await apiReq('GET', `/git/trees/${cfg.branch}?recursive=1`);
+  const jsonFiles = tree.tree.filter(f => f.path.startsWith('src/content/') && f.path.endsWith('.json'));
+  await Promise.all(jsonFiles.map(async f => {
+    try {
+      const file = await getFile(f.path);
+      const content = b64Decode(file.content);
+      if (content.includes(imagePath)) results.push({ filePath: f.path, sha: file.sha, content });
+    } catch { /* skip */ }
+  }));
+  return results;
+}
+
+async function updateImageReferences(refs, oldPath, newPath) {
+  await Promise.all(refs.map(async ref => {
+    const updated = ref.content.split(oldPath).join(newPath);
+    await putFile(ref.filePath, updated, `Uppdaterar bildreferens: ${oldPath} → ${newPath}`, ref.sha);
+  }));
+}
+
+async function loadImageLibrary() {
+  loading('Laddar bildbibliotek…');
+  try {
+    const tree = await apiReq('GET', `/git/trees/${cfg.branch}?recursive=1`);
+    const images = tree.tree
+      .filter(f => f.path.startsWith('public/images/') && /\.(jpe?g|png|webp|gif|avif|svg)$/i.test(f.path))
+      .map(f => ({ path: f.path, name: f.path.replace('public/images/', ''), sha: f.sha, url: '/images/' + f.path.replace('public/images/', ''), size: f.size || 0 }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+    showImageLibrary(images);
+  } catch (err) {
+    toast('Kunde inte hämta bilder: ' + err.message, true);
+    loadPageList();
+  }
+}
+
+function showImageLibrary(images) {
+  app().innerHTML = '';
+
+  const header = makeHeader(
+    h('button', { className: 'back-btn', onClick: loadPageList }, '← Sidor'),
+    'Bildbibliotek',
+    null,
+  );
+
+  const searchInp = h('input', { type: 'text', placeholder: 'Sök på filnamn…', style: 'max-width:24rem' });
+  const countEl   = h('span', { className: 'text-muted' });
+  const grid      = h('div', { className: 'img-lib-grid' });
+
+  function renderGrid() {
+    const q = searchInp.value.trim().toLowerCase();
+    const filtered = q ? images.filter(img => img.name.toLowerCase().includes(q)) : images;
+    countEl.textContent = `${filtered.length} av ${images.length} bilder`;
+    grid.innerHTML = '';
+    if (!filtered.length) {
+      grid.append(h('p', { className: 'text-muted', style: 'grid-column:1/-1' }, q ? 'Inga bilder matchar sökningen.' : 'Inga bilder ännu.'));
+      return;
+    }
+    filtered.forEach(img => {
+      const kb = img.size / 1024;
+      const sizeBg  = kb > 1500 ? 'oklch(0.55 0.2 25)' : kb > 500 ? 'oklch(0.72 0.15 55)' : 'oklch(0.72 0.13 145)';
+      const card = h('div', { className: 'img-lib-card' },
+        h('div', { className: 'img-lib-thumb' }, h('img', { src: rawUrl(img.url), alt: img.name, loading: 'lazy' })),
+        h('div', { className: 'img-lib-name', title: img.name }, img.name),
+        img.size ? h('div', { style: 'padding:0 0.5rem 0.5rem' }, h('span', { style: `font-size:0.68rem;font-weight:600;color:white;background:${sizeBg};padding:0.1rem 0.4rem;border-radius:999px` }, fmtSize(img.size))) : null,
+        h('div', { className: 'img-lib-actions' },
+          h('button', { className: 'btn btn-ghost btn-sm', onClick: () => openRenameModal(img) }, 'Byt namn'),
+          h('button', { className: 'btn btn-ghost btn-sm', style: 'color:var(--destructive)', onClick: () => openDeleteModal(img) }, 'Ta bort'),
+        ),
+      );
+      grid.append(card);
+    });
+  }
+
+  function openRenameModal(img) {
+    const hashMatch = img.name.match(/^(.+)-([0-9a-f]{8})(\.[^.]+)$/i);
+    const currentBase = hashMatch ? hashMatch[1] : img.name.replace(/\.[^.]+$/, '');
+    const ext = img.name.split('.').pop().toLowerCase();
+
+    const nameInp   = h('input', { type: 'text', value: currentBase, placeholder: 'nytt-seo-namn',
+      style: 'border:none;border-radius:0;outline:none;box-shadow:none;flex:1;min-width:0' });
+    const previewEl = h('span', { className: 'hint' });
+    const refInfoEl = h('p', { className: 'hint', style: 'display:none' });
+    const confirmBtn = h('button', { className: 'btn btn-primary' }, 'Byt namn');
+    let refsCache = null;
+
+    function refreshPreview() {
+      const base = cleanSlug(nameInp.value) || 'bild';
+      previewEl.textContent = `→ ${base}-[hash].${ext}`;
+    }
+    nameInp.addEventListener('input', refreshPreview);
+    refreshPreview();
+
+    // Async: check references
+    (async () => {
+      refInfoEl.textContent = 'Söker efter användning…';
+      refInfoEl.style.display = '';
+      refsCache = await findImageReferences(img.url);
+      refInfoEl.textContent = refsCache.length
+        ? `Används på ${refsCache.length} ställe${refsCache.length > 1 ? 'n' : ''} — uppdateras automatiskt.`
+        : 'Används inte på någon sida.';
+    })();
+
+    confirmBtn.addEventListener('click', async () => {
+      const base = cleanSlug(nameInp.value);
+      if (!base) { toast('Ange ett filnamn.', true); return; }
+      confirmBtn.disabled = true;
+      confirmBtn.innerHTML = '<span class="spinner"></span> Byter namn…';
+      try {
+        const file = await getFile(img.path);
+        const b64 = file.content.replace(/\s/g, '');
+        const binStr = atob(b64);
+        const bytes = new Uint8Array(binStr.length);
+        for (let i = 0; i < binStr.length; i++) bytes[i] = binStr.charCodeAt(i);
+        const hashBuf = await crypto.subtle.digest('SHA-1', bytes.buffer);
+        const hash = Array.from(new Uint8Array(hashBuf)).slice(0, 4).map(b => b.toString(16).padStart(2, '0')).join('');
+
+        const newName = `${base}-${hash}.${ext}`;
+        const newApiPath = `public/images/${newName}`;
+        const newUrl = `/images/${newName}`;
+
+        if (newName === img.name) { toast('Filnamnet är redan det.'); close(); return; }
+
+        const uploadRes = await apiReq('PUT', `/contents/${newApiPath}`, {
+          message: `Byter namn: ${img.name} → ${newName}`,
+          content: b64,
+          branch: cfg.branch,
+        });
+
+        if (refsCache === null) refsCache = await findImageReferences(img.url);
+        await updateImageReferences(refsCache, img.url, newUrl);
+
+        await deleteFile(img.path, img.sha, `Tar bort efter namnbyte: ${img.name}`);
+
+        // Update local list and re-render
+        const idx = images.findIndex(i => i.path === img.path);
+        if (idx !== -1) images[idx] = { path: newApiPath, name: newName, sha: uploadRes.content.sha, url: newUrl };
+
+        close();
+        renderGrid();
+        toast(`Bytte namn till ${newName}${refsCache.length ? ` · ${refsCache.length} fil${refsCache.length > 1 ? 'er' : ''} uppdaterade` : ''}`);
+      } catch (err) {
+        toast('Fel: ' + err.message, true);
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = 'Byt namn';
+      }
+    });
+
+    const close = () => overlay.remove();
+    const overlay = h('div', { className: 'modal-overlay', onClick: e => { if (e.target === overlay) close(); } },
+      h('div', { className: 'modal', style: 'max-width:26rem' },
+        h('div', { className: 'modal-header' },
+          h('span', { style: 'font-weight:500' }, 'Byt namn på bild'),
+          h('button', { className: 'btn btn-ghost btn-sm', onClick: close }, '✕'),
+        ),
+        h('div', { className: 'modal-body', style: 'display:flex;flex-direction:column;gap:0.875rem' },
+          h('img', { src: rawUrl(img.url), alt: img.name, style: 'width:100%;max-height:160px;object-fit:contain;border-radius:var(--radius);background:var(--muted)' }),
+          h('p', { style: 'font-size:0.8125rem;color:var(--muted-fg);word-break:break-all' }, img.name),
+          refInfoEl,
+          h('div', { className: 'field' },
+            h('label', {}, 'Nytt SEO-filnamn'),
+            h('div', { style: 'display:flex;align-items:center;overflow:hidden;border:1px solid var(--border);border-radius:var(--radius)' },
+              nameInp,
+              h('span', { style: 'padding:0.5rem 0.625rem;background:var(--muted);border-left:1px solid var(--border);font-size:0.875rem;color:var(--muted-fg);white-space:nowrap;flex-shrink:0' }, `.${ext}`),
+            ),
+            previewEl,
+          ),
+          h('div', { style: 'display:flex;gap:0.5rem;justify-content:flex-end' },
+            h('button', { className: 'btn btn-ghost', onClick: close }, 'Avbryt'),
+            confirmBtn,
+          ),
+        ),
+      ),
+    );
+    document.body.append(overlay);
+  }
+
+  function openDeleteModal(img) {
+    const confirmBtn = h('button', { className: 'btn btn-danger' }, 'Ta bort');
+    const refInfoEl  = h('p', { className: 'hint', style: 'display:none' });
+    let refsCache = null;
+
+    (async () => {
+      refInfoEl.textContent = 'Söker efter användning…';
+      refInfoEl.style.display = '';
+      refsCache = await findImageReferences(img.url);
+      if (refsCache.length) {
+        refInfoEl.style.color = 'var(--destructive)';
+        refInfoEl.textContent = `⚠ Används på ${refsCache.length} ställe${refsCache.length > 1 ? 'n' : ''}: ${refsCache.map(r => r.filePath.replace('src/content/', '')).join(', ')}. Referenserna tas INTE bort automatiskt.`;
+      } else {
+        refInfoEl.textContent = 'Används inte på någon sida — säkert att ta bort.';
+      }
+    })();
+
+    confirmBtn.addEventListener('click', async () => {
+      confirmBtn.disabled = true;
+      confirmBtn.innerHTML = '<span class="spinner"></span> Tar bort…';
+      try {
+        await deleteFile(img.path, img.sha, `Tar bort bild: ${img.name}`);
+        const idx = images.findIndex(i => i.path === img.path);
+        if (idx !== -1) images.splice(idx, 1);
+        close();
+        renderGrid();
+        toast(`"${img.name}" borttagen.`);
+      } catch (err) {
+        toast('Fel: ' + err.message, true);
+        confirmBtn.disabled = false;
+        confirmBtn.textContent = 'Ta bort';
+      }
+    });
+
+    const close = () => overlay.remove();
+    const overlay = h('div', { className: 'modal-overlay', onClick: e => { if (e.target === overlay) close(); } },
+      h('div', { className: 'modal', style: 'max-width:22rem' },
+        h('div', { className: 'modal-header' },
+          h('span', { style: 'font-weight:500' }, 'Ta bort bild'),
+          h('button', { className: 'btn btn-ghost btn-sm', onClick: close }, '✕'),
+        ),
+        h('div', { className: 'modal-body', style: 'display:flex;flex-direction:column;gap:0.875rem' },
+          h('img', { src: rawUrl(img.url), alt: img.name, style: 'width:100%;max-height:140px;object-fit:contain;border-radius:var(--radius);background:var(--muted)' }),
+          h('p', { style: 'font-size:0.8125rem;color:var(--muted-fg);word-break:break-all' }, img.name),
+          refInfoEl,
+          h('div', { style: 'display:flex;gap:0.5rem;justify-content:flex-end' },
+            h('button', { className: 'btn btn-ghost', onClick: close }, 'Avbryt'),
+            confirmBtn,
+          ),
+        ),
+      ),
+    );
+    document.body.append(overlay);
+  }
+
+  searchInp.addEventListener('input', renderGrid);
+  renderGrid();
+
+  const infoBox = h('div', { style: 'background:white;border:1px solid var(--border);border-radius:var(--radius);padding:0.875rem 1rem;font-size:0.8125rem;line-height:1.6;color:var(--muted-fg);margin-bottom:1rem;display:flex;flex-direction:column;gap:0.5rem' },
+    h('p', {},
+      'Stora bilder bromsar laddningstiden. Komprimera alltid bilder på ',
+      h('a', { href: 'https://squoosh.app', target: '_blank', rel: 'noopener', style: 'color:var(--leather);font-weight:500' }, 'squoosh.app'),
+      ' innan uppladdning.',
+    ),
+    h('div', { style: 'display:flex;gap:0.625rem;flex-wrap:wrap' },
+      h('span', {}, h('span', { style: 'font-size:0.68rem;font-weight:600;color:white;background:oklch(0.72 0.13 145);padding:0.1rem 0.4rem;border-radius:999px' }, 'under 500 KB'), ' Bra storlek'),
+      h('span', {}, h('span', { style: 'font-size:0.68rem;font-weight:600;color:white;background:oklch(0.72 0.15 55);padding:0.1rem 0.4rem;border-radius:999px' }, '500 KB–1,5 MB'), ' Komprimering rekommenderas'),
+      h('span', {}, h('span', { style: 'font-size:0.68rem;font-weight:600;color:white;background:oklch(0.55 0.2 25);padding:0.1rem 0.4rem;border-radius:999px' }, 'över 1,5 MB'), ' För stor — komprimera'),
+    ),
+  );
+
+  const main = h('div', { className: 'main', role: 'main' },
+    h('div', { style: 'display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem' },
+      h('h2', {}, 'Bildbibliotek'),
+      countEl,
+    ),
+    infoBox,
+    searchInp,
+    grid,
+  );
+
+  app().append(header, main);
+}
+
+function cleanSlug(str) {
+  return str.trim()
+    .toLowerCase()
+    .replace(/[åä]/g, 'a').replace(/ö/g, 'o')
+    .replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-').replace(/^-|-$/g, '');
+}
+
 async function loadPageList() {
   loading('Laddar sidor…');
   dirty = false;
   try {
+    // Fetch newsletter categories alongside pages so the editor has them ready
+    if (!settingsData.newsletter?.sha) {
+      try {
+        const nlf = await getFile('src/content/settings/newsletter.json');
+        settingsData.newsletter = { data: JSON.parse(b64Decode(nlf.content)), sha: nlf.sha };
+      } catch { settingsData.newsletter = { data: { interests: [] }, sha: null }; }
+    }
     const files = await getPageFiles();
     const pages = await Promise.all(files.map(async filePath => {
       const slug = filePath.replace('src/content/pages/', '').replace('.json', '');
@@ -743,7 +1168,10 @@ function showPageList(pages) {
   const header = makeHeader(
     null,
     'Marie Uhrbom — Admin',
-    h('button', { className: 'btn btn-ghost btn-sm', onClick: loadSettings }, 'Inställningar'),
+    h('div', { style: 'display:flex;gap:0.375rem' },
+      h('button', { className: 'btn btn-ghost btn-sm', onClick: loadImageLibrary }, 'Bilder'),
+      h('button', { className: 'btn btn-ghost btn-sm', onClick: loadSettings }, 'Inställningar'),
+    ),
   );
 
   const list = h('div', {});
@@ -1389,9 +1817,10 @@ function makeField(field, value, onChange) {
       break;
     }
     case 'select': {
+      const opts = typeof field.options === 'function' ? field.options() : (field.options || []);
       const sel = h('select', { onChange: e => onChange(e.target.value) },
         h('option', { value: '' }, '—'),
-        ...(field.options || []).map(o => {
+        ...opts.map(o => {
           const val = typeof o === 'object' ? o.value : o;
           const lbl = typeof o === 'object' ? o.label : o;
           return h('option', { value: val, selected: val === value }, lbl);
@@ -1449,25 +1878,28 @@ function makeImageField(value, onChange) {
 
   const uploadBtn = h('button', { className: 'btn btn-ghost btn-sm', onClick: () => fileInput.click() }, value ? 'Byt bild' : 'Välj bild');
 
-  fileInput.addEventListener('change', async e => {
+  fileInput.addEventListener('change', e => {
     const file = e.target.files[0];
     if (!file) return;
-    uploadBtn.disabled = true;
-    uploadBtn.innerHTML = '<span class="spinner"></span>';
-    try {
-      const url = await uploadImage(file);
-      onChange(url);
-      const newThumb = h('img', { src: rawUrl(url), className: 'image-thumb', alt: '' });
-      wrap.replaceChild(newThumb, thumb);
-      thumb = newThumb;
-      uploadBtn.textContent = 'Byt bild';
-      toast('Bilden laddades upp!');
-    } catch (err) {
-      toast('Uppladdning misslyckades: ' + err.message, true);
-      uploadBtn.textContent = value ? 'Byt bild' : 'Välj bild';
-    } finally {
-      uploadBtn.disabled = false;
-    }
+    fileInput.value = '';
+    showUploadConfirm(file, async (processedFile, baseName) => {
+      uploadBtn.disabled = true;
+      uploadBtn.innerHTML = '<span class="spinner"></span>';
+      try {
+        const url = await uploadImage(processedFile, baseName);
+        onChange(url);
+        const newThumb = h('img', { src: rawUrl(url), className: 'image-thumb', alt: '' });
+        wrap.replaceChild(newThumb, thumb);
+        thumb = newThumb;
+        uploadBtn.textContent = 'Byt bild';
+        toast('Bilden laddades upp!');
+      } catch (err) {
+        toast('Uppladdning misslyckades: ' + err.message, true);
+        uploadBtn.textContent = value ? 'Byt bild' : 'Välj bild';
+      } finally {
+        uploadBtn.disabled = false;
+      }
+    });
   });
 
   wrap.append(thumb, uploadBtn, fileInput);
@@ -1492,20 +1924,23 @@ function makeImageList(items, onChange) {
 
       const pickBtn = h('button', { className: 'btn btn-ghost btn-sm', onClick: () => fileInput.click() }, item.url ? 'Byt' : 'Välj');
 
-      fileInput.addEventListener('change', async e => {
+      fileInput.addEventListener('change', e => {
         const file = e.target.files[0];
         if (!file) return;
-        pickBtn.disabled = true;
-        try {
-          list[idx].url = await uploadImage(file);
-          onChange([...list]);
-          rerender();
-          toast('Bilden laddades upp!');
-        } catch (err) {
-          toast('Fel: ' + err.message, true);
-        } finally {
-          pickBtn.disabled = false;
-        }
+        fileInput.value = '';
+        showUploadConfirm(file, async (processedFile, baseName) => {
+          pickBtn.disabled = true;
+          try {
+            list[idx].url = await uploadImage(processedFile, baseName);
+            onChange([...list]);
+            rerender();
+            toast('Bilden laddades upp!');
+          } catch (err) {
+            toast('Fel: ' + err.message, true);
+          } finally {
+            pickBtn.disabled = false;
+          }
+        });
       });
 
       const altWarn = h('span', {
@@ -1513,7 +1948,7 @@ function makeImageList(items, onChange) {
         title: 'Alt-text saknas — lägg till en bildbeskrivning för tillgänglighet och SEO',
       }, '⚠ Alt-text saknas');
 
-      const altInp = h('input', { type: 'text', placeholder: 'Bildbeskrivning (alt) — obligatorisk för tillgänglighet', value: item.alt || '',
+      const altInp = h('input', { type: 'text', placeholder: 'Bildbeskrivning — visas som bildtext om "Visa bildtexter" är på', value: item.alt || '',
         style: item.alt ? '' : 'border-color:var(--destructive)',
         onInput: e => {
           list[idx].alt = e.target.value;
@@ -1595,21 +2030,24 @@ function makeServiceList(items, onChange) {
         ? h('img', { src: rawUrl(item.image), className: 'image-thumb', alt: '' })
         : h('div', { className: 'image-empty' }, 'Ingen bild');
       const imgBtn = h('button', { className: 'btn btn-ghost btn-sm', onClick: () => fileInput.click() }, item.image ? 'Byt bild' : 'Välj bild');
-      fileInput.addEventListener('change', async e => {
+      fileInput.addEventListener('change', e => {
         const file = e.target.files[0];
         if (!file) return;
-        imgBtn.disabled = true; imgBtn.innerHTML = '<span class="spinner"></span>';
-        try {
-          const url = await uploadImage(file);
-          list[idx].image = url; onChange([...list]);
-          const newThumb = h('img', { src: rawUrl(url), className: 'image-thumb', alt: '' });
-          imgThumb.replaceWith(newThumb); imgThumb = newThumb;
-          imgBtn.textContent = 'Byt bild';
-          toast('Bilden laddades upp!');
-        } catch (err) {
-          toast('Uppladdning misslyckades: ' + err.message, true);
-          imgBtn.textContent = item.image ? 'Byt bild' : 'Välj bild';
-        } finally { imgBtn.disabled = false; }
+        fileInput.value = '';
+        showUploadConfirm(file, async (processedFile, baseName) => {
+          imgBtn.disabled = true; imgBtn.innerHTML = '<span class="spinner"></span>';
+          try {
+            const url = await uploadImage(processedFile, baseName);
+            list[idx].image = url; onChange([...list]);
+            const newThumb = h('img', { src: rawUrl(url), className: 'image-thumb', alt: '' });
+            imgThumb.replaceWith(newThumb); imgThumb = newThumb;
+            imgBtn.textContent = 'Byt bild';
+            toast('Bilden laddades upp!');
+          } catch (err) {
+            toast('Uppladdning misslyckades: ' + err.message, true);
+            imgBtn.textContent = item.image ? 'Byt bild' : 'Välj bild';
+          } finally { imgBtn.disabled = false; }
+        });
       });
       const imgWrap = h('div', { style: 'display:flex;flex-direction:column;align-items:center;gap:0.375rem' }, imgThumb, imgBtn, fileInput);
 
@@ -1920,18 +2358,21 @@ async function loadSettings() {
   }
   loading('Laddar inställningar…');
   try {
-    const [cf, nf, sf, nlf] = await Promise.all([
+    const [cf, nf, sf] = await Promise.all([
       getFile('src/content/settings/contact.json'),
       getFile('src/content/settings/navigation.json'),
       getFile('src/content/settings/seo.json'),
-      getFile('src/content/settings/newsletter.json'),
     ]);
     settingsData = {
-      contact:    { data: JSON.parse(b64Decode(cf.content)),  sha: cf.sha },
-      navigation: { data: JSON.parse(b64Decode(nf.content)),  sha: nf.sha },
-      seo:        { data: JSON.parse(b64Decode(sf.content)),  sha: sf.sha },
-      newsletter: { data: JSON.parse(b64Decode(nlf.content)), sha: nlf.sha },
+      contact:    { data: JSON.parse(b64Decode(cf.content)), sha: cf.sha },
+      navigation: { data: JSON.parse(b64Decode(nf.content)), sha: nf.sha },
+      seo:        { data: JSON.parse(b64Decode(sf.content)), sha: sf.sha },
+      newsletter: { data: { interests: [] }, sha: null },
     };
+    try {
+      const nlf = await getFile('src/content/settings/newsletter.json');
+      settingsData.newsletter = { data: JSON.parse(b64Decode(nlf.content)), sha: nlf.sha };
+    } catch { /* filen saknas — börja med tom lista */ }
     showSettings();
   } catch (err) {
     toast('Fel: ' + err.message, true);
@@ -1964,18 +2405,21 @@ function showSettings() {
     if (id !== 'konfiguration' && !settingsData.contact) {
       loading('Laddar inställningar…');
       try {
-        const [cf, nf, sf, nlf] = await Promise.all([
+        const [cf, nf, sf] = await Promise.all([
           getFile('src/content/settings/contact.json'),
           getFile('src/content/settings/navigation.json'),
           getFile('src/content/settings/seo.json'),
-          getFile('src/content/settings/newsletter.json'),
         ]);
         settingsData = {
-          contact:    { data: JSON.parse(b64Decode(cf.content)),  sha: cf.sha },
-          navigation: { data: JSON.parse(b64Decode(nf.content)),  sha: nf.sha },
-          seo:        { data: JSON.parse(b64Decode(sf.content)),  sha: sf.sha },
-          newsletter: { data: JSON.parse(b64Decode(nlf.content)), sha: nlf.sha },
+          contact:    { data: JSON.parse(b64Decode(cf.content)), sha: cf.sha },
+          navigation: { data: JSON.parse(b64Decode(nf.content)), sha: nf.sha },
+          seo:        { data: JSON.parse(b64Decode(sf.content)), sha: sf.sha },
+          newsletter: { data: { interests: [] }, sha: null },
         };
+        try {
+          const nlf = await getFile('src/content/settings/newsletter.json');
+          settingsData.newsletter = { data: JSON.parse(b64Decode(nlf.content)), sha: nlf.sha };
+        } catch { /* filen saknas — börja med tom lista */ }
         showSettings();
         return;
       } catch (err) {
@@ -2878,11 +3322,16 @@ function renderCredentialStrip(sec) {
 }
 
 function renderNewsletter(sec, contact) {
+  const interests = settingsData.newsletter?.data?.interests || [];
   const showCheckboxes = !sec.area || sec.area === 'all';
-  const areaLabel = sec.area === 'homeopati' ? 'Homeopati' : sec.area === 'coachning' ? 'Livscoachning' : sec.area === 'hantverk' ? 'Läderhantverk' : '';
+  const areaInterest = interests.find(i => i.value === sec.area);
+  const areaLabel = areaInterest ? areaInterest.label : sec.area || '';
   const contactEmail = contact?.email || '';
+  const checkboxItems = interests.length
+    ? interests.map(i => `<label style="display:flex;align-items:center;gap:.625rem;font-size:.875rem;cursor:default"><input type="checkbox" disabled> ${esc(i.label)}</label>`).join('')
+    : '<label style="display:flex;align-items:center;gap:.625rem;font-size:.875rem;cursor:default;color:var(--muted-fg)">(inga kategorier — lägg till i Inställningar → Nyhetsbrev)</label>';
   const checkboxes = showCheckboxes
-    ? `<div style="margin-bottom:.25rem"><p style="font-size:.875rem;font-weight:500;margin-bottom:.625rem">Jag är intresserad av <span style="color:var(--destructive)">*</span></p><div style="display:flex;flex-direction:column;gap:.5rem"><label style="display:flex;align-items:center;gap:.625rem;font-size:.875rem;cursor:default"><input type="checkbox" disabled> Homeopati</label><label style="display:flex;align-items:center;gap:.625rem;font-size:.875rem;cursor:default"><input type="checkbox" disabled> Hälsa &amp; Livscoachning</label><label style="display:flex;align-items:center;gap:.625rem;font-size:.875rem;cursor:default"><input type="checkbox" disabled> Läderhantverk</label></div></div>`
+    ? `<div style="margin-bottom:.25rem"><p style="font-size:.875rem;font-weight:500;margin-bottom:.625rem">Jag är intresserad av <span style="color:var(--destructive)">*</span></p><div style="display:flex;flex-direction:column;gap:.5rem">${checkboxItems}</div></div>`
     : `<p style="font-size:.8125rem;color:var(--muted-fg);margin-bottom:.25rem">(Prenumererar på: ${esc(areaLabel)})</p>`;
   return `<section class="newsletter"${sec.id?` id="${esc(sec.id)}"`:''}>`
     + `<div class="newsletter-inner">`
