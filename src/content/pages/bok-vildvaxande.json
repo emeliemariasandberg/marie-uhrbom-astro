@@ -19,7 +19,7 @@
     },
     {
       "type": "gallery",
-      "columns": "2",
+      "columns": "3",
       "eyebrow": "Fram och baksida",
       "title": "Vildväxande - storlek A4, 221 sidor",
       "images": [
@@ -30,6 +30,10 @@
         {
           "url": "/images/img5958-4c1187be.jpeg",
           "alt": "Bild på boken Vildväxandes baksida"
+        },
+        {
+          "url": "/images/img5936-37776ae3.jpeg",
+          "alt": "Bild på ett uppslag i boken med information om mjölksyrning"
         }
       ]
     },
