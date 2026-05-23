@@ -37,6 +37,10 @@
     {
       "label": "Hälsa & Livscoachning",
       "href": "/vagledning"
+    },
+    {
+      "label": "Bok Vildväxande",
+      "href": "/bok-vildvaxande"
     }
   ]
 }
