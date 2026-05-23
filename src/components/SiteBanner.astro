@@ -1,34 +1,39 @@
 ---
-import banner from '@/content/settings/banner.json';
-import { makeUrlFn } from '@/utils/url';
-
-const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
+interface Props {
+  message?: string;
+  linkLabel?: string;
+  linkHref?: string;
+}
+const { message, linkLabel, linkHref } = Astro.props;
+const isExternal = linkHref?.startsWith('http');
 ---
 
-{banner.enabled && (
-  <div id="site-banner" class="bg-[var(--color-leather-deep)] text-[var(--color-primary-foreground)] text-sm py-2 px-4">
-    <div class="container-prose flex items-center justify-between gap-4">
-      <p class="text-center flex-1">
-        {banner.message}
-        {banner.linkHref && banner.linkLabel && (
-          <a href={siteUrl(banner.linkHref)} class="ml-2 underline underline-offset-2 font-medium hover:opacity-80">
-            {banner.linkLabel}
-          </a>
-        )}
-      </p>
-      <button
-        id="banner-close"
-        class="shrink-0 opacity-70 hover:opacity-100 transition-opacity"
-        aria-label="Stäng banner"
-      >
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
-      </button>
-    </div>
+<div id="site-banner" class="bg-[var(--color-leather-deep)] text-[var(--color-primary-foreground)] text-sm py-2 px-4">
+  <div class="container-prose flex items-center justify-between gap-4">
+    <p class="text-center flex-1">
+      {message}
+      {linkHref && linkLabel && (
+        <a
+          href={linkHref}
+          class="ml-2 underline underline-offset-2 font-medium hover:opacity-80"
+          {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+        >
+          {linkLabel}
+        </a>
+      )}
+    </p>
+    <button
+      id="banner-close"
+      class="shrink-0 opacity-70 hover:opacity-100 transition-opacity"
+      aria-label="Stäng banner"
+    >
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
   </div>
-)}
+</div>
 
 <script>
   document.getElementById('banner-close')?.addEventListener('click', () => {

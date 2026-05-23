@@ -5,7 +5,6 @@ import SiteBanner from '@/components/SiteBanner.astro';
 import '@/styles/global.css';
 import { makeUrlFn } from '@/utils/url';
 import seoSettings from '@/content/settings/seo.json';
-import banner from '@/content/settings/banner.json';
 import contact from '@/content/settings/contact.json';
 
 const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
@@ -14,12 +13,14 @@ interface Props {
   title?: string;
   description?: string;
   slug?: string;
+  banner?: { enabled?: boolean; message?: string; linkLabel?: string; linkHref?: string };
 }
 
 const {
   title = seoSettings.defaultTitle,
   description = seoSettings.defaultDescription,
   slug = '',
+  banner,
 } = Astro.props;
 
 const canonicalUrl = new URL(slug ? `/${slug}` : '/', Astro.site ?? 'https://marieuhrbom.se');
@@ -112,7 +113,9 @@ const canonicalUrl = new URL(slug ? `/${slug}` : '/', Astro.site ?? 'https://mar
     />
   </head>
   <body>
-    {banner.enabled && <SiteBanner />}
+    {banner?.enabled && banner?.message && (
+      <SiteBanner message={banner.message} linkLabel={banner.linkLabel} linkHref={banner.linkHref} />
+    )}
     <SiteHeader />
     <main id="main-content">
       <slot />

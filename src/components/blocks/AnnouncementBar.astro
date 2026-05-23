@@ -1,0 +1,24 @@
+---
+interface Props {
+  message: string;
+  linkLabel?: string;
+  linkHref?: string;
+}
+const { message, linkLabel, linkHref } = Astro.props;
+const isExternal = linkHref?.startsWith('http');
+---
+
+<div class="bg-[var(--color-leather-deep)] text-[var(--color-primary-foreground)] py-2.5 px-4 text-center">
+  <div class="container-prose text-sm leading-snug">
+    {message}
+    {linkLabel && linkHref && (
+      <a
+        href={linkHref}
+        class="ml-2 underline underline-offset-2 font-medium hover:opacity-80 transition-opacity"
+        {...(isExternal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+      >
+        {linkLabel}
+      </a>
+    )}
+  </div>
+</div>

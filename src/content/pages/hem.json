@@ -4,6 +4,12 @@
     "description": "Klassisk homeopati, vägledning och handgjort läderhantverk. Marie Uhrbom tar emot nära Mellerud, online och via telefon.",
     "slug": ""
   },
+  "banner": {
+    "enabled": true,
+    "message": "Veckans tips: Granskott är riktiga c-vitaminbomber. Har du gjort granskottssirap någon gång? Tänk på att fråga markägaren om du vill plocka dem.",
+    "linkLabel": "",
+    "linkHref": ""
+  },
   "sections": [
     {
       "type": "hero-split",

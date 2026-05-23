@@ -28,6 +28,6 @@ const match = pageEntries.find(([path]) => slugFromPath(path) === slug);
 const page = match?.[1].default ?? match?.[1];
 ---
 
-<Base title={page.meta.title} description={page.meta.description} slug={slug}>
+<Base title={page.meta.title} description={page.meta.description} slug={slug} banner={page.banner}>
   <PageRenderer sections={page.sections} />
 </Base>

@@ -1,5 +1,6 @@
 ---
 import contact from '@/content/settings/contact.json';
+import newsletter from '@/content/settings/newsletter.json';
 
 interface Props {
   id?: string;
@@ -60,21 +61,13 @@ const formId = `nl-${Math.random().toString(36).slice(2, 7)}`;
             Jag är intresserad av <span class="text-[var(--color-destructive)]">*</span>
           </p>
           <div class="flex flex-col sm:flex-row gap-3">
-            <label class="flex items-center gap-2.5 cursor-pointer">
-              <input type="checkbox" name="interest" value="homeopati"
-                class="w-4 h-4 rounded border-[var(--color-input)] accent-[var(--color-leather)]" />
-              <span class="text-sm">Homeopati</span>
-            </label>
-            <label class="flex items-center gap-2.5 cursor-pointer">
-              <input type="checkbox" name="interest" value="coachning"
-                class="w-4 h-4 rounded border-[var(--color-input)] accent-[var(--color-leather)]" />
-              <span class="text-sm">Hälsa & Livscoachning</span>
-            </label>
-            <label class="flex items-center gap-2.5 cursor-pointer">
-              <input type="checkbox" name="interest" value="hantverk"
-                class="w-4 h-4 rounded border-[var(--color-input)] accent-[var(--color-leather)]" />
-              <span class="text-sm">Läderhantverk</span>
-            </label>
+            {newsletter.interests.map(interest => (
+              <label class="flex items-center gap-2.5 cursor-pointer">
+                <input type="checkbox" name="interest" value={interest.value}
+                  class="w-4 h-4 rounded border-[var(--color-input)] accent-[var(--color-leather)]" />
+                <span class="text-sm">{interest.label}</span>
+              </label>
+            ))}
           </div>
           <p id={`${formId}-interest-err`} class="hidden text-xs text-[var(--color-destructive)] mt-1.5">
             Välj minst ett alternativ.
