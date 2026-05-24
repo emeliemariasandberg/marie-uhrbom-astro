@@ -384,10 +384,14 @@ const SECTION_SCHEMA = {
     { key: 'body',      label: 'Text',                 type: 'textarea', required: true },
   ],
   'gallery': [
+    { key: 'id',           label: 'Länk-ID',                    type: 'text',     hint: 'Valfritt. Gör att man kan länka direkt hit, t.ex. /sida#motiv' },
     { key: 'eyebrow',      label: 'Etikett',                    type: 'text',     hint: 'Liten text ovanför rubriken' },
     { key: 'title',        label: 'Rubrik',                     type: 'text' },
     { key: 'columns',      label: 'Antal kolumner',             type: 'select',   options: [{ value: '2', label: '2 kolumner' }, { value: '3', label: '3 kolumner (standard)' }, { value: '4', label: '4 kolumner' }] },
     { key: 'showCaptions', label: 'Visa bildtexter i rutnätet', type: 'checkbox', hint: 'Visar bildtexten (alt-texten) som en synlig etikett längst ner på varje bild. Bra för gallerier där beskrivningen är viktig, t.ex. motiv på gevärsremmar.' },
+    { key: 'showFilters',  label: 'Visa motivfilter',           type: 'checkbox', hint: 'Lägger till filterknappar ovanför galleriet — besökaren kan välja att visa bara vissa motiv.' },
+    { key: 'filterLabel',  label: 'Filtrets etikett',           type: 'text',     hint: 'T.ex. "Filtrera på motiv"' },
+    { type: 'button-group', label: 'CTA-knapp (valfri)', labelKey: 'ctaLabel', hrefKey: 'ctaHref', variant: 'link' },
     { key: 'images',       label: 'Bilder',                     type: 'image-list' },
   ],
   'services-grid': [
@@ -467,6 +471,11 @@ const SECTION_SCHEMA = {
     { key: 'title',      label: 'Rubrik',              type: 'text' },
     { key: 'steps',      label: 'Steg',                type: 'step-list' },
   ],
+  'customer-stories': [
+    { key: 'eyebrow',    label: 'Etikett',             type: 'text',     hint: 'Liten text ovanför rubriken' },
+    { key: 'title',      label: 'Rubrik',              type: 'text' },
+    { key: 'items',      label: 'Berättelser',         type: 'story-list' },
+  ],
   'credential-strip': [
     { key: 'items',      label: 'Meriter',             type: 'credential-list' },
   ],
@@ -478,7 +487,7 @@ const SECTION_GROUPS = [
   { label: 'Innehåll',                types: ['text','gallery','process-steps'] },
   { label: 'Tjänster & presentation', types: ['services-grid','about-band','method-cards','credential-strip'] },
   { label: 'Kontakt & formulär',      types: ['booking-grid','contact-card','inquiry-form'] },
-  { label: 'Övrigt',                  types: ['cta','quote','info-card','testimonials','newsletter-signup'] },
+  { label: 'Övrigt',                  types: ['cta','quote','info-card','testimonials','customer-stories','newsletter-signup'] },
 ];
 
 const SECTION_LABELS = {
@@ -500,6 +509,7 @@ const SECTION_LABELS = {
   'info-card':         'Informationsruta',
   'testimonials':      'Klientberättelser',
   'newsletter-signup': 'Nyhetsbrevsprenumeration',
+  'customer-stories':  'Kundberättelser med bild',
 };
 
 const SECTION_DESCRIPTIONS = {
@@ -521,6 +531,7 @@ const SECTION_DESCRIPTIONS = {
   'info-card':         'Inramad informationsruta — mjuk, varm eller grön ton',
   'testimonials':      'Klientberättelser som citatkort i rutnät',
   'newsletter-signup': 'E-postprenumeration med intressefilter (Homeopati/Livscoachning/Läderhantverk)',
+  'customer-stories':  'Kundcitat med runda porträttbilder — cirklar med foto, citat och namn. Idealisk för produktsidor.',
 };
 
 /* ── State ────────────────────────────────────────────────────── */
@@ -890,25 +901,46 @@ async function updateImageReferences(refs, oldPath, newPath) {
 async function loadImageLibrary() {
   loading('Laddar bildbibliotek…');
   try {
-    const tree = await apiReq('GET', `/git/trees/${cfg.branch}?recursive=1`);
+    const [tree, altsFile] = await Promise.all([
+      apiReq('GET', `/git/trees/${cfg.branch}?recursive=1`),
+      getFile('src/content/settings/image-alts.json').catch(() => null),
+    ]);
     const images = tree.tree
       .filter(f => f.path.startsWith('public/images/') && /\.(jpe?g|png|webp|gif|avif|svg)$/i.test(f.path))
       .map(f => ({ path: f.path, name: f.path.replace('public/images/', ''), sha: f.sha, url: '/images/' + f.path.replace('public/images/', ''), size: f.size || 0 }))
       .sort((a, b) => a.name.localeCompare(b.name));
-    showImageLibrary(images);
+    const altsData = altsFile ? JSON.parse(b64Decode(altsFile.content)) : {};
+    const altsSha  = altsFile ? altsFile.sha : null;
+    showImageLibrary(images, altsData, altsSha);
   } catch (err) {
     toast('Kunde inte hämta bilder: ' + err.message, true);
     loadPageList();
   }
 }
 
-function showImageLibrary(images) {
+function showImageLibrary(images, altsData, altsSha) {
+  altsData = altsData || {};
+  const alts = Object.assign({}, altsData); // local mutable copy
+  let altsDirty = false;
+
   app().innerHTML = '';
+
+  const saveAltsBtn = h('button', { className: 'btn btn-primary btn-sm', style: 'display:none', onClick: async () => {
+    saveAltsBtn.disabled = true;
+    saveAltsBtn.innerHTML = '<span class="spinner"></span>';
+    try {
+      const res = await putFile('src/content/settings/image-alts.json', JSON.stringify(alts, null, 2), 'Uppdaterar alt-texter', altsSha);
+      altsSha = res.content.sha;
+      altsDirty = false;
+      saveAltsBtn.style.display = 'none';
+      toast('Alt-texter sparade!');
+    } catch (err) { toast('Fel: ' + err.message, true); saveAltsBtn.disabled = false; saveAltsBtn.textContent = 'Spara alt-texter'; }
+  }}, 'Spara alt-texter');
 
   const header = makeHeader(
     h('button', { className: 'back-btn', onClick: loadPageList }, '← Sidor'),
     'Bildbibliotek',
-    null,
+    saveAltsBtn,
   );
 
   const searchInp = h('input', { type: 'text', placeholder: 'Sök på filnamn…', style: 'max-width:24rem' });
@@ -927,10 +959,28 @@ function showImageLibrary(images) {
     filtered.forEach(img => {
       const kb = img.size / 1024;
       const sizeBg  = kb > 1500 ? 'oklch(0.55 0.2 25)' : kb > 500 ? 'oklch(0.72 0.15 55)' : 'oklch(0.72 0.13 145)';
+
+      const altInp = document.createElement('input');
+      altInp.type = 'text';
+      altInp.placeholder = 'Alt-text för skärmläsare och SEO…';
+      altInp.value = alts[img.url] || '';
+      altInp.style.cssText = 'font-size:0.75rem;padding:0.3rem 0.5rem;border-radius:var(--radius);border:1px solid var(--border);width:100%;margin-top:0.375rem';
+      if (!altInp.value) altInp.style.borderColor = 'var(--destructive)';
+      altInp.addEventListener('input', e => {
+        const val = e.target.value.trim();
+        if (val) { alts[img.url] = val; altInp.style.borderColor = ''; }
+        else { delete alts[img.url]; altInp.style.borderColor = 'var(--destructive)'; }
+        altsDirty = true;
+        saveAltsBtn.style.display = '';
+        saveAltsBtn.disabled = false;
+        saveAltsBtn.textContent = 'Spara alt-texter';
+      });
+
       const card = h('div', { className: 'img-lib-card' },
         h('div', { className: 'img-lib-thumb' }, h('img', { src: rawUrl(img.url), alt: img.name, loading: 'lazy' })),
         h('div', { className: 'img-lib-name', title: img.name }, img.name),
-        img.size ? h('div', { style: 'padding:0 0.5rem 0.5rem' }, h('span', { style: `font-size:0.68rem;font-weight:600;color:white;background:${sizeBg};padding:0.1rem 0.4rem;border-radius:999px` }, fmtSize(img.size))) : null,
+        img.size ? h('div', { style: 'padding:0 0.5rem 0' }, h('span', { style: `font-size:0.68rem;font-weight:600;color:white;background:${sizeBg};padding:0.1rem 0.4rem;border-radius:999px` }, fmtSize(img.size))) : null,
+        h('div', { style: 'padding:0 0.5rem 0.5rem' }, altInp),
         h('div', { className: 'img-lib-actions' },
           h('button', { className: 'btn btn-ghost btn-sm', onClick: () => openRenameModal(img) }, 'Byt namn'),
           h('button', { className: 'btn btn-ghost btn-sm', style: 'color:var(--destructive)', onClick: () => openDeleteModal(img) }, 'Ta bort'),
@@ -1569,10 +1619,22 @@ function makeWireframe(type) {
       el.style.cssText += ';display:flex;gap:4px;padding:6px';
       for (let i = 0; i < 3; i++)
         el.append(h('div', { className: 'wf-card', style: 'flex:1;padding:5px;display:flex;flex-direction:column;gap:3px' },
-          h('div', { style: 'font-size:11px;color:oklch(0.55 0.13 45);line-height:1;margin-bottom:2px' }, '“'),
+          h('div', { style: 'font-size:11px;color:oklch(0.55 0.13 45);line-height:1;margin-bottom:2px' }, '”'),
           h('div', { className: 'wf-line', style: 'width:88%;margin:0;height:3px' }),
           h('div', { className: 'wf-line', style: 'width:72%;margin:0;height:3px' }),
           h('div', { className: 'wf-line wf-sm', style: 'width:46%;margin-top:4px' }),
+        ));
+      break;
+
+    case 'customer-stories':
+      el.style.cssText += ';display:flex;gap:6px;padding:7px;background:oklch(0.972 0.014 80)';
+      for (let i = 0; i < 2; i++)
+        el.append(h('div', { style: 'flex:1;display:flex;flex-direction:column;align-items:center;gap:3px' },
+          h('div', { style: 'width:28px;height:28px;border-radius:50%;background:oklch(0.82 0.015 70);border:1.5px solid oklch(0.7 0.02 50);flex-shrink:0' }),
+          h('div', { style: 'font-size:9px;color:oklch(0.55 0.13 45);line-height:1;margin:1px 0' }, '”'),
+          h('div', { className: 'wf-line', style: 'width:88%;margin:0;height:3px;background:oklch(0.52 0.03 48)' }),
+          h('div', { className: 'wf-line', style: 'width:72%;margin:0;height:3px;background:oklch(0.52 0.03 48)' }),
+          h('div', { className: 'wf-line wf-sm', style: 'width:40%;margin-top:3px' }),
         ));
       break;
 
@@ -1678,6 +1740,7 @@ function makeAddSectionBar(listEl) {
 function detectLinkType(href) {
   if (!href) return 'empty';
   if (/^https?:\/\//.test(href)) return 'extern';
+  if (/^#/.test(href)) return 'anchor';
   return 'intern';
 }
 
@@ -1687,6 +1750,10 @@ function updateLinkBadge(badge, hintEl, href) {
     badge.textContent = '↗ extern länk';
     badge.className = 'link-badge link-badge-extern';
     if (hintEl) hintEl.textContent = 'Extern webbplats — öppnas automatiskt i nytt fönster';
+  } else if (t === 'anchor') {
+    badge.textContent = '⚓ ankarlänk';
+    badge.className = 'link-badge link-badge-intern';
+    if (hintEl) hintEl.textContent = 'Ankarlänk — scrollar till en sektion på samma sida';
   } else if (t === 'intern') {
     badge.textContent = '↩ intern sida';
     badge.className = 'link-badge link-badge-intern';
@@ -1698,16 +1765,7 @@ function updateLinkBadge(badge, hintEl, href) {
   }
 }
 
-function makeButtonGroup(field, sec, onDirty) {
-  const lk = field.labelKey;
-  const hk = field.hrefKey;
-  const isLink = field.variant === 'link';
-
-  const wrap = h('div', { className: 'field' });
-  wrap.append(h('label', {}, field.label));
-
-  // Datalist with known pages for URL autocomplete
-  const dlId = 'pdl-' + Math.random().toString(36).slice(2);
+function buildLinkDatalist(dlId) {
   const dl = document.createElement('datalist');
   dl.id = dlId;
   knownPages.forEach(p => {
@@ -1716,6 +1774,28 @@ function makeButtonGroup(field, sec, onDirty) {
     o.textContent = p.title;
     dl.append(o);
   });
+  (pageData?.sections || []).forEach(sec => {
+    if (sec.id) {
+      const o = document.createElement('option');
+      o.value = '#' + sec.id;
+      o.textContent = '#' + sec.id + (sec.title ? ' — ' + sec.title : '');
+      dl.append(o);
+    }
+  });
+  return dl;
+}
+
+function makeButtonGroup(field, sec, onDirty) {
+  const lk = field.labelKey;
+  const hk = field.hrefKey;
+  const isLink = field.variant === 'link';
+
+  const wrap = h('div', { className: 'field' });
+  wrap.append(h('label', {}, field.label));
+
+  // Datalist with known pages + page anchors for URL autocomplete
+  const dlId = 'pdl-' + Math.random().toString(36).slice(2);
+  const dl = buildLinkDatalist(dlId);
 
   const badge  = h('span', { className: 'link-badge link-badge-empty' });
   const hintEl = h('span', { className: 'hint' });
@@ -1851,6 +1931,10 @@ function makeField(field, value, onChange) {
       wrap.append(makeTestimonialList(value || [], onChange));
       break;
     }
+    case 'story-list': {
+      wrap.append(makeStoryList(value || [], onChange));
+      break;
+    }
     case 'step-list': {
       wrap.append(makeStepList(value || [], onChange));
       break;
@@ -1943,25 +2027,34 @@ function makeImageList(items, onChange) {
         });
       });
 
-      const altWarn = h('span', {
-        style: 'font-size:0.7rem;color:var(--destructive);display:' + (item.alt ? 'none' : 'block'),
-        title: 'Alt-text saknas — lägg till en bildbeskrivning för tillgänglighet och SEO',
-      }, '⚠ Alt-text saknas');
+      const captionInp = h('input', { type: 'text', placeholder: 'Bildtext (visas vid hovring, t.ex. "Rem med älgmotiv")', value: item.caption || '',
+        onInput: e => { list[idx].caption = e.target.value; onChange([...list]); },
+      });
 
-      const altInp = h('input', { type: 'text', placeholder: 'Bildbeskrivning — visas som bildtext om "Visa bildtexter" är på', value: item.alt || '',
-        style: item.alt ? '' : 'border-color:var(--destructive)',
+      const detailInp = h('input', { type: 'text', placeholder: 'Detaljtext (liten rad under bildtexten, t.ex. "Tärnsjöläder · 90 cm")', value: item.detail || '',
+        onInput: e => { list[idx].detail = e.target.value; onChange([...list]); },
+      });
+
+      const motifInp = h('input', { type: 'text', placeholder: 'Motiv för filter (t.ex. Älg) — flera separeras med komma', value: Array.isArray(item.motif) ? item.motif.join(', ') : (item.motif || ''),
         onInput: e => {
-          list[idx].alt = e.target.value;
-          altWarn.style.display = e.target.value ? 'none' : 'block';
-          e.target.style.borderColor = e.target.value ? '' : 'var(--destructive)';
+          const val = e.target.value.trim();
+          const parts = val ? val.split(',').map(s => s.trim()).filter(Boolean) : [];
+          list[idx].motif = parts.length === 1 ? parts[0] : parts.length > 1 ? parts : undefined;
+          if (list[idx].motif === undefined) delete list[idx].motif;
           onChange([...list]);
         },
       });
+
       const delBtn = h('button', { className: 'btn btn-ghost btn-sm', style: 'color:var(--destructive)', onClick: () => { list.splice(idx, 1); onChange([...list]); rerender(); } }, '×');
 
       container.append(h('div', { className: 'list-row' },
         h('div', { style: 'display:flex;flex-direction:column;align-items:center;gap:0.375rem' }, thumb, pickBtn, fileInput),
-        h('div', { className: 'list-row-fields' }, altInp, altWarn),
+        h('div', { className: 'list-row-fields' },
+          captionInp,
+          detailInp,
+          motifInp,
+          h('span', { className: 'hint' }, 'Bildtext och detaljer visas när besökaren hovrar över bilden. Motiv används bara om "Visa motivfilter" är aktiverat. Alt-text sätts i Bildbiblioteket.'),
+        ),
         delBtn,
       ));
     });
@@ -2061,9 +2154,7 @@ function makeServiceList(items, onChange) {
             const hint2  = h('span', { className: 'hint', style: 'font-size:0.72rem' });
             updateLinkBadge(badge2, hint2, item.href || '');
             const dlId2 = 'pdl-' + Math.random().toString(36).slice(2);
-            const dl2 = document.createElement('datalist');
-            dl2.id = dlId2;
-            knownPages.forEach(p => { const o = document.createElement('option'); o.value = '/' + (p.slug === 'hem' ? '' : p.slug); o.textContent = p.title; dl2.append(o); });
+            const dl2 = buildLinkDatalist(dlId2);
             const hrefInp2 = h('input', { type: 'text', placeholder: '/sida  eller  https://...', value: item.href || '', list: dlId2,
               onInput: e => { list[idx].href = e.target.value; updateLinkBadge(badge2, hint2, e.target.value); onChange([...list]); } });
             return h('div', {},
@@ -2102,6 +2193,65 @@ function makeTestimonialList(items, onChange) {
       ));
     });
     container.append(h('button', { className: 'btn btn-ghost btn-sm', style: 'margin-top:0.375rem', onClick: () => { list.push({ quote: '', attribution: '' }); onChange([...list]); rerender(); } }, '+ Lägg till berättelse'));
+  };
+
+  rerender();
+  return container;
+}
+
+function makeStoryList(items, onChange) {
+  const container = h('div', {});
+  const list = [...items];
+
+  const rerender = () => {
+    container.innerHTML = '';
+    list.forEach((item, idx) => {
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file'; fileInput.accept = 'image/*'; fileInput.style.display = 'none';
+
+      let thumb = item.image
+        ? h('img', { src: rawUrl(item.image), className: 'image-thumb', alt: '' })
+        : h('div', { className: 'image-empty' }, 'Bild');
+
+      const pickBtn = h('button', { className: 'btn btn-ghost btn-sm', onClick: () => fileInput.click() }, item.image ? 'Byt' : 'Välj');
+
+      fileInput.addEventListener('change', e => {
+        const file = e.target.files[0];
+        if (!file) return;
+        fileInput.value = '';
+        showUploadConfirm(file, async (processedFile, baseName) => {
+          pickBtn.disabled = true;
+          try {
+            list[idx].image = await uploadImage(processedFile, baseName);
+            onChange([...list]);
+            rerender();
+            toast('Bilden laddades upp!');
+          } catch (err) {
+            toast('Fel: ' + err.message, true);
+          } finally { pickBtn.disabled = false; }
+        });
+      });
+
+      const quoteTa = document.createElement('textarea');
+      quoteTa.rows = 3; quoteTa.placeholder = 'Citat från kunden'; quoteTa.value = item.quote || '';
+      quoteTa.addEventListener('input', e => { list[idx].quote = e.target.value; onChange([...list]); });
+
+      const attrInp = h('input', { type: 'text', placeholder: 'Kund · Dalarna', value: item.attribution || '',
+        onInput: e => { list[idx].attribution = e.target.value; onChange([...list]); } });
+
+      const delBtn = h('button', { className: 'btn btn-ghost btn-sm', style: 'color:var(--destructive)',
+        onClick: () => { list.splice(idx, 1); onChange([...list]); rerender(); } }, '×');
+
+      container.append(h('div', { className: 'list-row' },
+        h('div', { style: 'display:flex;flex-direction:column;align-items:center;gap:0.375rem' }, thumb, pickBtn, fileInput),
+        h('div', { className: 'list-row-fields' }, quoteTa, attrInp),
+        delBtn,
+      ));
+    });
+
+    container.append(h('button', { className: 'btn btn-ghost btn-sm', style: 'margin-top:0.375rem',
+      onClick: () => { list.push({ image: '', quote: '', attribution: '' }); onChange([...list]); rerender(); }
+    }, '+ Lägg till berättelse'));
   };
 
   rerender();
@@ -2155,9 +2305,7 @@ function makeCredentialList(items, onChange) {
             const hint3  = h('span', { className: 'hint', style: 'font-size:0.72rem' });
             updateLinkBadge(badge3, hint3, item.href || '');
             const dlId3 = 'pdl-' + Math.random().toString(36).slice(2);
-            const dl3 = document.createElement('datalist');
-            dl3.id = dlId3;
-            knownPages.forEach(p => { const o = document.createElement('option'); o.value = '/' + (p.slug === 'hem' ? '' : p.slug); o.textContent = p.title; dl3.append(o); });
+            const dl3 = buildLinkDatalist(dlId3);
             const hrefInp3 = h('input', { type: 'text', placeholder: '/sida  eller  https://... (valfri)', value: item.href || '', list: dlId3,
               onInput: e => { list[idx].href = e.target.value; updateLinkBadge(badge3, hint3, e.target.value); onChange([...list]); } });
             return h('div', {},
@@ -2373,6 +2521,10 @@ async function loadSettings() {
       const nlf = await getFile('src/content/settings/newsletter.json');
       settingsData.newsletter = { data: JSON.parse(b64Decode(nlf.content)), sha: nlf.sha };
     } catch { /* filen saknas — börja med tom lista */ }
+    try {
+      const lf = await getFile('public/llms.txt');
+      settingsData.llms = { content: b64Decode(lf.content), sha: lf.sha };
+    } catch { settingsData.llms = { content: '', sha: null }; }
     showSettings();
   } catch (err) {
     toast('Fel: ' + err.message, true);
@@ -2397,6 +2549,7 @@ function showSettings() {
     { id: 'navigation',    label: 'Navigation' },
     { id: 'seo',           label: 'SEO' },
     { id: 'newsletter',    label: 'Nyhetsbrev' },
+    { id: 'llms',          label: 'llms.txt' },
     { id: 'konfiguration', label: 'Konfiguration' },
   ];
 
@@ -2420,6 +2573,10 @@ function showSettings() {
           const nlf = await getFile('src/content/settings/newsletter.json');
           settingsData.newsletter = { data: JSON.parse(b64Decode(nlf.content)), sha: nlf.sha };
         } catch { /* filen saknas — börja med tom lista */ }
+        try {
+          const lf = await getFile('public/llms.txt');
+          settingsData.llms = { content: b64Decode(lf.content), sha: lf.sha };
+        } catch { settingsData.llms = { content: '', sha: null }; }
         showSettings();
         return;
       } catch (err) {
@@ -2434,6 +2591,7 @@ function showSettings() {
     if (id === 'navigation')    content.append(makeNavTab());
     if (id === 'seo')           content.append(makeSeoTab());
     if (id === 'newsletter')    content.append(makeNewsletterTab());
+    if (id === 'llms')          content.append(makeLlmsTab());
     if (id === 'konfiguration') content.append(makeConfigTab());
   };
 
@@ -2589,6 +2747,52 @@ function makeSeoTab() {
       const res = await putFile('src/content/settings/seo.json', JSON.stringify(d, null, 2), 'Uppdaterar SEO-inställningar', settingsData.seo.sha);
       settingsData.seo.sha = res.content.sha;
       toast('SEO-inställningar sparade!');
+      saveBtn.textContent = '✓ Sparat';
+      setTimeout(() => { if (saveBtn.isConnected) saveBtn.textContent = 'Spara'; }, 2000);
+    } catch (err) { toast('Fel: ' + err.message, true); saveBtn.textContent = 'Spara'; }
+    finally { saveBtn.disabled = false; }
+  }}, 'Spara');
+
+  card.append(saveBtn);
+  return card;
+}
+
+function makeLlmsTab() {
+  const card = h('div', { className: 'card', style: 'display:flex;flex-direction:column;gap:1rem' });
+
+  card.append(
+    h('div', { style: 'background:oklch(0.97 0.018 65);border:1px solid oklch(0.88 0.035 60);border-radius:0.75rem;padding:1rem 1.25rem' },
+      h('p', { style: 'font-size:0.875rem;font-weight:600;margin-bottom:0.35rem' }, 'Vad är llms.txt?'),
+      h('p', { className: 'text-muted', style: 'font-size:0.8125rem;line-height:1.6;margin:0' },
+        'En lättläst sammanfattning av webbplatsen för AI-sökmotorer som ChatGPT, Claude och Perplexity. När dessa system söker efter information om Marie Uhrbom läser de den här filen för att snabbt förstå vad sidan handlar om, vilka tjänster som erbjuds och hur man kontaktar dig. Håll texten kort och faktabaserad — namn, tjänster, priser, plats och kontakt. Filen är skriven i markdown-format och ligger på /llms.txt.'
+      ),
+    ),
+  );
+
+  const d = settingsData.llms;
+  const ta = document.createElement('textarea');
+  ta.rows = 20;
+  ta.style.fontFamily = 'monospace';
+  ta.style.fontSize = '0.8125rem';
+  ta.style.resize = 'vertical';
+  ta.value = d.content || '';
+  ta.addEventListener('input', e => { d.content = e.target.value; });
+
+  card.append(
+    h('div', { className: 'field' },
+      h('label', {}, 'Innehåll'),
+      ta,
+      h('span', { className: 'hint' }, 'Undvik marknadsföringsspråk — AI-system föredrar faktapåståenden.'),
+    ),
+  );
+
+  const saveBtn = h('button', { className: 'btn btn-primary', style: 'margin-top:0.25rem', onClick: async () => {
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner"></span>';
+    try {
+      const res = await putFile('public/llms.txt', d.content, 'Uppdaterar llms.txt', d.sha);
+      d.sha = res.content.sha;
+      toast('llms.txt sparad!');
       saveBtn.textContent = '✓ Sparat';
       setTimeout(() => { if (saveBtn.isConnected) saveBtn.textContent = 'Spara'; }, 2000);
     } catch (err) { toast('Fel: ' + err.message, true); saveBtn.textContent = 'Spara'; }
@@ -3053,6 +3257,7 @@ function renderSection(sec, contact) {
     case 'inquiry-form':     return renderInquiryForm(sec);
     case 'testimonials':     return renderTestimonials(sec);
     case 'process-steps':    return renderProcessSteps(sec);
+    case 'customer-stories': return renderCustomerStories(sec);
     case 'credential-strip': return renderCredentialStrip(sec);
     case 'newsletter-signup':return renderNewsletter(sec, contact);
     default: return `<section style="padding:2rem;text-align:center;color:var(--muted-fg);font-size:.875rem;border-bottom:1px solid var(--border)">— ${esc(sec.type)} —</section>`;
@@ -3303,6 +3508,27 @@ function renderProcessSteps(sec) {
         ${sec.title?`<h2 class="process-steps-title">${esc(sec.title)}</h2>`:''}
       </div>`:''}
       <div class="steps-grid" style="grid-template-columns:repeat(${cols},1fr)">${cards}</div>
+    </div>
+  </section>`;
+}
+
+function renderCustomerStories(sec) {
+  const cards = (sec.items||[]).map(item=>`<div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:0.75rem">
+    ${item.image?`<div style="width:7rem;height:7rem;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid var(--border)">${imgEl(item.image,item.attribution||'','width:100%;height:100%;object-fit:cover')}</div>`:''}
+    <blockquote style="margin:0">
+      <p style="font-family:var(--font-display);font-style:italic;font-size:0.9375rem;line-height:1.6;margin-bottom:0.5rem">&ldquo;${esc(item.quote||'')}&rdquo;</p>
+      ${item.attribution?`<footer style="font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--leather)">— ${esc(item.attribution)}</footer>`:''}
+    </blockquote>
+  </div>`).join('');
+  return `<section style="padding:4rem 0;background:oklch(0.978 0.011 85);border-top:1px solid var(--border);border-bottom:1px solid var(--border)">
+    <div class="wrap">
+      ${sec.eyebrow||sec.title?`<div style="text-align:center;margin-bottom:2.5rem">
+        ${sec.eyebrow?`<span class="eyebrow">${esc(sec.eyebrow)}</span>`:''}
+        ${sec.title?`<h2 style="font-family:var(--font-display);font-size:1.75rem;margin-top:0.5rem">${esc(sec.title)}</h2>`:''}
+      </div>`:''}
+      <div style="display:grid;grid-template-columns:repeat(${Math.min((sec.items||[]).length,2)||1},1fr);gap:2.5rem;max-width:48rem;margin:0 auto">
+        ${cards||`<p style="color:var(--muted-fg);text-align:center;grid-column:1/-1">Inga berättelser ännu.</p>`}
+      </div>
     </div>
   </section>`;
 }

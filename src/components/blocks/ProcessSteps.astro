@@ -24,18 +24,18 @@ const colClass = colMap[Math.min(steps.length, 4)] ?? 'md:grid-cols-4';
       </div>
     )}
 
-    <div class:list={['grid grid-cols-1 gap-8 md:gap-6', colClass]}>
+    <ol class:list={['grid grid-cols-1 gap-8 md:gap-6 list-none m-0 p-0', colClass]}>
       {steps.map((step) => (
-        <div class="flex flex-col">
+        <li class="flex flex-col">
           <div class="flex items-center gap-4 mb-4">
-            <div class="shrink-0 w-12 h-12 rounded-full bg-[var(--color-sage-deep)] text-[var(--color-primary-foreground)] flex items-center justify-center shadow-[var(--shadow-sage)]">
+            <div class="shrink-0 w-12 h-12 rounded-full bg-[var(--color-sage-deep)] text-[var(--color-primary-foreground)] flex items-center justify-center shadow-[var(--shadow-sage)]" aria-hidden="true">
               <span class="font-display text-xl font-medium leading-none select-none">{step.number}</span>
             </div>
             <h3 class="font-display text-xl font-medium leading-snug">{step.title}</h3>
           </div>
           <p class="text-sm text-[var(--color-muted-foreground)] leading-relaxed">{step.body}</p>
-        </div>
+        </li>
       ))}
-    </div>
+    </ol>
   </div>
 </section>

@@ -4,11 +4,110 @@
     "description": "Handgjorda gevärsremmar, beställt läderhantverk och sadelmakeri i Tärnsjö-läder. Traditionellt hantverk med material av hög kvalitet från Marie Uhrbom utanför Mellerud.",
     "slug": "hantverk"
   },
+  "schema": [
+    {
+      "@context": "https://schema.org",
+      "@type": "Product",
+      "name": "Handgjord gevärsrem i Tärnsjö-läder",
+      "description": "Handgjord gevärsrem i vegetabilgarvat Tärnsjö-läder, 3–3,5 mm tjockt med neoprenbaksida. Personligt motiv handskuret och inslaget med punsar för 3D-effekt. Namn kan graveras. Tillverkas på beställning i Mellerud.",
+      "brand": {
+        "@type": "Brand",
+        "name": "Marie Uhrbom"
+      },
+      "material": "Vegetabilgarvat Tärnsjö-läder",
+      "countryOfOrigin": "SE",
+      "offers": {
+        "@type": "Offer",
+        "price": "1250",
+        "priceCurrency": "SEK",
+        "availability": "https://schema.org/InStock",
+        "url": "https://marieuhrbom.se/hantverk",
+        "seller": {
+          "@type": "Person",
+          "name": "Marie Uhrbom",
+          "telephone": "0703266213",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Mellerud",
+            "addressRegion": "Västra Götaland",
+            "addressCountry": "SE"
+          }
+        }
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Vilka motiv finns tillgängliga för gevärsremmen?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Tillgängliga motiv är älg, rådjur, hare, orre, varg, vildsvin, dovhjort, kronhjort och lodjur. Eget motiv kan också beställas mot ett tillägg från 400 kr — kontakta Marie för mer information."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Vad kostar en handgjord gevärsrem?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "En gevärsrem med befintligt motiv och graverat namn kostar 1 250 kr inklusive moms. Färgad baksida är ett tillval för +200 kr. Eget motiv kostar från +400 kr."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Kan jag få mitt namn på remmen?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ja, namnet graveras med bokstavspunsar. Kontrollera stavningen noga i din beställning — det går inte att ändra i efterhand."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Hur lång är leveranstiden?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Varje rem tillverkas på beställning från en hel hud. Leveranstiden varierar beroende på hur många beställningar som ligger inne. Fråga Marie om aktuell tid innan du beställer, eller räkna med några veckors väntan."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Av vilket material är remmen gjord?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Remmen är gjord i vegetabilgarvat Tärnsjö-läder, 3–3,5 mm tjockt. Baksidan har ett neoprenlager som förhindrar att remmen glider. Standardlängden är 90 cm, längre kan beställas vid behov."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Hur beställer jag en gevärsrem?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Kontakta Marie via formuläret på marieuhrbom.se/hantverk. Berätta vilket motiv du vill ha, om du vill ha namn på remmen och eventuella önskemål om färg på baksidan. Marie bekräftar leveranstid och detaljer innan du binder dig."
+          }
+        }
+      ]
+    }
+  ],
   "sections": [
     {
+      "type": "hero-overlay",
+      "eyebrow": "Läderhantverk",
+      "title": "Handgjord gevärsrem",
+      "subtitle": "Vegetabilgarvat Tärnsjö-läder med personligt motiv och graverat namn — beständigt hantverk från Mellerud.",
+      "image": "/images/laderhantverk5-0ffeb56a.jpeg",
+      "alt": "",
+      "cta1Label": "Beställ en rem",
+      "cta1Href": "#bestall",
+      "cta2Label": "Se motiv och priser",
+      "cta2Href": "#motiv"
+    },
+    {
       "type": "gallery",
+      "id": "motiv",
       "eyebrow": "Hantverk med själ",
-      "title": "Handgjort läder av hög kvalitet",
+      "title": "Motiv och utföranden",
       "showFilters": true,
       "filterLabel": "Filtrera på motiv",
       "images": [
@@ -85,26 +184,15 @@
       ]
     },
     {
-      "type": "text",
-      "title": "Beställ en personlig gevärrem",
-      "body": "Hos mig beställer du en gevärrem i Tärnsjö-läder, 3–3,5 mm tjockt med ett neoprenlager på baksidan som förhindrar att remmen glider. Standardlängden är 90 cm och passar de flesta jägare — något längre kan beställas vid behov. Remmen fästs med läderremmar så att det inte finns något som skramlar eller blänker.\n\n## Tillgängliga motiv\n\nÄlg, rådjur, hare, orre, varg, vildsvin, dovhjort, kronhjort, lodjur. Eget motiv går att beställa — hör av dig för mer information.\n\nMotiven görs för hand med läderplastik där mönstret skärs ut och slås in med punsar för en tydlig 3D-effekt.\n\n## Namn på remmen\n\nDu kan få ditt namn (eller ett annat ord) ingraverat med bokstavspunsar. Kontrollera stavningen noga innan du beställer — det går inte att ändra i efterhand.\n\n## Färg och finish\n\nRemmen färgas med chattering, en teknik som ger naturliga variationer i färgen beroende på lädrets struktur. Baksidan lämnas ofärgad som standard men kan färgas mot tillägg.\n\n## Leveranstid\n\nVarje rem görs på beställning från en hel hud. Leveranstiden varierar beroende på hur många beställningar som ligger inne — fråga gärna om aktuell tid innan du beställer, eller räkna med några veckors väntan."
-    },
-    {
       "type": "info-card",
       "title": "Priser (inklusive moms)",
       "body": "- Rem med befintligt motiv och namn: **1 250 kr**\n- Färgad baksida: **+200 kr**\n- Kundens eget motiv: **från +400 kr**\n\nKontakta mig via formuläret nedan för att stämma av leveranstid och lägga din beställning.",
       "tone": "warm"
     },
     {
-      "type": "inquiry-form",
-      "id": "bestall",
-      "eyebrow": "Beställ eller fråga",
-      "title": "Skicka en förfrågan",
-      "intro": "Fyll i formuläret så hör jag av mig inom ett par dagar. Beskriv gärna vad du vill ha — motiv, om du vill ha namn på remmen, och om du har önskemål om färg på baksidan.",
-      "area": "hantverk",
-      "subjectLabel": "Vad gäller det?",
-      "messagePlaceholder": "T.ex: Gevärrem med älgmotiv och namnet Svensson. Standardlängd 90 cm. Ofärgad baksida.",
-      "submitLabel": "Skicka förfrågan"
+      "type": "text",
+      "title": "Beställ en personlig gevärrem",
+      "body": "Hos mig beställer du en gevärrem i Tärnsjö-läder, 3–3,5 mm tjockt med ett neoprenlager på baksidan som förhindrar att remmen glider. Standardlängden är 90 cm och passar de flesta jägare — något längre kan beställas vid behov. Remmen fästs med läderremmar så att det inte finns något som skramlar eller blänker.\n\n## Tillgängliga motiv\n\nÄlg, rådjur, hare, orre, varg, vildsvin, dovhjort, kronhjort, lodjur. Eget motiv går att beställa — hör av dig för mer information.\n\nMotiven görs för hand med läderplastik där mönstret skärs ut och slås in med punsar för en tydlig 3D-effekt.\n\n## Namn på remmen\n\nDu kan få ditt namn (eller ett annat ord) ingraverat med bokstavspunsar. Kontrollera stavningen noga innan du beställer — det går inte att ändra i efterhand.\n\n## Färg och finish\n\nRemmen färgas med chattering, en teknik som ger naturliga variationer i färgen beroende på lädrets struktur. Baksidan lämnas ofärgad som standard men kan färgas mot tillägg.\n\n## Leveranstid\n\nVarje rem görs på beställning från en hel hud. Leveranstiden varierar beroende på hur många beställningar som ligger inne — fråga gärna om aktuell tid innan du beställer, eller räkna med några veckors väntan."
     },
     {
       "type": "customer-stories",
@@ -122,6 +210,17 @@
           "attribution": "Kund · Värmland"
         }
       ]
+    },
+    {
+      "type": "inquiry-form",
+      "id": "bestall",
+      "eyebrow": "Beställ eller fråga",
+      "title": "Skicka en förfrågan",
+      "intro": "Fyll i formuläret så hör jag av mig inom ett par dagar. Beskriv gärna vad du vill ha — motiv, om du vill ha namn på remmen, och om du har önskemål om färg på baksidan.",
+      "area": "hantverk",
+      "subjectLabel": "Vad gäller det?",
+      "messagePlaceholder": "T.ex: Gevärrem med älgmotiv och namnet Svensson. Standardlängd 90 cm. Ofärgad baksida.",
+      "submitLabel": "Skicka förfrågan"
     }
   ]
 }

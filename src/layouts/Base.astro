@@ -14,6 +14,7 @@ interface Props {
   description?: string;
   slug?: string;
   banner?: { enabled?: boolean; message?: string; linkLabel?: string; linkHref?: string };
+  schema?: Record<string, unknown>[];
 }
 
 const {
@@ -21,6 +22,7 @@ const {
   description = seoSettings.defaultDescription,
   slug = '',
   banner,
+  schema,
 } = Astro.props;
 
 const canonicalUrl = new URL(slug ? `/${slug}` : '/', Astro.site ?? 'https://marieuhrbom.se');
@@ -102,6 +104,10 @@ const canonicalUrl = new URL(slug ? `/${slug}` : '/', Astro.site ?? 'https://mar
         }
       ]
     })} />
+
+    {schema?.map(s => (
+      <script type="application/ld+json" set:html={JSON.stringify(s)} />
+    ))}
 
     <!-- Google Fonts: Cormorant Garamond + Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -36,7 +36,7 @@ const { sections } = Astro.props;
     case 'text':
       return <TextSection title={section.title} body={section.body} />;
     case 'gallery':
-      return <Gallery eyebrow={section.eyebrow} title={section.title} images={section.images ?? []} columns={section.columns} showCaptions={section.showCaptions} showFilters={section.showFilters} filterLabel={section.filterLabel} />;
+      return <Gallery id={section.id} eyebrow={section.eyebrow} title={section.title} images={section.images ?? []} columns={section.columns} showCaptions={section.showCaptions} showFilters={section.showFilters} filterLabel={section.filterLabel} ctaLabel={section.ctaLabel} ctaHref={section.ctaHref} />;
     case 'services-grid':
       return <ServicesGrid {...section} />;
     case 'about-band':

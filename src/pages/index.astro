@@ -4,6 +4,6 @@ import PageRenderer from '@/components/PageRenderer.astro';
 import page from '@/content/pages/hem.json';
 ---
 
-<Base title={page.meta.title} description={page.meta.description} slug="" banner={page.banner}>
+<Base title={page.meta.title} description={page.meta.description} slug="" banner={page.banner} schema={page.schema}>
   <PageRenderer sections={page.sections} />
 </Base>

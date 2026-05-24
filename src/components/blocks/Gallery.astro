@@ -7,6 +7,7 @@ interface GalleryImage {
   detail?: string;
 }
 interface Props {
+  id?: string;
   eyebrow?: string;
   title?: string;
   images: GalleryImage[];
@@ -14,10 +15,16 @@ interface Props {
   showCaptions?: boolean;
   showFilters?: boolean;
   filterLabel?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
 }
 import { makeUrlFn } from '@/utils/url';
+import imageAlts from '@/content/settings/image-alts.json';
 const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
-const { eyebrow, title, images, columns = 3, showCaptions = false, showFilters = false, filterLabel } = Astro.props;
+const { id, eyebrow, title, images, columns = 3, showCaptions = false, showFilters = false, filterLabel, ctaLabel, ctaHref } = Astro.props;
+
+const getAlt = (img: GalleryImage) =>
+  (imageAlts as Record<string, string>)[img.url] || img.alt || '';
 
 const uid = Math.random().toString(36).slice(2, 7);
 const colClass =
@@ -25,7 +32,7 @@ const colClass =
   columns === 4 ? 'grid-cols-2 lg:grid-cols-4' :
                   'grid-cols-2 lg:grid-cols-3';
 
-const slides = images.map(img => ({ src: siteUrl(img.url), alt: img.alt }));
+const slides = images.map(img => ({ src: siteUrl(img.url), alt: getAlt(img) }));
 
 const toArray = (motif?: string | string[]) =>
   !motif ? [] : Array.isArray(motif) ? motif : [motif];
@@ -36,12 +43,23 @@ const motifs = showFilters
 const hasFilters = motifs.length > 0;
 ---
 
-<section class="py-16 md:py-20 bg-[var(--color-sage)]/8">
+<section id={id} class="py-16 md:py-20 bg-[var(--color-sage)]/8" aria-label="Produktbilder">
   <div class="container-prose">
     {(eyebrow || title) && (
       <div class="mb-8">
         {eyebrow && <p class="eyebrow mb-3">{eyebrow}</p>}
         {title && <h2 class="font-display text-3xl md:text-4xl font-medium leading-tight">{title}</h2>}
+        {ctaLabel && ctaHref && (
+          <a
+            href={ctaHref}
+            class="inline-flex items-center gap-2 mt-5 px-7 py-3 rounded-lg bg-[var(--color-primary)] text-[var(--color-primary-foreground)] font-medium text-sm hover:opacity-90 transition-opacity shadow-[var(--shadow-soft)]"
+          >
+            {ctaLabel}
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        )}
       </div>
     )}
 
@@ -72,13 +90,13 @@ const hasFilters = motifs.length > 0;
           data-gallery={uid}
           data-index={i}
           data-motifs={toArray(img.motif).join(',')}
-          aria-label={img.alt || `Bild ${i + 1}`}
+          aria-label={getAlt(img) || `Bild ${i + 1}`}
         >
           <img
             src={siteUrl(img.url)}
-            alt={img.alt}
+            alt={getAlt(img)}
             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-            loading="lazy"
+            loading={i === 0 ? 'eager' : 'lazy'}
           />
           <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
 
@@ -88,7 +106,7 @@ const hasFilters = motifs.length > 0;
                 <p class="gal-motif-tag">{toArray(img.motif).join(' · ')}</p>
               )}
               <p class="font-display text-[0.9rem] md:text-[1.05rem] font-medium leading-snug text-white mb-0.5">
-                {img.caption || img.alt}
+                {img.caption || getAlt(img)}
               </p>
               {img.detail && (
                 <p class="hidden md:block text-[0.72rem] text-white/65 tracking-[0.02em]">{img.detail}</p>
@@ -96,9 +114,9 @@ const hasFilters = motifs.length > 0;
             </div>
           )}
 
-          {showCaptions && img.alt && !img.caption && !img.motif && (
+          {showCaptions && getAlt(img) && !img.caption && !img.motif && (
             <div class="gallery-caption absolute bottom-0 inset-x-0 px-3 py-2 pointer-events-none">
-              <p class="text-white text-xs leading-snug line-clamp-2">{img.alt}</p>
+              <p class="text-white text-xs leading-snug line-clamp-2">{getAlt(img)}</p>
             </div>
           )}
         </button>
@@ -122,7 +140,7 @@ const hasFilters = motifs.length > 0;
   </button>
 
   <div class="ss-stage">
-    <img id={`ss-img-${uid}`} class="ss-image" src="" alt="" />
+    <img id={`ss-img-${uid}`} class="ss-image" alt="" />
   </div>
 
   <button class="ss-nav ss-next" aria-label="Nästa bild">
