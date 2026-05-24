@@ -9,35 +9,56 @@
       "type": "gallery",
       "eyebrow": "Hantverk med själ",
       "title": "Handgjort läder av hög kvalitet",
-      "showCaptions": true,
+      "showFilters": true,
+      "filterLabel": "Filtrera på motiv",
       "images": [
         {
           "url": "/images/laderhantverk1.jpeg",
-          "alt": "Handgjord gevärsrem i vegetabilgarvat Tärnsjöläder med vildsvinsmotiv"
+          "alt": "Handgjord gevärsrem i vegetabilgarvat Tärnsjöläder med vildsvinsmotiv",
+          "motif": "Vildsvin",
+          "caption": "Rem med vildsvinsmotiv",
+          "detail": "Tärnsjöläder · naturlig finish · 90 cm"
         },
         {
           "url": "/images/laderhantverk2.jpeg",
-          "alt": "Rådjursmotiv med kundens namn"
+          "alt": "Rådjursmotiv med kundens namn",
+          "motif": "Rådjur",
+          "caption": "Rådjursmotiv med namn",
+          "detail": "Kundens namn graverat · färgad baksida"
         },
         {
           "url": "/images/laderhanterverk4.png",
-          "alt": "Gevärsrem med dovhjortsmotiv"
+          "alt": "Gevärsrem med dovhjortsmotiv",
+          "motif": "Dovhjort",
+          "caption": "Gevärsrem med dovhjortsmotiv",
+          "detail": "3D-relief i Tärnsjöläder"
         },
         {
           "url": "/images/laderhanterverk6-00a986ad.jpeg",
-          "alt": "Kronhjort till vänster, dovhjort till höger"
+          "alt": "Kronhjort till vänster, dovhjort till höger",
+          "motif": "Dovhjort",
+          "caption": "Kronhjort & dovhjort",
+          "detail": "Kronhjort till vänster, dovhjort till höger"
         },
         {
           "url": "/images/laderhantverk5-0ffeb56a.jpeg",
-          "alt": "Från vänster orre- älg- och vargmotiv"
+          "alt": "Från vänster orre- älg- och vargmotiv",
+          "motif": ["Älg", "Orre", "Varg"],
+          "caption": "Orre, älg och varg i rad",
+          "detail": "Tre motiv på en och samma rem"
         },
         {
           "url": "/images/laderhanterverk7-a948483e.jpeg",
-          "alt": "Baksidan kan fås färgad mot kostnad. På baksidan ett neopren för att förhindra glid."
+          "alt": "Baksidan kan fås färgad mot kostnad. På baksidan ett neopren för att förhindra glid.",
+          "caption": "Färgad baksida med neopren",
+          "detail": "Tillval · +200 kr · förhindrar glid"
         },
         {
           "url": "/images/laderhanterverk3-0d74d63f.jpeg",
-          "alt": "Hare till vänster, älg till höger. Färgerna varierar, beror på vald färg samt lädrets textur."
+          "alt": "Hare till vänster, älg till höger. Färgerna varierar, beror på vald färg samt lädrets textur.",
+          "motif": ["Hare", "Älg"],
+          "caption": "Hare och älg",
+          "detail": "Färgerna varierar med lädrets textur"
         }
       ]
     },
@@ -86,25 +107,19 @@
       "submitLabel": "Skicka förfrågan"
     },
     {
-      "type": "newsletter-signup",
-      "eyebrow": "Nyhetsbrev",
-      "title": "Följ hantverket",
-      "body": "Ungefär en gång i månaden delar jag bilder och berättelser från verkstaden — nya mönster, pågående arbeten och tankar om hantverk. Inga spam, avregistrera dig när som helst.",
-      "area": "hantverk"
-    },
-    {
-      "type": "gallery",
+      "type": "customer-stories",
       "eyebrow": "Kundbilder och reparationer",
-      "title": "Hantverk ",
-      "columns": "3",
-      "images": [
+      "title": "Remmar som håller livet ut",
+      "items": [
         {
-          "url": "/images/img4150-32a65027.jpeg",
-          "alt": "Remmar som hängt med sedan år 2000"
+          "image": "/images/img4150-32a65027.jpeg",
+          "quote": "Remmen hängt med sedan år 2000 – fortfarande i perfekt skick. Tärnsjöläder åldras vackert med användning.",
+          "attribution": "Kund · Dalarna"
         },
         {
-          "url": "/images/9910b9c4-3043-49e5-aa2b-2eb70c6722ce1102o-c1d1471a.jpeg",
-          "alt": "Gevärsrem på sin plats"
+          "image": "/images/9910b9c4-3043-49e5-aa2b-2eb70c6722ce1102o-c1d1471a.jpeg",
+          "quote": "Gevärsremmen på sin plats – precis som den ska sitta. Inga skrammel, inget blänk.",
+          "attribution": "Kund · Värmland"
         }
       ]
     }

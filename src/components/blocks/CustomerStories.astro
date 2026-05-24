@@ -1,0 +1,155 @@
+---
+interface CustomerStoryItem {
+  image?: string;
+  quote: string;
+  attribution?: string;
+}
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  items: CustomerStoryItem[];
+}
+
+import { makeUrlFn } from '@/utils/url';
+const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
+const { eyebrow, title, items = [] } = Astro.props;
+
+const uid = Math.random().toString(36).slice(2, 7);
+const withImages = items.map(item => ({
+  ...item,
+  src: item.image ? siteUrl(item.image) : null,
+}));
+---
+
+<section class="py-14 md:py-20 bg-[var(--color-cream)] border-y border-[var(--color-border)]">
+  <div class="container-prose">
+    {(eyebrow || title) && (
+      <div class="mb-10 text-center">
+        {eyebrow && <p class="eyebrow mb-3">{eyebrow}</p>}
+        {title && (
+          <h2 class="font-display text-2xl md:text-3xl font-medium leading-tight">{title}</h2>
+        )}
+      </div>
+    )}
+
+    <div class="grid grid-cols-2 gap-6 md:gap-10">
+      {withImages.map((item, i) => (
+        <article class="flex flex-col items-center text-center">
+          {item.src && (
+            <button
+              class="group relative w-36 h-36 md:w-48 md:h-48 rounded-full overflow-hidden mb-5 ring-2 ring-[var(--color-border)] shadow-[var(--shadow-soft)] flex-shrink-0 cursor-zoom-in"
+              data-cs={uid}
+              data-index={i}
+              aria-label={`Förstora bild — ${item.attribution ?? 'kundberättelse'}`}
+            >
+              <img
+                src={item.src}
+                alt={item.attribution ?? 'Kundberättelse'}
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+              />
+              <span class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-black/20">
+                <svg width="24" height="24" fill="none" stroke="white" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/>
+                  <path d="M11 8v6M8 11h6"/>
+                </svg>
+              </span>
+            </button>
+          )}
+          <blockquote class="flex flex-col items-center flex-1">
+            <p class="font-display text-sm md:text-base italic leading-relaxed text-[var(--color-foreground)] mb-3">
+              &ldquo;{item.quote}&rdquo;
+            </p>
+            {item.attribution && (
+              <footer class="text-[0.68rem] tracking-[0.16em] uppercase text-[var(--color-leather)] font-normal">
+                {item.attribution}
+              </footer>
+            )}
+          </blockquote>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<dialog id={`cs-${uid}`} class="cs-lightbox" aria-modal="true" aria-label="Kundberättelse">
+  <button class="cs-lb-close" aria-label="Stäng">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+    </svg>
+  </button>
+  <img id={`cs-img-${uid}`} class="cs-lb-image" src="" alt="" />
+</dialog>
+
+<style>
+  .cs-lightbox {
+    padding: 0;
+    background: transparent;
+    border: none;
+    outline: none;
+    max-width: 100vw;
+    max-height: 100dvh;
+    width: 100vw;
+    height: 100dvh;
+  }
+  .cs-lightbox::backdrop {
+    background: rgba(0, 0, 0, 0.92);
+    backdrop-filter: blur(8px);
+  }
+  .cs-lightbox[open] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .cs-lb-image {
+    display: block;
+    max-width: min(88vw, 680px);
+    max-height: 85dvh;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 50%;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  }
+  .cs-lb-close {
+    position: fixed;
+    top: 1rem;
+    right: 1.25rem;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s;
+    z-index: 10;
+  }
+  .cs-lb-close:hover { background: rgba(255, 255, 255, 0.25); }
+</style>
+
+<script define:vars={{ uid, withImages }}>
+  const dialog = document.getElementById('cs-' + uid);
+  const lbImg  = document.getElementById('cs-img-' + uid);
+  const close  = dialog.querySelector('.cs-lb-close');
+  let opener   = null;
+
+  document.querySelectorAll(`[data-cs="${uid}"]`).forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = withImages[Number(btn.dataset.index)];
+      lbImg.src = item.src;
+      lbImg.alt = item.attribution ?? '';
+      opener = btn;
+      dialog.showModal();
+      close.focus();
+    });
+  });
+
+  close.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
+  dialog.addEventListener('close', () => { opener?.focus(); opener = null; });
+  dialog.addEventListener('keydown', e => { if (e.key === 'Escape') dialog.close(); });
+</script>

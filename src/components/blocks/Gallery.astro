@@ -2,6 +2,9 @@
 interface GalleryImage {
   url: string;
   alt: string;
+  motif?: string | string[];
+  caption?: string;
+  detail?: string;
 }
 interface Props {
   eyebrow?: string;
@@ -9,10 +12,12 @@ interface Props {
   images: GalleryImage[];
   columns?: 2 | 3 | 4;
   showCaptions?: boolean;
+  showFilters?: boolean;
+  filterLabel?: string;
 }
 import { makeUrlFn } from '@/utils/url';
 const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
-const { eyebrow, title, images, columns = 3, showCaptions = false } = Astro.props;
+const { eyebrow, title, images, columns = 3, showCaptions = false, showFilters = false, filterLabel } = Astro.props;
 
 const uid = Math.random().toString(36).slice(2, 7);
 const colClass =
@@ -21,14 +26,42 @@ const colClass =
                   'grid-cols-2 lg:grid-cols-3';
 
 const slides = images.map(img => ({ src: siteUrl(img.url), alt: img.alt }));
+
+const toArray = (motif?: string | string[]) =>
+  !motif ? [] : Array.isArray(motif) ? motif : [motif];
+
+const motifs = showFilters
+  ? [...new Set(images.flatMap(img => toArray(img.motif)))]
+  : [];
+const hasFilters = motifs.length > 0;
 ---
 
 <section class="py-16 md:py-20 bg-[var(--color-sage)]/8">
   <div class="container-prose">
     {(eyebrow || title) && (
-      <div class="mb-10">
+      <div class="mb-8">
         {eyebrow && <p class="eyebrow mb-3">{eyebrow}</p>}
         {title && <h2 class="font-display text-3xl md:text-4xl font-medium leading-tight">{title}</h2>}
+      </div>
+    )}
+
+    {hasFilters && (
+      <div class="mb-7">
+        {filterLabel && (
+          <p class="text-[0.7rem] tracking-[0.18em] uppercase text-[var(--color-muted-foreground)] mb-3 font-normal">
+            {filterLabel}
+          </p>
+        )}
+        <div class="flex flex-wrap gap-2">
+          <button class="filter-pill active" data-filter="alla" data-group={uid}>
+            Alla arbeten
+          </button>
+          {motifs.map(motif => (
+            <button class="filter-pill" data-filter={motif} data-group={uid}>
+              {motif}
+            </button>
+          ))}
+        </div>
       </div>
     )}
 
@@ -38,6 +71,7 @@ const slides = images.map(img => ({ src: siteUrl(img.url), alt: img.alt }));
           class="group relative block w-full aspect-square overflow-hidden rounded-xl shadow-[var(--shadow-soft)] hover:shadow-[var(--shadow-warm)] transition-shadow cursor-pointer"
           data-gallery={uid}
           data-index={i}
+          data-motifs={toArray(img.motif).join(',')}
           aria-label={img.alt || `Bild ${i + 1}`}
         >
           <img
@@ -46,8 +80,23 @@ const slides = images.map(img => ({ src: siteUrl(img.url), alt: img.alt }));
             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
             loading="lazy"
           />
-          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/15 transition-colors duration-300" />
-          {showCaptions && img.alt && (
+          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+
+          {(img.motif || img.caption || img.detail) && (
+            <div class="gal-overlay absolute inset-0 flex flex-col justify-end px-3 py-3 md:px-4 md:py-4 md:opacity-0 md:group-hover:opacity-100 md:transition-opacity md:duration-300 pointer-events-none">
+              {toArray(img.motif).length > 0 && (
+                <p class="gal-motif-tag">{toArray(img.motif).join(' · ')}</p>
+              )}
+              <p class="font-display text-[0.9rem] md:text-[1.05rem] font-medium leading-snug text-white mb-0.5">
+                {img.caption || img.alt}
+              </p>
+              {img.detail && (
+                <p class="hidden md:block text-[0.72rem] text-white/65 tracking-[0.02em]">{img.detail}</p>
+              )}
+            </div>
+          )}
+
+          {showCaptions && img.alt && !img.caption && !img.motif && (
             <div class="gallery-caption absolute bottom-0 inset-x-0 px-3 py-2 pointer-events-none">
               <p class="text-white text-xs leading-snug line-clamp-2">{img.alt}</p>
             </div>
@@ -89,11 +138,56 @@ const slides = images.map(img => ({ src: siteUrl(img.url), alt: img.alt }));
 </dialog>
 
 <style>
+  /* Filter pills */
+  .filter-pill {
+    padding: 5px 15px;
+    border-radius: 9999px;
+    border: 0.5px solid var(--color-border);
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--color-muted-foreground);
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+    letter-spacing: 0.04em;
+  }
+  .filter-pill:hover {
+    border-color: var(--color-leather);
+    color: var(--color-leather);
+    background: color-mix(in oklab, var(--color-leather) 8%, transparent);
+  }
+  .filter-pill.active {
+    background: var(--color-leather);
+    color: var(--color-primary-foreground);
+    border-color: var(--color-leather);
+  }
+
+  /* Gallery overlay */
+  .gal-overlay {
+    background: linear-gradient(
+      to top,
+      oklch(0.22 0.04 40 / 0.9) 0%,
+      oklch(0.22 0.04 40 / 0.15) 55%,
+      transparent 80%
+    );
+  }
+  .gal-motif-tag {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 400;
+    margin-bottom: 0.3rem;
+    color: oklch(0.75 0.1 55);
+  }
+
+  /* Caption (legacy showCaptions mode) */
   .gallery-caption {
     background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0) 100%);
     padding-top: 1.5rem;
   }
 
+  /* Slideshow dialog */
   .gallery-ss {
     padding: 0;
     background: transparent;
@@ -196,7 +290,8 @@ const slides = images.map(img => ({ src: siteUrl(img.url), alt: img.alt }));
   }
 </style>
 
-<script define:vars={{ uid, slides }}>
+<script define:vars={{ uid, slides, hasFilters }}>
+  // Slideshow
   const dialog  = document.getElementById('ss-' + uid);
   const ssImg   = document.getElementById('ss-img-' + uid);
   const ssCap   = document.getElementById('ss-cap-' + uid);
@@ -250,4 +345,21 @@ const slides = images.map(img => ({ src: siteUrl(img.url), alt: img.alt }));
     if (e.key === 'ArrowRight') show(current + 1, true);
     if (e.key === 'Escape')     dialog.close();
   });
+
+  // Motif filter
+  if (hasFilters) {
+    const pills = document.querySelectorAll(`[data-filter][data-group="${uid}"]`);
+    const items = document.querySelectorAll(`[data-gallery="${uid}"]`);
+
+    pills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        const filter = pill.dataset.filter;
+        pills.forEach(p => p.classList.toggle('active', p === pill));
+        items.forEach(item => {
+          const motifs = (item.dataset.motifs || '').split(',').filter(Boolean);
+          item.style.display = (filter === 'alla' || motifs.includes(filter)) ? '' : 'none';
+        });
+      });
+    });
+  }
 </script>
