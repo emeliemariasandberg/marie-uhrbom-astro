@@ -14,8 +14,8 @@
       "alt": "Naturlig miljö med örter och grönska",
       "cta1Label": "Boka samtal",
       "cta1Href": "#boka",
-      "cta2Label": "Läs om mig",
-      "cta2Href": "/om-marie"
+      "cta2Label": "Läs mer",
+      "cta2Href": "/om-homeopati"
     },
     {
       "type": "text",
@@ -77,5 +77,6 @@
       "body": "Ungefär en gång i månaden delar jag tankar om hälsa, homeopati och välmående. Inga spam, avregistrera dig när som helst.",
       "area": "homeopati"
     }
-  ]
+  ],
+  "banner": {}
 }
