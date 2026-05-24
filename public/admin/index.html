@@ -547,6 +547,7 @@ let settingsData = {};
 let knownPages   = []; // { slug, title } — cached for nav suggestions
 let previewOpen   = false;
 let previewMobile = false;
+let imgLibCache   = null; // { images: [...] } — cached for image picker
 
 /* ── GitHub API ───────────────────────────────────────────────── */
 
@@ -767,13 +768,9 @@ function showUploadConfirm(initialFile, onUpload) {
 async function uploadImage(file, customBaseName) {
   const buffer = await file.arrayBuffer();
 
-  const hashBuf = await crypto.subtle.digest('SHA-1', buffer);
-  const hash = Array.from(new Uint8Array(hashBuf)).slice(0, 4)
-    .map(b => b.toString(16).padStart(2, '0')).join('');
-
   const ext  = fileExt(file);
   const base = customBaseName || buildSeoName(file);
-  const name    = `${base}-${hash}.${ext}`;
+  const name    = `${base}.${ext}`;
   const apiPath = `public/images/${name}`;
 
   const base64 = bufferToBase64(buffer);
@@ -787,6 +784,14 @@ async function uploadImage(file, customBaseName) {
   const body = { message: `Laddar upp ${name}`, content: base64, branch: cfg.branch };
   if (existingSha) body.sha = existingSha;
   await apiReq('PUT', `/contents/${apiPath}`, body);
+
+  // Update cache
+  if (imgLibCache) {
+    const url = `/images/${name}`;
+    const idx = imgLibCache.images.findIndex(i => i.url === url);
+    if (idx === -1) imgLibCache.images.unshift({ path: apiPath, name, sha: null, url, size: file.size });
+    else imgLibCache.images[idx].size = file.size;
+  }
 
   return `/images/${name}`;
 }
@@ -909,6 +914,7 @@ async function loadImageLibrary() {
       .filter(f => f.path.startsWith('public/images/') && /\.(jpe?g|png|webp|gif|avif|svg)$/i.test(f.path))
       .map(f => ({ path: f.path, name: f.path.replace('public/images/', ''), sha: f.sha, url: '/images/' + f.path.replace('public/images/', ''), size: f.size || 0 }))
       .sort((a, b) => a.name.localeCompare(b.name));
+    imgLibCache = { images };
     const altsData = altsFile ? JSON.parse(b64Decode(altsFile.content)) : {};
     const altsSha  = altsFile ? altsFile.sha : null;
     showImageLibrary(images, altsData, altsSha);
@@ -937,10 +943,37 @@ function showImageLibrary(images, altsData, altsSha) {
     } catch (err) { toast('Fel: ' + err.message, true); saveAltsBtn.disabled = false; saveAltsBtn.textContent = 'Spara alt-texter'; }
   }}, 'Spara alt-texter');
 
+  const libUploadInput = document.createElement('input');
+  libUploadInput.type = 'file'; libUploadInput.accept = 'image/*'; libUploadInput.style.display = 'none';
+  const libUploadBtn = h('button', { className: 'btn btn-secondary btn-sm', onClick: () => libUploadInput.click() }, '+ Ladda upp');
+  libUploadInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    libUploadInput.value = '';
+    showUploadConfirm(file, async (processedFile, baseName) => {
+      libUploadBtn.disabled = true;
+      libUploadBtn.innerHTML = '<span class="spinner"></span>';
+      try {
+        const url = await uploadImage(processedFile, baseName);
+        const name = url.replace('/images/', '');
+        const newImg = { path: `public/images/${name}`, name, sha: null, url, size: processedFile.size };
+        images.push(newImg);
+        images.sort((a, b) => a.name.localeCompare(b.name));
+        renderGrid();
+        toast('Bilden laddades upp!');
+      } catch (err) {
+        toast('Uppladdning misslyckades: ' + err.message, true);
+      } finally {
+        libUploadBtn.disabled = false;
+        libUploadBtn.textContent = '+ Ladda upp';
+      }
+    });
+  });
+
   const header = makeHeader(
     h('button', { className: 'back-btn', onClick: loadPageList }, '← Sidor'),
     'Bildbibliotek',
-    saveAltsBtn,
+    h('div', { style: 'display:flex;gap:0.375rem;align-items:center' }, saveAltsBtn, libUploadBtn, libUploadInput),
   );
 
   const searchInp = h('input', { type: 'text', placeholder: 'Sök på filnamn…', style: 'max-width:24rem' });
@@ -1004,7 +1037,7 @@ function showImageLibrary(images, altsData, altsSha) {
 
     function refreshPreview() {
       const base = cleanSlug(nameInp.value) || 'bild';
-      previewEl.textContent = `→ ${base}-[hash].${ext}`;
+      previewEl.textContent = `→ ${base}.${ext}`;
     }
     nameInp.addEventListener('input', refreshPreview);
     refreshPreview();
@@ -1027,13 +1060,8 @@ function showImageLibrary(images, altsData, altsSha) {
       try {
         const file = await getFile(img.path);
         const b64 = file.content.replace(/\s/g, '');
-        const binStr = atob(b64);
-        const bytes = new Uint8Array(binStr.length);
-        for (let i = 0; i < binStr.length; i++) bytes[i] = binStr.charCodeAt(i);
-        const hashBuf = await crypto.subtle.digest('SHA-1', bytes.buffer);
-        const hash = Array.from(new Uint8Array(hashBuf)).slice(0, 4).map(b => b.toString(16).padStart(2, '0')).join('');
 
-        const newName = `${base}-${hash}.${ext}`;
+        const newName = `${base}.${ext}`;
         const newApiPath = `public/images/${newName}`;
         const newUrl = `/images/${newName}`;
 
@@ -1052,7 +1080,12 @@ function showImageLibrary(images, altsData, altsSha) {
 
         // Update local list and re-render
         const idx = images.findIndex(i => i.path === img.path);
-        if (idx !== -1) images[idx] = { path: newApiPath, name: newName, sha: uploadRes.content.sha, url: newUrl };
+        const newImgEntry = { path: newApiPath, name: newName, sha: uploadRes.content.sha, url: newUrl, size: img.size };
+        if (idx !== -1) images[idx] = newImgEntry;
+        if (imgLibCache) {
+          const cIdx = imgLibCache.images.findIndex(i => i.path === img.path);
+          if (cIdx !== -1) imgLibCache.images[cIdx] = newImgEntry;
+        }
 
         close();
         renderGrid();
@@ -1117,6 +1150,10 @@ function showImageLibrary(images, altsData, altsSha) {
         await deleteFile(img.path, img.sha, `Tar bort bild: ${img.name}`);
         const idx = images.findIndex(i => i.path === img.path);
         if (idx !== -1) images.splice(idx, 1);
+        if (imgLibCache) {
+          const cIdx = imgLibCache.images.findIndex(i => i.path === img.path);
+          if (cIdx !== -1) imgLibCache.images.splice(cIdx, 1);
+        }
         close();
         renderGrid();
         toast(`"${img.name}" borttagen.`);
@@ -1948,45 +1985,128 @@ function makeField(field, value, onChange) {
   return wrap;
 }
 
-function makeImageField(value, onChange) {
-  const wrap = h('div', { className: 'image-wrap' });
+/* ── Image picker modal ───────────────────────────────────────── */
 
-  let thumb = value
-    ? h('img', { src: rawUrl(value), className: 'image-thumb', alt: '' })
-    : h('div', { className: 'image-empty' }, 'Ingen bild');
+async function openImagePicker(currentUrl, onSelect) {
+  let images = [];
+  const grid = h('div', { className: 'img-lib-grid', style: 'grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:0.5rem;margin-top:0' });
+  const countEl = h('span', { style: 'font-size:0.8125rem;color:var(--muted-fg);white-space:nowrap' });
+  const searchInp = h('input', { type: 'text', placeholder: 'Sök på filnamn…', style: 'flex:1;max-width:20rem' });
 
-  const fileInput = document.createElement('input');
-  fileInput.type = 'file';
-  fileInput.accept = 'image/*';
-  fileInput.style.display = 'none';
+  function renderPickerGrid() {
+    const q = searchInp.value.trim().toLowerCase();
+    const filtered = q ? images.filter(img => img.name.toLowerCase().includes(q)) : images;
+    countEl.textContent = `${filtered.length} bilder`;
+    grid.innerHTML = '';
+    if (!filtered.length) {
+      grid.append(h('p', { style: 'grid-column:1/-1;color:var(--muted-fg);font-size:0.875rem' }, q ? 'Inga bilder matchar.' : 'Inga bilder ännu.'));
+      return;
+    }
+    filtered.forEach(img => {
+      const isSelected = currentUrl && img.url === currentUrl;
+      const card = h('div', {
+        style: `background:white;border:${isSelected ? '2.5px solid var(--leather)' : '1px solid var(--border)'};border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:border-color 0.12s,box-shadow 0.12s${isSelected ? ';box-shadow:0 0 0 3px oklch(0.55 0.13 45/0.2)' : ''}`,
+        onClick: () => { onSelect(img.url); overlay.remove(); },
+      },
+        h('div', { style: 'aspect-ratio:1;overflow:hidden;background:var(--muted)' },
+          h('img', { src: rawUrl(img.url), alt: img.name, loading: 'lazy', style: 'width:100%;height:100%;object-fit:cover;display:block' }),
+        ),
+        h('div', { style: 'font-size:0.65rem;color:var(--muted-fg);padding:0.25rem 0.4rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap', title: img.name }, img.name),
+      );
+      card.addEventListener('mouseenter', () => { if (!isSelected) { card.style.borderColor = 'var(--leather)'; card.style.boxShadow = '0 0 0 2px oklch(0.55 0.13 45/0.15)'; } });
+      card.addEventListener('mouseleave', () => { if (!isSelected) { card.style.borderColor = 'var(--border)'; card.style.boxShadow = ''; } });
+      grid.append(card);
+    });
+  }
 
-  const uploadBtn = h('button', { className: 'btn btn-ghost btn-sm', onClick: () => fileInput.click() }, value ? 'Byt bild' : 'Välj bild');
+  searchInp.addEventListener('input', renderPickerGrid);
 
-  fileInput.addEventListener('change', e => {
+  const pickerFileInput = document.createElement('input');
+  pickerFileInput.type = 'file'; pickerFileInput.accept = 'image/*'; pickerFileInput.style.display = 'none';
+  const pickerUploadBtn = h('button', { className: 'btn btn-secondary btn-sm', onClick: () => pickerFileInput.click() }, '+ Ladda upp ny bild');
+  pickerFileInput.addEventListener('change', e => {
     const file = e.target.files[0];
     if (!file) return;
-    fileInput.value = '';
+    pickerFileInput.value = '';
     showUploadConfirm(file, async (processedFile, baseName) => {
-      uploadBtn.disabled = true;
-      uploadBtn.innerHTML = '<span class="spinner"></span>';
+      pickerUploadBtn.disabled = true;
+      pickerUploadBtn.innerHTML = '<span class="spinner"></span>';
       try {
         const url = await uploadImage(processedFile, baseName);
-        onChange(url);
-        const newThumb = h('img', { src: rawUrl(url), className: 'image-thumb', alt: '' });
-        wrap.replaceChild(newThumb, thumb);
-        thumb = newThumb;
-        uploadBtn.textContent = 'Byt bild';
+        overlay.remove();
+        onSelect(url);
         toast('Bilden laddades upp!');
       } catch (err) {
         toast('Uppladdning misslyckades: ' + err.message, true);
-        uploadBtn.textContent = value ? 'Byt bild' : 'Välj bild';
-      } finally {
-        uploadBtn.disabled = false;
+        pickerUploadBtn.disabled = false;
+        pickerUploadBtn.textContent = '+ Ladda upp ny bild';
       }
     });
   });
 
-  wrap.append(thumb, uploadBtn, fileInput);
+  const loadingEl = h('div', { style: 'display:flex;align-items:center;gap:0.5rem;padding:2rem 0;color:var(--muted-fg)' },
+    h('span', { className: 'spinner' }), 'Laddar bilder…',
+  );
+
+  const modalBody = h('div', { className: 'modal-body', style: 'display:flex;flex-direction:column;gap:0.75rem' },
+    h('div', { style: 'display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap' }, searchInp, countEl),
+    loadingEl,
+  );
+
+  const close = () => overlay.remove();
+  const overlay = h('div', { className: 'modal-overlay', onClick: e => { if (e.target === overlay) close(); } },
+    h('div', { className: 'modal', role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Välj bild', style: 'max-width:58rem' },
+      h('div', { className: 'modal-header' },
+        h('span', { style: 'font-weight:500' }, 'Välj bild'),
+        h('div', { style: 'display:flex;gap:0.375rem;align-items:center' }, pickerUploadBtn, pickerFileInput,
+          h('button', { className: 'btn btn-ghost btn-sm', onClick: close }, '✕'),
+        ),
+      ),
+      modalBody,
+    ),
+  );
+  overlay.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+  document.body.append(overlay);
+
+  try {
+    if (imgLibCache) {
+      images = [...imgLibCache.images];
+    } else {
+      const tree = await apiReq('GET', `/git/trees/${cfg.branch}?recursive=1`);
+      images = tree.tree
+        .filter(f => f.path.startsWith('public/images/') && /\.(jpe?g|png|webp|gif|avif|svg)$/i.test(f.path))
+        .map(f => ({ path: f.path, name: f.path.replace('public/images/', ''), sha: f.sha, url: '/images/' + f.path.replace('public/images/', ''), size: f.size || 0 }))
+        .sort((a, b) => a.name.localeCompare(b.name));
+      imgLibCache = { images };
+    }
+    modalBody.replaceChild(grid, loadingEl);
+    renderPickerGrid();
+  } catch (err) {
+    loadingEl.innerHTML = '';
+    loadingEl.textContent = 'Kunde inte ladda bilder: ' + err.message;
+  }
+}
+
+function makeImageField(value, onChange) {
+  const wrap = h('div', { className: 'image-wrap' });
+
+  let currentValue = value;
+  let thumb = value
+    ? h('img', { src: rawUrl(value), className: 'image-thumb', alt: '' })
+    : h('div', { className: 'image-empty' }, 'Ingen bild');
+
+  const pickBtn = h('button', { className: 'btn btn-ghost btn-sm', onClick: () => {
+    openImagePicker(currentValue, url => {
+      currentValue = url;
+      const newThumb = h('img', { src: rawUrl(url), className: 'image-thumb', alt: '' });
+      wrap.replaceChild(newThumb, thumb);
+      thumb = newThumb;
+      pickBtn.textContent = 'Byt bild';
+      onChange(url);
+    });
+  }}, value ? 'Byt bild' : 'Välj bild');
+
+  wrap.append(thumb, pickBtn);
   return wrap;
 }
 
@@ -1997,35 +2117,17 @@ function makeImageList(items, onChange) {
   const rerender = () => {
     container.innerHTML = '';
     list.forEach((item, idx) => {
-      const fileInput = document.createElement('input');
-      fileInput.type = 'file';
-      fileInput.accept = 'image/*';
-      fileInput.style.display = 'none';
-
       const thumb = item.url
         ? h('img', { src: rawUrl(item.url), className: 'image-thumb', alt: '' })
         : h('div', { className: 'image-empty' }, 'Bild');
 
-      const pickBtn = h('button', { className: 'btn btn-ghost btn-sm', onClick: () => fileInput.click() }, item.url ? 'Byt' : 'Välj');
-
-      fileInput.addEventListener('change', e => {
-        const file = e.target.files[0];
-        if (!file) return;
-        fileInput.value = '';
-        showUploadConfirm(file, async (processedFile, baseName) => {
-          pickBtn.disabled = true;
-          try {
-            list[idx].url = await uploadImage(processedFile, baseName);
-            onChange([...list]);
-            rerender();
-            toast('Bilden laddades upp!');
-          } catch (err) {
-            toast('Fel: ' + err.message, true);
-          } finally {
-            pickBtn.disabled = false;
-          }
+      const pickBtn = h('button', { className: 'btn btn-ghost btn-sm', onClick: () => {
+        openImagePicker(list[idx].url, url => {
+          list[idx].url = url;
+          onChange([...list]);
+          rerender();
         });
-      });
+      }}, item.url ? 'Byt' : 'Välj');
 
       const captionInp = h('input', { type: 'text', placeholder: 'Bildtext (visas vid hovring, t.ex. "Rem med älgmotiv")', value: item.caption || '',
         onInput: e => { list[idx].caption = e.target.value; onChange([...list]); },
@@ -2048,7 +2150,7 @@ function makeImageList(items, onChange) {
       const delBtn = h('button', { className: 'btn btn-ghost btn-sm', style: 'color:var(--destructive)', onClick: () => { list.splice(idx, 1); onChange([...list]); rerender(); } }, '×');
 
       container.append(h('div', { className: 'list-row' },
-        h('div', { style: 'display:flex;flex-direction:column;align-items:center;gap:0.375rem' }, thumb, pickBtn, fileInput),
+        h('div', { style: 'display:flex;flex-direction:column;align-items:center;gap:0.375rem' }, thumb, pickBtn),
         h('div', { className: 'list-row-fields' },
           captionInp,
           detailInp,
@@ -2116,33 +2218,19 @@ function makeServiceList(items, onChange) {
       );
       const delBtn = h('button', { className: 'btn btn-ghost btn-sm', style: 'color:var(--destructive)', onClick: () => { list.splice(idx, 1); onChange([...list]); rerender(); } }, '×');
 
-      // Image upload for this service card
-      const fileInput = document.createElement('input');
-      fileInput.type = 'file'; fileInput.accept = 'image/*'; fileInput.style.display = 'none';
+      // Image picker for this service card
       let imgThumb = item.image
         ? h('img', { src: rawUrl(item.image), className: 'image-thumb', alt: '' })
         : h('div', { className: 'image-empty' }, 'Ingen bild');
-      const imgBtn = h('button', { className: 'btn btn-ghost btn-sm', onClick: () => fileInput.click() }, item.image ? 'Byt bild' : 'Välj bild');
-      fileInput.addEventListener('change', e => {
-        const file = e.target.files[0];
-        if (!file) return;
-        fileInput.value = '';
-        showUploadConfirm(file, async (processedFile, baseName) => {
-          imgBtn.disabled = true; imgBtn.innerHTML = '<span class="spinner"></span>';
-          try {
-            const url = await uploadImage(processedFile, baseName);
-            list[idx].image = url; onChange([...list]);
-            const newThumb = h('img', { src: rawUrl(url), className: 'image-thumb', alt: '' });
-            imgThumb.replaceWith(newThumb); imgThumb = newThumb;
-            imgBtn.textContent = 'Byt bild';
-            toast('Bilden laddades upp!');
-          } catch (err) {
-            toast('Uppladdning misslyckades: ' + err.message, true);
-            imgBtn.textContent = item.image ? 'Byt bild' : 'Välj bild';
-          } finally { imgBtn.disabled = false; }
+      const imgBtn = h('button', { className: 'btn btn-ghost btn-sm', onClick: () => {
+        openImagePicker(list[idx].image, url => {
+          list[idx].image = url; onChange([...list]);
+          const newThumb = h('img', { src: rawUrl(url), className: 'image-thumb', alt: '' });
+          imgThumb.replaceWith(newThumb); imgThumb = newThumb;
+          imgBtn.textContent = 'Byt bild';
         });
-      });
-      const imgWrap = h('div', { style: 'display:flex;flex-direction:column;align-items:center;gap:0.375rem' }, imgThumb, imgBtn, fileInput);
+      }}, item.image ? 'Byt bild' : 'Välj bild');
+      const imgWrap = h('div', { style: 'display:flex;flex-direction:column;align-items:center;gap:0.375rem' }, imgThumb, imgBtn);
 
       container.append(h('div', { className: 'list-row' },
         imgWrap,
@@ -2206,31 +2294,17 @@ function makeStoryList(items, onChange) {
   const rerender = () => {
     container.innerHTML = '';
     list.forEach((item, idx) => {
-      const fileInput = document.createElement('input');
-      fileInput.type = 'file'; fileInput.accept = 'image/*'; fileInput.style.display = 'none';
-
-      let thumb = item.image
+      const thumb = item.image
         ? h('img', { src: rawUrl(item.image), className: 'image-thumb', alt: '' })
         : h('div', { className: 'image-empty' }, 'Bild');
 
-      const pickBtn = h('button', { className: 'btn btn-ghost btn-sm', onClick: () => fileInput.click() }, item.image ? 'Byt' : 'Välj');
-
-      fileInput.addEventListener('change', e => {
-        const file = e.target.files[0];
-        if (!file) return;
-        fileInput.value = '';
-        showUploadConfirm(file, async (processedFile, baseName) => {
-          pickBtn.disabled = true;
-          try {
-            list[idx].image = await uploadImage(processedFile, baseName);
-            onChange([...list]);
-            rerender();
-            toast('Bilden laddades upp!');
-          } catch (err) {
-            toast('Fel: ' + err.message, true);
-          } finally { pickBtn.disabled = false; }
+      const pickBtn = h('button', { className: 'btn btn-ghost btn-sm', onClick: () => {
+        openImagePicker(list[idx].image, url => {
+          list[idx].image = url;
+          onChange([...list]);
+          rerender();
         });
-      });
+      }}, item.image ? 'Byt' : 'Välj');
 
       const quoteTa = document.createElement('textarea');
       quoteTa.rows = 3; quoteTa.placeholder = 'Citat från kunden'; quoteTa.value = item.quote || '';
@@ -2243,7 +2317,7 @@ function makeStoryList(items, onChange) {
         onClick: () => { list.splice(idx, 1); onChange([...list]); rerender(); } }, '×');
 
       container.append(h('div', { className: 'list-row' },
-        h('div', { style: 'display:flex;flex-direction:column;align-items:center;gap:0.375rem' }, thumb, pickBtn, fileInput),
+        h('div', { style: 'display:flex;flex-direction:column;align-items:center;gap:0.375rem' }, thumb, pickBtn),
         h('div', { className: 'list-row-fields' }, quoteTa, attrInp),
         delBtn,
       ));
