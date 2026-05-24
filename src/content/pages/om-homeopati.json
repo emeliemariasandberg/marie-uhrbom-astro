@@ -4,5 +4,19 @@
     "title": "Om homeopati",
     "description": ""
   },
-  "sections": []
+  "sections": [
+    {
+      "type": "hero-overlay",
+      "title": "Rubrik om homeopati ",
+      "eyebrow": "Titel över rubrik",
+      "subtitle": "Text under rubrik",
+      "image": "/images/img5819-7bc4e208.jpeg"
+    },
+    {
+      "type": "text",
+      "body": "Brödtext",
+      "title": "titel"
+    }
+  ],
+  "banner": {}
 }
