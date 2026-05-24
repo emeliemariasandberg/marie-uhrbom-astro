@@ -96,7 +96,7 @@
       "eyebrow": "Läderhantverk",
       "title": "Handgjord gevärsrem",
       "subtitle": "Vegetabilgarvat Tärnsjö-läder med personligt motiv och graverat namn — beständigt hantverk från Mellerud.",
-      "image": "/images/laderhantverk5-0ffeb56a.jpeg",
+      "image": "/images/lader-orre-alg-varg-e3829db4.webp",
       "alt": "",
       "cta1Label": "Beställ en rem",
       "cta1Href": "#bestall",
@@ -142,20 +142,28 @@
         {
           "url": "/images/laderhantverk5-0ffeb56a.jpeg",
           "alt": "Från vänster orre- älg- och vargmotiv",
-          "motif": ["Älg", "Orre", "Varg"],
+          "motif": [
+            "Älg",
+            "Orre",
+            "Varg"
+          ],
           "caption": "Orre, älg och varg i rad",
           "detail": "Tre motiv på en och samma rem"
         },
         {
-          "url": "/images/laderhanterverk7-a948483e.jpeg",
+          "url": "/images/laderrem-alg-dd117e21.webp",
           "alt": "Baksidan kan fås färgad mot kostnad. På baksidan ett neopren för att förhindra glid.",
           "caption": "Färgad baksida med neopren",
-          "detail": "Tillval · +200 kr · förhindrar glid"
+          "detail": "Tillval · +200 kr · förhindrar glid",
+          "motif": "Älg"
         },
         {
           "url": "/images/laderhanterverk3-0d74d63f.jpeg",
           "alt": "Hare till vänster, älg till höger. Färgerna varierar, beror på vald färg samt lädrets textur.",
-          "motif": ["Hare", "Älg"],
+          "motif": [
+            "Hare",
+            "Älg"
+          ],
           "caption": "Hare och älg",
           "detail": "Färgerna varierar med lädrets textur"
         }
@@ -222,5 +230,6 @@
       "messagePlaceholder": "T.ex: Gevärrem med älgmotiv och namnet Svensson. Standardlängd 90 cm. Ofärgad baksida.",
       "submitLabel": "Skicka förfrågan"
     }
-  ]
+  ],
+  "banner": {}
 }
