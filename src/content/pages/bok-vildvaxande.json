@@ -13,6 +13,15 @@
       "alt": "Bild på en solros"
     },
     {
+      "type": "cta",
+      "title": "Beställ boken här",
+      "theme": "sage",
+      "align": "center",
+      "body": "Beställ Dan Uhrboms bok genom att fylla i formuläret eller skicka ett mail till info@marieuhrbom.se",
+      "buttonLabel": "Beställ här",
+      "buttonHref": "#bok"
+    },
+    {
       "type": "text",
       "title": "Vem var Dan Uhrbom",
       "body": "Dan Uhrbom var min far, ingenjören som under hela sitt liv sökte kunskap om hälsa och välmående. Dan var nyfiken på såväl raw food som kvantfysik och samhällsutveckling. Han hade väldigt omtyckta Vilda-växtvandringar och kurser där detta var kursboken. \nNär Dan gick bort 2020 så valde jag och min bror att låta trycka upp hans bok i fler exemplar eftersom så många frågade efter den. Därför finns även möjlighet för dig att beställa den."
@@ -50,15 +59,6 @@
       "eyebrow": "Vildväxande formulär",
       "intro": "Fyll i formuläret så hör jag av mig inom ett par dagar. Du är också välkommen att ringa eller skicka ett e-postmeddelande direkt.",
       "id": "bok"
-    },
-    {
-      "type": "cta",
-      "title": "Beställ boken här",
-      "theme": "sage",
-      "align": "center",
-      "body": "Beställ Dan Uhrboms bok genom att fylla i formuläret eller skicka ett mail till info@marieuhrbom.se",
-      "buttonLabel": "Beställ här",
-      "buttonHref": "#bok"
     }
   ],
   "banner": {}
