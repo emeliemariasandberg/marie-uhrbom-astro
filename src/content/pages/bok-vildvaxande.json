@@ -48,7 +48,8 @@
       "showSubject": false,
       "title": "Beställ boken Vildväxande",
       "eyebrow": "Vildväxande formulär",
-      "intro": "Fyll i formuläret så hör jag av mig inom ett par dagar. Du är också välkommen att ringa eller skicka ett e-postmeddelande direkt."
+      "intro": "Fyll i formuläret så hör jag av mig inom ett par dagar. Du är också välkommen att ringa eller skicka ett e-postmeddelande direkt.",
+      "id": "bok"
     },
     {
       "type": "cta",
@@ -56,7 +57,9 @@
       "theme": "sage",
       "align": "center",
       "body": "Beställ Dan Uhrboms bok genom att fylla i formuläret eller skicka ett mail till info@marieuhrbom.se",
-      "buttonLabel": "Beställ här"
+      "buttonLabel": "Beställ här",
+      "buttonHref": "#bok"
     }
-  ]
+  ],
+  "banner": {}
 }
