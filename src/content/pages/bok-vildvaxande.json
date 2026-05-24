@@ -2,7 +2,7 @@
   "meta": {
     "slug": "bok-vildvaxande",
     "title": "Bok Vildväxande",
-    "description": "Dan Uhrboms bok Vildväxande finns att köpa"
+    "description": "Beställ boken Vildväxande av Dan Uhrbom – 221 sidor om vilda växter, självhushållning, recept och mycket mer."
   },
   "sections": [
     {
@@ -25,15 +25,15 @@
       "images": [
         {
           "url": "/images/img5956-cf242ceb.jpeg",
-          "alt": "Bild på boken Vildväxande omgiven av gröna blad"
+          "alt": "Omslag till boken Vildväxande av Dan Uhrbom omgiven av gröna blad"
         },
         {
           "url": "/images/img5958-4c1187be.jpeg",
-          "alt": "Bild på boken Vildväxandes baksida"
+          "alt": "Omslag till boken Vildväxande av Dan Uhrbom baksida"
         },
         {
           "url": "/images/img5936-37776ae3.jpeg",
-          "alt": "Bild på ett uppslag i boken med information om mjölksyrning"
+          "alt": "Uppslag boken Vildväxande med information om mjölksyrning"
         }
       ]
     },
@@ -49,6 +49,14 @@
       "title": "Beställ boken Vildväxande",
       "eyebrow": "Vildväxande formulär",
       "intro": "Fyll i formuläret så hör jag av mig inom ett par dagar. Du är också välkommen att ringa eller skicka ett e-postmeddelande direkt."
+    },
+    {
+      "type": "cta",
+      "title": "Beställ boken här",
+      "theme": "sage",
+      "align": "center",
+      "body": "Beställ Dan Uhrboms bok genom att fylla i formuläret eller skicka ett mail till info@marieuhrbom.se",
+      "buttonLabel": "Beställ här"
     }
   ]
 }
