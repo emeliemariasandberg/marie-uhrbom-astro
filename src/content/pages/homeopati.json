@@ -48,6 +48,21 @@
       "attribution": "Marie Uhrbom"
     },
     {
+      "type": "testimonials",
+      "eyebrow": "Vad mina klienter säger",
+      "title": "Klientberättelser",
+      "items": [
+        {
+          "quote": "\"Recension av Marie Uhrboms homeopatiska kunskap, hjälp och driv.\nJag har träffat Marie ett antal gånger nu. Jag har tagit emot mängder med goda råd, skratt och även en del skön gråt. Jag har mötts av en person som ser mig som hel, som ser mig precis som jag är. Detta i jämförelse med läkare eller psykologer som bara ser det psykiska eller bara ser det fysiska och som knappt ser en person framför sig.\nI mötet med Marie är allt en helhet. Allt är viktigt. Att bli bemött men också behandlad utefter detta helhetstänk är och känns fantastiskt. Speciellt med tanke på hur dagens vård ser ut idag där man behöver gå till massa olika instanser och där ingen samverkar utan bara fokuserar på en viss del och inte bryr sig om resten. \n\nEfter samtalet med Marie har hon sedan rekommenderat ett homeopatiskt medel. Medlet har kroppen tagit emot och sedan givit mig en färd. Inte i negativ bemärkelse utan en färd av fascination. Fascination av att kroppen kan ta emot och bete sig på de märkligaste sätt för att sedan läka och bli bättre. Och detta med ett enda homeopatiskt medel. Jag ska inte berätta allt då jag tycker att alla ska få uppleva sin egen färd och inte jämföra sin resa med någon annans, för den kommer antagligen ändå inte se likadan ut. \nMen det jag vill berätta är att jag har blivit bättre. Varje gång. \n\nJag kan ge ett exempel:\nJag kom till Marie med en pollenallergi som varit svår och som bara blev svårare med åren. Jag hade haft pollenallergi sedan jag var 7 och var nu över 30 år. När jag sökte så hade jag två olika inhalatorer, 2 olika tabletter, nässprej och ögondroppar. Trots detta hjälpte inget när det var som värst. Jag fick då vara sjukskriven och hålla mig inomhus med andnöd och nysningar och diverse besvär därtill.  Efter behandling med homeopatiskt medel behöver jag nu endast ta en tablett och nässprej vid behov. Inhalatorerna har jag inte behövt använda en enda gång. Jag kan inte säga mer än att jag är så tacksam för Marie och hennes kunskap! Önskar att fler kunde få uppleva detta.\"",
+          "attribution": "E.V. 32 år"
+        },
+        {
+          "quote": "\"Efter att ha kämpat länge med rosacea hittade jag Marie som verkligen gjorde skillnad för mig! Idag är mina besvär helt borta och mitt mående SÅ mycket bättre!\nStort tack för ditt engagemang och kunnande!\"",
+          "attribution": "A.H 53 år"
+        }
+      ]
+    },
+    {
       "type": "info-card",
       "title": "Praktisk information",
       "body": "Jag har **tystnadsplikt** och är **ansvarsförsäkrad** via Gefvert.\n\nVid akuta eller livshotande tillstånd ska sjukvården alltid kontaktas. Homeopater får enligt lag inte behandla diabetes, cancer eller epilepsi. Barn under 8 år får inte behandlas av homeopat i Sverige.\n\nHomeopati är ett komplement — inte ett alternativ — till konventionell medicinsk vård.",
