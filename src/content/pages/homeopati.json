@@ -20,7 +20,7 @@
     {
       "type": "text",
       "title": "Vad är klassisk homeopati?",
-      "body": "Klassisk homeopati är ett holistiskt medicinskt system som grundades av Samuel Hahnemann i slutet av 1700-talet. Behandlingen utgår från principen att \"lika botar lika\" — ett ämne som hos en frisk person orsakar vissa symptom kan hos en sjuk person bota liknande symptom.\n\nVid en homeopatisk konsultation tittar vi på hela dig — din kropp, ditt sinne och din historia. Jag väljer ett medel som passar just dig, inte bara din diagnos.\n\nHomeopati är skonsamt, utan kända biverkningar och passar alla åldrar — från barn till äldre, och även djur."
+      "body": "Klassisk homeopati är ett holistiskt medicinskt system som grundades av Samuel Hahnemann i slutet av 1700-talet. Behandlingen utgår från principen att \"lika botar lika\" — ett ämne som hos en frisk person orsakar vissa symptom kan hos en sjuk person bota liknande symptom.\n\nVid en homeopatisk konsultation tittar vi på hela dig — din kropp, ditt sinne och din historia. \n\nKlassisk homeopati utgår ifrån ett samtal mellan dig och mig, där du i lugn och ro talar om vad du önskar hjälp med och hur du upplever dina symtom. Jag kommer även att fråga dig vad som hänt tidigare och hur du reagerade på det. Andra frågor handlar om dina vanor, vad du tycker om och inte. Utifrån det du berättar så väljer jag det medel som passar just dig, inte bara din diagnos.\n\nDet första samtalet tar 1,5 - 2 timmar. En uppföljning ca 30 minuter.\n\nHomeopati är skonsamt, utan kända biverkningar och passar alla åldrar — från barn till äldre, och även djur."
     },
     {
       "type": "method-cards",
@@ -28,7 +28,7 @@
         {
           "icon": "info",
           "title": "1. Vi ses",
-          "body": "Vi tar oss god tid — vanligtvis 60–90 minuter — för att tillsammans gå igenom din hälsosituation, historia och nuvarande symptom på djupet. Du berättar, jag lyssnar."
+          "body": "Vi tar oss god tid — vanligtvis 90–120 minuter — för att tillsammans gå igenom din hälsosituation, historia och nuvarande symptom på djupet. Du berättar, jag lyssnar."
         },
         {
           "icon": "sparkles",
@@ -38,7 +38,7 @@
         {
           "icon": "shield",
           "title": "3. Vi följer upp",
-          "body": "Efter 4–6 veckor ses vi igen för att utvärdera hur du mår. Uppföljningar är kortare och vi justerar behandlingen om det behövs. Djur är varmt välkomna."
+          "body": "Efter 6-8 veckor ses vi igen för att utvärdera hur du mår. Uppföljningar är kortare och vi justerar behandlingen om det behövs. "
         }
       ]
     },
