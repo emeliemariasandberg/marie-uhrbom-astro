@@ -23,15 +23,6 @@
       "body": "Klassisk homeopati är ett holistiskt medicinskt system som grundades av Samuel Hahnemann i slutet av 1700-talet. Behandlingen utgår från principen att \"lika botar lika\" — ett ämne som hos en frisk person orsakar vissa symptom kan hos en sjuk person bota liknande symptom.\n\nVid en homeopatisk konsultation tittar vi på hela dig — din kropp, ditt sinne och din historia. \n\nKlassisk homeopati utgår ifrån ett samtal mellan dig och mig, där du i lugn och ro talar om vad du önskar hjälp med och hur du upplever dina symtom. Jag kommer även att fråga dig vad som hänt tidigare och hur du reagerade på det. Andra frågor handlar om dina vanor, vad du tycker om och inte. Utifrån det du berättar så väljer jag det medel som passar just dig, inte bara din diagnos.\n\nDet första samtalet tar 1,5 - 2 timmar. En uppföljning ca 30 minuter.\n\nHomeopati är skonsamt, utan kända biverkningar och passar alla åldrar — från barn till äldre, och även djur."
     },
     {
-      "type": "cta",
-      "buttonLabel": "Läs mer",
-      "buttonHref": "/om-homeopati",
-      "title": "Vill du veta mer?",
-      "body": "Klicka på \"Läs mer\" så kommer du till en sida med mer ingående information om vad homeopati är.",
-      "theme": "sage",
-      "align": "center"
-    },
-    {
       "type": "method-cards",
       "items": [
         {
@@ -70,6 +61,15 @@
           "attribution": "A.H 53 år"
         }
       ]
+    },
+    {
+      "type": "cta",
+      "buttonLabel": "Läs mer",
+      "buttonHref": "/om-homeopati",
+      "title": "Vill du veta mer?",
+      "body": "Klicka på \"Läs mer\" så kommer du till en sida med mer ingående information om vad homeopati är.",
+      "theme": "sage",
+      "align": "center"
     },
     {
       "type": "info-card",
