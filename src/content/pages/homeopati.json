@@ -91,6 +91,15 @@
       "title": "Få tips om hälsa och homeopati",
       "body": "Ungefär en gång i månaden delar jag tankar om hälsa, homeopati och välmående. Inga spam, avregistrera dig när som helst.",
       "area": "homeopati"
+    },
+    {
+      "type": "cta",
+      "buttonLabel": "Läs mer",
+      "buttonHref": "/om-homeopati",
+      "title": "Vill du veta mer?",
+      "body": "Klicka på \"Läs mer\" så kommer du till en sida med mer ingående information om vad homeopati är.",
+      "theme": "sage",
+      "align": "center"
     }
   ],
   "banner": {}
