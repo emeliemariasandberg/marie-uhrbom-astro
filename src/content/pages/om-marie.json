@@ -10,7 +10,7 @@
       "eyebrow": "Om Marie",
       "title": "Hantverkare, Homeopat & Vägledare",
       "subtitle": "Med rötterna i naturen och hjärtat i hantverket.",
-      "image": "/images/naturaker-b21fa6a6.jpeg",
+      "image": "/images/solnedgang-brinnande-himmel.jpg",
       "alt": "Marie Uhrbom",
       "cta1Label": "Kom i kontakt",
       "cta1Href": "/kontakt",
@@ -58,5 +58,6 @@
       "buttonLabel": "Kontakta mig",
       "buttonHref": "/kontakt"
     }
-  ]
+  ],
+  "banner": {}
 }
