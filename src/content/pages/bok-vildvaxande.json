@@ -9,7 +9,7 @@
       "type": "hero-overlay",
       "eyebrow": "Bok",
       "title": "Vildväxande av Dan Uhrbom",
-      "image": "/images/img4099-2-d65c96c5.jpeg",
+      "image": "/images/solros-bakgrund.jpg",
       "alt": "Bild på en solros"
     },
     {
@@ -33,16 +33,25 @@
       "title": "Vildväxande - storlek A4, 221 sidor",
       "images": [
         {
-          "url": "/images/img5956-cf242ceb.jpeg",
-          "alt": "Omslag till boken Vildväxande av Dan Uhrbom omgiven av gröna blad"
+          "url": "/images/bok-vildvaxande-omslag.jpg",
+          "alt": "Omslag till boken Vildväxande av Dan Uhrbom omgiven av gröna blad",
+          "detail": "Vildväxande",
+          "caption": "Bokens framsida",
+          "motif": "Bok"
         },
         {
-          "url": "/images/img5958-4c1187be.jpeg",
-          "alt": "Omslag till boken Vildväxande av Dan Uhrbom baksida"
+          "url": "/images/bok-vildvaxande-baksida.jpg",
+          "alt": "Omslag till boken Vildväxande av Dan Uhrbom baksida",
+          "caption": "Bokens baksida",
+          "detail": "Vildväxande",
+          "motif": "Bok"
         },
         {
-          "url": "/images/img5936-37776ae3.jpeg",
-          "alt": "Uppslag boken Vildväxande med information om mjölksyrning"
+          "url": "/images/bok-vildvaxande-uppslag.jpg",
+          "alt": "Uppslag boken Vildväxande med information om mjölksyrning",
+          "caption": "Uppslag ur boken ",
+          "detail": "Vildväxande",
+          "motif": "Bok"
         }
       ]
     },
