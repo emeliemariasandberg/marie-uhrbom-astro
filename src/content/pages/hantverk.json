@@ -112,7 +112,7 @@
       "filterLabel": "Filtrera på motiv",
       "images": [
         {
-          "url": "/images/laderhantverk1.jpeg",
+          "url": "/images/vapenrem-vildsvin-motiv.jpg",
           "alt": "Handgjord gevärsrem i vegetabilgarvat Tärnsjöläder med vildsvinsmotiv",
           "motif": "Vildsvin",
           "caption": "Rem med vildsvinsmotiv",
@@ -126,39 +126,39 @@
           "detail": "Kundens namn graverat · färgad baksida"
         },
         {
-          "url": "/images/vapenrem-dovhjort-motiv.webp",
+          "url": "/images/dovhjort-motiv-vapenrem.webp",
           "alt": "Gevärsrem med dovhjortsmotiv",
           "motif": "Dovhjort",
           "caption": "Gevärsrem med dovhjortsmotiv",
           "detail": "3D-relief i Tärnsjöläder"
         },
         {
-          "url": "/images/laderhanterverk6-00a986ad.jpeg",
+          "url": "/images/kronhjort-dovhjort-motiv-vapenrem.jpg",
           "alt": "Kronhjort till vänster, dovhjort till höger",
           "motif": "Dovhjort",
           "caption": "Kronhjort & dovhjort",
           "detail": "Kronhjort till vänster, dovhjort till höger"
         },
         {
-          "url": "/images/lader-orre-alg-varg-e3829db4.webp",
+          "url": "/images/orre-alg-varg-motiv-vapenrem.jpg",
           "alt": "Från vänster orre- älg- och vargmotiv",
           "motif": [
-            "Älg",
             "Orre",
+            "Älg",
             "Varg"
           ],
           "caption": "Orre, älg och varg i rad",
-          "detail": "Tre motiv på en och samma rem"
+          "detail": "Orre älg varg"
         },
         {
           "url": "/images/vapenrem-alg.webp",
           "alt": "Baksidan kan fås färgad mot kostnad. På baksidan ett neopren för att förhindra glid.",
           "caption": "Färgad baksida med neopren",
-          "detail": "Tillval · +200 kr · förhindrar glid",
+          "detail": "Tillval ·färg +200 kr · förhindrar glid",
           "motif": "Älg"
         },
         {
-          "url": "/images/laderhanterverk3-0d74d63f.jpeg",
+          "url": "/images/vapenrem-hare-alg.jpeg",
           "alt": "Hare till vänster, älg till höger. Färgerna varierar, beror på vald färg samt lädrets textur.",
           "motif": [
             "Hare",
