@@ -95,7 +95,7 @@
       "type": "hero-overlay",
       "eyebrow": "Läderhantverk",
       "title": "Handgjord gevärsrem",
-      "subtitle": "Vegetabilgarvat Tärnsjö-läder med personligt motiv och graverat namn — beständigt hantverk från Mellerud.",
+      "subtitle": "Vegetabiliskt garvat Tärnsjöläder med motiv och namn — gediget hantverk från Mellerud.",
       "image": "/images/orre-alg-varg-motiv-vapenrem.jpg",
       "alt": "",
       "cta1Label": "Beställ en rem",
@@ -198,20 +198,20 @@
         {
           "number": "3",
           "title": "Du får din rem",
-          "body": "Produkten tillverkas för hand från en hel hud. När den är klar skickar jag den till dig — beständig och redo att användas."
+          "body": "Produkten tillverkas för hand från en hel hud svenskt läder. När den är klar skickar jag den till dig — spårbar frakt och information hur du tar hand om remmen följer med."
         }
       ]
     },
     {
       "type": "info-card",
       "title": "Priser (inklusive moms)",
-      "body": "- Rem med befintligt motiv och namn: **1 250 kr**\n- Färgad baksida: **+200 kr**\n- Kundens eget motiv: **från +400 kr**\n\nKontakta mig via formuläret nedan för att stämma av leveranstid och lägga din beställning.",
+      "body": "- Rem med ofärgad baksida, befintligt motiv och namn: **1 250 kr**\n- Färgad baksida: **+200 kr**\n- Kundens eget motiv: **från +400 kr**\n\nKontakta mig via formuläret nedan för att stämma av leveranstid och lägga din beställning.",
       "tone": "warm"
     },
     {
       "type": "text",
       "title": "Beställ en personlig gevärrem",
-      "body": "Hos mig beställer du en gevärrem i Tärnsjö-läder, 3–3,5 mm tjockt med ett neoprenlager på baksidan som förhindrar att remmen glider. Standardlängden är 90 cm och passar de flesta jägare — något längre kan beställas vid behov. Remmen fästs med läderremmar så att det inte finns något som skramlar eller blänker.\n\n## Tillgängliga motiv\n\nÄlg, rådjur, hare, orre, varg, vildsvin, dovhjort, kronhjort, lodjur. Eget motiv går att beställa — hör av dig för mer information.\n\nMotiven görs för hand med läderplastik där mönstret skärs ut och slås in med punsar för en tydlig 3D-effekt.\n\n## Namn på remmen\n\nDu kan få ditt namn (eller ett annat ord) ingraverat med bokstavspunsar. Kontrollera stavningen noga innan du beställer — det går inte att ändra i efterhand.\n\n## Färg och finish\n\nRemmen färgas med chattering, en teknik som ger naturliga variationer i färgen beroende på lädrets struktur. Baksidan lämnas ofärgad som standard men kan färgas mot tillägg.\n\n## Leveranstid\n\nVarje rem görs på beställning från en hel hud. Leveranstiden varierar beroende på hur många beställningar som ligger inne — fråga gärna om aktuell tid innan du beställer, eller räkna med några veckors väntan."
+      "body": "Hos mig beställer du en gevärrem i Tärnsjöläder, 3–3,5 mm tjockt med ett neoprenfoder på övre delen av baksidan som förhindrar att remmen glider. Standardlängden är 90 cm och passar de flesta jägare — något längre kan beställas vid behov. Remmen fästs i geväret med läderremmar så att det inte finns något som skramlar eller blänker.\n\n## Tillgängliga motiv\n\nÄlg, rådjur, hare, orre, varg, vildsvin, dovhjort, kronhjort, lodjur. Eget motiv går att beställa — hör av dig för mer information.\n\nMotiven görs för hand med läderplastik där mönstret skärs ut och slås in med punsar för en tydlig 3D-effekt.\n\n## Namn på remmen\n\nDu kan få ditt namn (eller ett annat ord) instansat med bokstavspunsar. Kontrollera stavningen noga innan du beställer — det går inte att ändra i efterhand.\n\n## Färg och finish\n\nRemmen färgas med shattering, en teknik som ger naturliga variationer i färgen beroende på lädrets struktur. Baksidan lämnas ofärgad som standard men kan färgas mot tillägg.\n\n## Leveranstid\n\nVarje rem görs på beställning från en hel hud. Leveranstiden varierar — fråga gärna om aktuell tid innan du beställer, eller räkna med några veckors väntan."
     },
     {
       "type": "customer-stories",
@@ -220,7 +220,7 @@
       "items": [
         {
           "image": "/images/kundbild-rem-ar-2000.jpg",
-          "quote": "Remmen hängt med sedan år 2000 – fortfarande i perfekt skick. Tärnsjöläder åldras vackert med användning.",
+          "quote": "Remmen har hängt med sedan år 2000 – fortfarande i perfekt skick. Tärnsjöläder åldras vackert med användning.",
           "attribution": "Kund · Dalsland"
         },
         {
