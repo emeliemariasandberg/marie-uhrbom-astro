@@ -19,11 +19,12 @@
       "type": "inquiry-form",
       "eyebrow": "Skicka ett meddelande",
       "title": "Formulär",
-      "intro": "Välj det ämne som passar din förfrågan bäst, skriv ett meddelande — så hör jag av mig så snart jag kan.",
+      "intro": "OBS! Just nu kontakt endast via mail info@marieuhrbom.se eller sms/telefonsamtal till 0703-266213.\n\nVälj det ämne som passar din förfrågan bäst, skriv ett meddelande — så hör jag av mig så snart jag kan.",
       "area": "general",
       "subjectLabel": "Ämne",
       "messagePlaceholder": "Skriv ditt meddelande här...",
       "submitLabel": "Skicka meddelande"
     }
-  ]
+  ],
+  "banner": {}
 }
