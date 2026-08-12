@@ -18,5 +18,8 @@
       "title": "Homeopati på ett mer förklarande sätt"
     }
   ],
-  "banner": {}
+  "banner": {
+    "enabled": true,
+    "message": "OBS! Just nu kontakt endast via mail info@marieuhrbom.se eller sms/telefonsamtal till 0703-266213. Formulär ur funktion."
+  }
 }
