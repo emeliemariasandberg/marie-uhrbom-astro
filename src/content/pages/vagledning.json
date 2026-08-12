@@ -36,7 +36,7 @@
       "intro": "Det inledande samtalet är kostnadsfritt och utan förpliktelse. Vi pratar om vad du söker och om vi är rätt för varandra. Jag svarar inom ett par dagar.",
       "area": "coachning",
       "subjectLabel": "Vad vill du prata om?",
-      "messagePlaceholder": "Berätta kort om vad som för dig till coaching och vad du hoppas på.",
+      "messagePlaceholder": "OBS! Just nu kontakt endast via mail info@marieuhrbom.se eller sms/telefonsamtal till 0703-266213.\n\nBerätta kort om vad som för dig till coaching och vad du hoppas på.",
       "submitLabel": "Skicka förfrågan"
     },
     {
@@ -46,5 +46,6 @@
       "body": "Ungefär en gång i månaden delar jag reflektioner om välmående, förändring och att leva mer i linje med sig själv. Inga spam, avregistrera dig när som helst.",
       "area": "coachning"
     }
-  ]
+  ],
+  "banner": {}
 }
