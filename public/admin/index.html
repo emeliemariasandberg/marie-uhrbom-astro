@@ -432,9 +432,7 @@ const SECTION_SCHEMA = {
     { key: 'messageLabel',        label: 'Meddelande-fältets etikett', type: 'text',   hint: 'Standard: "Meddelande"' },
     { key: 'messagePlaceholder',  label: 'Meddelandefältets platshållartext', type: 'textarea' },
     { key: 'submitLabel',         label: 'Skicka-knappens text',     type: 'text',     hint: 'Standard: "Skicka"' },
-    { key: 'gdprText',            label: 'GDPR-samtyckestext',       type: 'textarea', hint: 'Lämna tomt för standardtext' },
-    { key: 'successText',         label: 'Bekräftelsemeddelande',    type: 'textarea', rows: 2, hint: 'Visas när formuläret skickats' },
-    { key: 'errorText',           label: 'Felmeddelande',            type: 'textarea', rows: 2, hint: 'Visas om något gick fel' },
+    { key: 'noteText',            label: 'Hjälptext under knappen',  type: 'textarea', rows: 2, hint: 'Lämna tomt för standardtext. Visas alltid — formuläret öppnar besökarens e-postklient med ett förifyllt meddelande, det skickas inte automatiskt.' },
   ],
   'cta': [
     { key: 'title',       label: 'Rubrik',             type: 'text',     required: true },
@@ -459,13 +457,6 @@ const SECTION_SCHEMA = {
     { key: 'title',      label: 'Rubrik',              type: 'text' },
     { key: 'items',      label: 'Berättelser',         type: 'testimonial-list' },
   ],
-  'newsletter-signup': [
-    { key: 'eyebrow',    label: 'Etikett',             type: 'text',     hint: 'T.ex. "Håll dig uppdaterad"' },
-    { key: 'title',      label: 'Rubrik',              type: 'text' },
-    { key: 'body',       label: 'Inledande text',      type: 'textarea', hint: 'Kort beskrivning av vad prenumeranterna kan förvänta sig' },
-    { key: 'area',       label: 'Intressefilter',      type: 'select',   options: () => [{ value: 'all', label: 'Alla — visar kryssrutor' }, ...(settingsData.newsletter?.data?.interests || []).map(i => ({ value: i.value, label: `Endast ${i.label}` }))], hint: '"Alla" visar kryssrutor för alla kategorier. Välj ett specifikt ämne för att dölja kryssrutorna.' },
-    { key: 'id',         label: 'Länk-ID',             type: 'text',     hint: 'Valfritt — gör att man kan länka direkt hit, t.ex. /sida#nyheter' },
-  ],
   'process-steps': [
     { key: 'eyebrow',    label: 'Etikett',             type: 'text' },
     { key: 'title',      label: 'Rubrik',              type: 'text' },
@@ -487,7 +478,7 @@ const SECTION_GROUPS = [
   { label: 'Innehåll',                types: ['text','gallery','process-steps'] },
   { label: 'Tjänster & presentation', types: ['services-grid','about-band','method-cards','credential-strip'] },
   { label: 'Kontakt & formulär',      types: ['booking-grid','contact-card','inquiry-form'] },
-  { label: 'Övrigt',                  types: ['cta','quote','info-card','testimonials','customer-stories','newsletter-signup'] },
+  { label: 'Övrigt',                  types: ['cta','quote','info-card','testimonials','customer-stories'] },
 ];
 
 const SECTION_LABELS = {
@@ -508,7 +499,6 @@ const SECTION_LABELS = {
   'quote':             'Citat',
   'info-card':         'Informationsruta',
   'testimonials':      'Klientberättelser',
-  'newsletter-signup': 'Nyhetsbrevsprenumeration',
   'customer-stories':  'Kundberättelser med bild',
 };
 
@@ -530,7 +520,6 @@ const SECTION_DESCRIPTIONS = {
   'quote':             'Framlyft citat — standard med grön kant eller stor mörk hero-variant',
   'info-card':         'Inramad informationsruta — mjuk, varm eller grön ton',
   'testimonials':      'Klientberättelser som citatkort i rutnät',
-  'newsletter-signup': 'E-postprenumeration med intressefilter (Homeopati/Livscoachning/Läderhantverk)',
   'customer-stories':  'Kundcitat med runda porträttbilder — cirklar med foto, citat och namn. Idealisk för produktsidor.',
 };
 
@@ -1226,13 +1215,6 @@ async function loadPageList() {
   loading('Laddar sidor…');
   dirty = false;
   try {
-    // Fetch newsletter categories alongside pages so the editor has them ready
-    if (!settingsData.newsletter?.sha) {
-      try {
-        const nlf = await getFile('src/content/settings/newsletter.json');
-        settingsData.newsletter = { data: JSON.parse(b64Decode(nlf.content)), sha: nlf.sha };
-      } catch { settingsData.newsletter = { data: { interests: [] }, sha: null }; }
-    }
     const files = await getPageFiles();
     const pages = await Promise.all(files.map(async filePath => {
       const slug = filePath.replace('src/content/pages/', '').replace('.json', '');
@@ -1696,21 +1678,6 @@ function makeWireframe(type) {
         ));
       break;
 
-    case 'newsletter-signup':
-      el.className += ' wf-muted-bg';
-      el.style.cssText += ';display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:6px 10px';
-      el.append(
-        h('div', { className: 'wf-line wf-lg', style: 'width:48%;margin:0' }),
-        h('div', { className: 'wf-inp', style: 'width:78%;height:10px' }),
-        h('div', { style: 'display:flex;gap:10px;align-items:center' },
-          ...[1,2].map(() => h('div', { style: 'display:flex;align-items:center;gap:3px' },
-            h('div', { style: 'width:8px;height:8px;border:1px solid oklch(0.7 0.02 50);border-radius:1px;flex-shrink:0' }),
-            h('div', { className: 'wf-line', style: 'width:36px;margin:0;height:3px' }),
-          )),
-        ),
-        h('div', { className: 'wf-btnsm' }),
-      );
-      break;
   }
 
   return el;
@@ -2589,12 +2556,7 @@ async function loadSettings() {
       contact:    { data: JSON.parse(b64Decode(cf.content)), sha: cf.sha },
       navigation: { data: JSON.parse(b64Decode(nf.content)), sha: nf.sha },
       seo:        { data: JSON.parse(b64Decode(sf.content)), sha: sf.sha },
-      newsletter: { data: { interests: [] }, sha: null },
     };
-    try {
-      const nlf = await getFile('src/content/settings/newsletter.json');
-      settingsData.newsletter = { data: JSON.parse(b64Decode(nlf.content)), sha: nlf.sha };
-    } catch { /* filen saknas — börja med tom lista */ }
     try {
       const lf = await getFile('public/llms.txt');
       settingsData.llms = { content: b64Decode(lf.content), sha: lf.sha };
@@ -2622,7 +2584,6 @@ function showSettings() {
     { id: 'contact',       label: 'Kontakt' },
     { id: 'navigation',    label: 'Navigation' },
     { id: 'seo',           label: 'SEO' },
-    { id: 'newsletter',    label: 'Nyhetsbrev' },
     { id: 'llms',          label: 'llms.txt' },
     { id: 'konfiguration', label: 'Konfiguration' },
   ];
@@ -2641,12 +2602,7 @@ function showSettings() {
           contact:    { data: JSON.parse(b64Decode(cf.content)), sha: cf.sha },
           navigation: { data: JSON.parse(b64Decode(nf.content)), sha: nf.sha },
           seo:        { data: JSON.parse(b64Decode(sf.content)), sha: sf.sha },
-          newsletter: { data: { interests: [] }, sha: null },
         };
-        try {
-          const nlf = await getFile('src/content/settings/newsletter.json');
-          settingsData.newsletter = { data: JSON.parse(b64Decode(nlf.content)), sha: nlf.sha };
-        } catch { /* filen saknas — börja med tom lista */ }
         try {
           const lf = await getFile('public/llms.txt');
           settingsData.llms = { content: b64Decode(lf.content), sha: lf.sha };
@@ -2664,7 +2620,6 @@ function showSettings() {
     if (id === 'contact')       content.append(makeContactTab());
     if (id === 'navigation')    content.append(makeNavTab());
     if (id === 'seo')           content.append(makeSeoTab());
-    if (id === 'newsletter')    content.append(makeNewsletterTab());
     if (id === 'llms')          content.append(makeLlmsTab());
     if (id === 'konfiguration') content.append(makeConfigTab());
   };
@@ -2875,65 +2830,6 @@ function makeLlmsTab() {
 
   card.append(saveBtn);
   return card;
-}
-
-function makeNewsletterTab() {
-  const d = settingsData.newsletter.data;
-  d.interests = d.interests || [];
-
-  const wrap = h('div', { style: 'display:flex;flex-direction:column;gap:1.25rem' });
-
-  const renderList = () => {
-    wrap.innerHTML = '';
-    wrap.append(h('p', { className: 'hint' }, 'Varje rad är en kryssruta i nyhetsbrevs-formuläret. "Etikett" är texten besökaren ser. "Värde" kopplar kategorin till en Brevo-lista via miljövariabeln PUBLIC_BREVO_LIST_[VÄRDE] (versaler).'));
-
-    d.interests.forEach((item, idx) => {
-      const row = h('div', { className: 'list-row' },
-        h('div', { className: 'list-row-fields' },
-          h('div', { style: 'display:flex;gap:0.5rem' },
-            h('div', { className: 'field', style: 'flex:1' },
-              h('label', {}, 'Etikett'),
-              h('input', { type: 'text', value: item.label || '', placeholder: 'T.ex. Homeopati', onInput: e => { d.interests[idx].label = e.target.value; } }),
-            ),
-            h('div', { className: 'field', style: 'flex:1' },
-              h('label', {}, 'Värde (tekniskt ID)'),
-              h('input', { type: 'text', value: item.value || '', placeholder: 'T.ex. homeopati', onInput: e => { d.interests[idx].value = e.target.value.toLowerCase().replace(/\s+/g, '-'); } }),
-            ),
-          ),
-        ),
-        h('button', { className: 'btn btn-ghost btn-sm', style: 'color:var(--destructive);align-self:flex-end', onClick: () => {
-          d.interests.splice(idx, 1);
-          renderList();
-        }}, 'Ta bort'),
-      );
-      wrap.append(row);
-    });
-
-    wrap.append(h('button', { className: 'btn btn-secondary btn-sm', style: 'align-self:flex-start', onClick: () => {
-      d.interests.push({ value: '', label: '' });
-      renderList();
-      wrap.querySelectorAll('.list-row input[type="text"]').slice(-2)[0]?.focus();
-    }}, '+ Lägg till kategori'));
-
-    const saveBtn = h('button', { className: 'btn btn-primary', style: 'margin-top:0.25rem', onClick: async () => {
-      const invalid = d.interests.filter(i => !i.value || !i.label);
-      if (invalid.length) { toast('Alla kategorier måste ha ett etikett och ett värde.', true); return; }
-      saveBtn.disabled = true;
-      saveBtn.innerHTML = '<span class="spinner"></span>';
-      try {
-        const res = await putFile('src/content/settings/newsletter.json', JSON.stringify(d, null, 2), 'Uppdaterar nyhetsbrevskategorier', settingsData.newsletter.sha);
-        settingsData.newsletter.sha = res.content.sha;
-        toast('Nyhetsbrevskategorier sparade!');
-        saveBtn.textContent = '✓ Sparat';
-        setTimeout(() => { if (saveBtn.isConnected) saveBtn.textContent = 'Spara'; }, 2000);
-      } catch (err) { toast('Fel: ' + err.message, true); saveBtn.textContent = 'Spara'; }
-      finally { saveBtn.disabled = false; }
-    }}, 'Spara');
-    wrap.append(saveBtn);
-  };
-
-  renderList();
-  return h('div', { className: 'card' }, wrap);
 }
 
 function makeConfigTab() {
@@ -3240,14 +3136,6 @@ function buildPreviewHtml(data, contact) {
     .credential-label{font-family:var(--font-display);font-size:1.375rem;font-weight:500}
     .credential-desc{font-size:.875rem;color:var(--muted-fg);margin-top:.375rem}
 
-    /* Newsletter */
-    .newsletter{padding:5rem 0;background:var(--muted);text-align:center}
-    .newsletter-inner{max-width:36rem;margin:0 auto}
-    .newsletter-title{font-size:2rem;margin-bottom:1rem}
-    .newsletter-body{color:var(--muted-fg);margin-bottom:2rem}
-    .newsletter-form{display:flex;gap:.75rem;justify-content:center}
-    .newsletter-input{flex:1;max-width:20rem;padding:.625rem 1rem;border:1px solid var(--border);border-radius:9999px;font-family:var(--font-body);font-size:.9375rem}
-
     /* Inquiry form */
     .inquiry-form-section{padding:5rem 0}
     .inquiry-form-inner{max-width:44rem;margin:0 auto}
@@ -3294,9 +3182,6 @@ function buildPreviewHtml(data, contact) {
       .form-row{grid-template-columns:1fr}
       /* CTA less padding */
       .cta-card{padding:2rem 1.25rem}
-      /* Newsletter form stacks */
-      .newsletter-form{flex-direction:column;align-items:stretch}
-      .newsletter-input{max-width:100%}
     }
   `;
 
@@ -3310,6 +3195,24 @@ function buildPreviewHtml(data, contact) {
 <body>
 ${bannerHtml}<header class="site-header"><div class="site-header-inner"><a class="site-brand" href="/">Marie Uhrbom</a></div></header>
 <main>${sections}</main>
+<script>
+document.querySelectorAll('[data-mailto-form]').forEach((form) => {
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const name = form.querySelector('[name="name"]')?.value.trim() || '';
+    const email = form.querySelector('[name="email"]')?.value.trim() || '';
+    const subject = form.querySelector('[name="subject"]')?.value.trim() || '';
+    const message = form.querySelector('[name="message"]')?.value.trim() || '';
+    const areaLabel = form.dataset.areaLabel || 'Förfrågan';
+    const recipient = form.dataset.recipient || '';
+    const mailSubject = subject ? '[' + areaLabel + '] ' + subject : '[' + areaLabel + '] Förfrågan via marieuhrbom.se';
+    const bodyLines = ['Namn: ' + name, 'E-post: ' + email];
+    if (subject) bodyLines.push('Ämne: ' + subject);
+    bodyLines.push('', message);
+    window.location.href = 'mailto:' + recipient + '?subject=' + encodeURIComponent(mailSubject) + '&body=' + encodeURIComponent(bodyLines.join('\n'));
+  });
+});
+<\/script>
 </body></html>`;
 }
 
@@ -3333,7 +3236,6 @@ function renderSection(sec, contact) {
     case 'process-steps':    return renderProcessSteps(sec);
     case 'customer-stories': return renderCustomerStories(sec);
     case 'credential-strip': return renderCredentialStrip(sec);
-    case 'newsletter-signup':return renderNewsletter(sec, contact);
     default: return `<section style="padding:2rem;text-align:center;color:var(--muted-fg);font-size:.875rem;border-bottom:1px solid var(--border)">— ${esc(sec.type)} —</section>`;
   }
 }
@@ -3535,18 +3437,28 @@ function renderInquiryForm(sec) {
   const nl = sec.nameLabel||'Namn', el = sec.emailLabel||'E-post';
   const sl = sec.subjectLabel||'Ämne', ml = sec.messageLabel||'Meddelande';
   const showSubject = sec.showSubject !== false;
+  const formId = `preview-inquiry-${Math.random().toString(36).slice(2, 7)}`;
+  const areaLabel = {
+    homeopati: 'Homeopati',
+    coachning: 'Hälsa & Livscoachning',
+    hantverk: 'Läderhantverk',
+  }[sec.area] || 'Förfrågan';
+  const noteText = sec.noteText || 'Ett mail till mig öppnas i din e-post, redan ifyllt och klart att skicka.';
   return `<section class="inquiry-form-section"${sec.id?` id="${esc(sec.id)}"`:''}>
     <div class="wrap"><div class="inquiry-form-inner">
       ${sec.eyebrow?`<span class="eyebrow">${esc(sec.eyebrow)}</span>`:''}
       ${sec.title?`<h2 class="inquiry-title">${esc(sec.title)}</h2>`:''}
       ${sec.intro?`<p class="inquiry-intro">${esc(sec.intro)}</p>`:''}
-      <div class="form-row">
-        <div class="form-field"><label>${esc(nl)}</label><input type="text" placeholder="${esc(nl)}"></div>
-        <div class="form-field"><label>${esc(el)}</label><input type="email" placeholder="${esc(el)}"></div>
-      </div>
-      ${showSubject?`<div class="form-field"><label>${esc(sl)}</label><input type="text" placeholder="${esc(sl)}"></div>`:''}
-      <div class="form-field"><label>${esc(ml)}</label><textarea placeholder="${esc(sec.messagePlaceholder||ml)}"></textarea></div>
-      <button type="button" class="btn-primary">${esc(sec.submitLabel||'Skicka')}</button>
+      <form id="${formId}" data-mailto-form data-recipient="${esc(contact.email || '')}" data-area-label="${esc(areaLabel)}">
+        <div class="form-row">
+          <div class="form-field"><label for="${formId}-name">${esc(nl)}</label><input id="${formId}-name" name="name" type="text" required></div>
+          <div class="form-field"><label for="${formId}-email">${esc(el)}</label><input id="${formId}-email" name="email" type="email" required></div>
+        </div>
+        ${showSubject?`<div class="form-field"><label for="${formId}-subject">${esc(sl)}</label><input id="${formId}-subject" name="subject" type="text"></div>`:''}
+        <div class="form-field"><label for="${formId}-message">${esc(ml)}</label><textarea id="${formId}-message" name="message" placeholder="${esc(sec.messagePlaceholder||ml)}" required></textarea></div>
+        <button type="submit" class="btn-primary">${esc(sec.submitLabel||'Skicka')}</button>
+        <p style="font-size:.75rem;color:var(--muted-fg);line-height:1.6;margin-top:1rem">${esc(noteText)}</p>
+      </form>
     </div></div>
   </section>`;
 }
@@ -3619,33 +3531,6 @@ function renderCredentialStrip(sec) {
       <div class="credential-grid" style="grid-template-columns:repeat(${Math.max(1,items.length)},1fr)">${cells}</div>
     </div>
   </section>`;
-}
-
-function renderNewsletter(sec, contact) {
-  const interests = settingsData.newsletter?.data?.interests || [];
-  const showCheckboxes = !sec.area || sec.area === 'all';
-  const areaInterest = interests.find(i => i.value === sec.area);
-  const areaLabel = areaInterest ? areaInterest.label : sec.area || '';
-  const contactEmail = contact?.email || '';
-  const checkboxItems = interests.length
-    ? interests.map(i => `<label style="display:flex;align-items:center;gap:.625rem;font-size:.875rem;cursor:default"><input type="checkbox" disabled> ${esc(i.label)}</label>`).join('')
-    : '<label style="display:flex;align-items:center;gap:.625rem;font-size:.875rem;cursor:default;color:var(--muted-fg)">(inga kategorier — lägg till i Inställningar → Nyhetsbrev)</label>';
-  const checkboxes = showCheckboxes
-    ? `<div style="margin-bottom:.25rem"><p style="font-size:.875rem;font-weight:500;margin-bottom:.625rem">Jag är intresserad av <span style="color:var(--destructive)">*</span></p><div style="display:flex;flex-direction:column;gap:.5rem">${checkboxItems}</div></div>`
-    : `<p style="font-size:.8125rem;color:var(--muted-fg);margin-bottom:.25rem">(Prenumererar på: ${esc(areaLabel)})</p>`;
-  return `<section class="newsletter"${sec.id?` id="${esc(sec.id)}"`:''}>`
-    + `<div class="newsletter-inner">`
-    + (sec.eyebrow?`<span class="eyebrow">${esc(sec.eyebrow)}</span>`:'')
-    + (sec.title?`<h2 class="newsletter-title">${esc(sec.title)}</h2>`:'')
-    + (sec.body?`<p class="newsletter-body">${esc(sec.body)}</p>`:'')
-    + `<div style="text-align:left;max-width:26rem;margin:0 auto;display:flex;flex-direction:column;gap:.875rem">`
-    + `<div><label style="display:block;font-size:.8125rem;font-weight:500;color:var(--muted-fg);margin-bottom:.375rem">E-postadress <span style="color:var(--destructive)">*</span></label><input type="email" placeholder="din@epost.se" style="width:100%;padding:.625rem 1rem;border:1px solid var(--border);border-radius:.5rem;font-family:var(--font-body);font-size:.9375rem;background:white"></div>`
-    + checkboxes
-    + `<label style="display:flex;align-items:flex-start;gap:.625rem;font-size:.8125rem;color:var(--muted-fg);cursor:default"><input type="checkbox" style="margin-top:.125rem;flex-shrink:0" disabled><span>Jag godkänner att min e-postadress sparas för nyhetsbrev från Marie Uhrbom. Jag kan när som helst avsluta prenumerationen. <span style="color:var(--destructive)">*</span></span></label>`
-    + `<div><button type="button" class="btn-primary">Prenumerera</button></div>`
-    + (contactEmail?`<p style="font-size:.75rem;color:var(--muted-fg);margin-top:.5rem">Vid fel visas: "kontakta mig direkt på ${esc(contactEmail)}"</p>`:'')
-    + `</div>`
-    + `</div></section>`;
 }
 
 /* ── Init ─────────────────────────────────────────────────────── */

@@ -1,0 +1,86 @@
+---
+import Base from '@/layouts/Base.astro';
+
+const mailtoUrl = 'mailto:info@marieuhrbom.se?subject=Test';
+---
+<Base title="Preview" description="" slug="preview-connect">
+  <div class="py-10 border-b-4 border-dashed border-green-500">
+    <p class="container-prose text-xs uppercase tracking-widest text-green-600 font-bold mb-2">Option E — Compact, honest "two clicks" caption</p>
+  </div>
+  <section class="py-8 md:py-10" style="background: color-mix(in oklab, var(--color-sage) 15%, var(--color-cream))">
+    <div class="container-prose max-w-md text-center">
+      <p class="eyebrow mb-2">Nyfiken?</p>
+      <h2 class="font-display text-xl md:text-2xl font-medium leading-snug mb-2">Vill du veta mer om homeopati?</h2>
+      <p class="text-sm text-[var(--color-foreground)]/80 leading-relaxed mb-5">Då och då delar jag tankar om hälsa och homeopati via mail.</p>
+      <a
+        href={mailtoUrl}
+        class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[var(--color-leather-deep)] text-[var(--color-primary-foreground)] font-medium text-sm hover:opacity-90 transition-opacity cursor-pointer"
+      >
+        Skicka hej →
+      </a>
+      <p class="text-xs text-[var(--color-muted-foreground)] mt-3">Klicka bara två gånger, så har jag din mail — enkelt som det.</p>
+    </div>
+  </section>
+
+  <div class="py-10 border-b-4 border-dashed border-orange-400 mt-16">
+    <p class="container-prose text-xs uppercase tracking-widest text-orange-500 font-bold mb-2">Unclear — Option D — Bold + personal + "nothing to write" (still too tall)</p>
+  </div>
+  <section class="py-14 md:py-16 relative overflow-hidden" style="background: linear-gradient(135deg, color-mix(in oklab, var(--color-sage) 45%, var(--color-cream)) 0%, var(--color-cream) 100%)">
+    <div class="container-prose max-w-lg text-center relative z-10">
+      <svg width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="mx-auto mb-4 text-[var(--color-leather-deep)]">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
+      </svg>
+      <p class="eyebrow mb-3">Nyfiken?</p>
+      <h2 class="font-display text-3xl md:text-4xl font-medium leading-tight mb-3">Vill du veta mer om homeopati?</h2>
+      <p class="text-[var(--color-foreground)]/80 leading-relaxed mb-7 max-w-sm mx-auto">Du behöver inte komma på vad du ska skriva — mailet är redan ifyllt. Klicka bara och tryck skicka en gång till.</p>
+      <a
+        href={mailtoUrl}
+        class="inline-flex items-center gap-2 px-9 py-3.5 rounded-full bg-[var(--color-leather-deep)] text-[var(--color-primary-foreground)] font-medium hover:opacity-90 transition-opacity shadow-[var(--shadow-warm)] cursor-pointer"
+      >
+        Skicka hej →
+      </a>
+    </div>
+  </section>
+
+  <div class="py-10 border-y-4 border-dashed border-red-400 mt-16">
+    <p class="container-prose text-xs uppercase tracking-widest text-red-500 font-bold mb-2">Rejected: Option A — Minimal inline note</p>
+  </div>
+  <section class="py-8">
+    <div class="container-prose max-w-xl text-center">
+      <p class="text-sm text-[var(--color-muted-foreground)]">
+        Då och då delar jag tankar om hälsa och homeopati via mail.
+        <a href={mailtoUrl} class="text-[var(--color-leather)] underline underline-offset-2 font-medium hover:opacity-80">Maila mig så lägger jag till dig →</a>
+      </p>
+    </div>
+  </section>
+
+  <div class="py-10 border-y-4 border-dashed border-red-400 mt-16">
+    <p class="container-prose text-xs uppercase tracking-widest text-red-500 font-bold mb-2">Rejected: Option B — Small compact card</p>
+  </div>
+  <section class="py-10">
+    <div class="container-prose max-w-md">
+      <div class="rounded-xl border border-[var(--color-border)] bg-[var(--color-secondary)]/40 px-6 py-5 text-center">
+        <p class="eyebrow mb-1.5" style="font-size:0.65rem">Håll kontakten</p>
+        <p class="text-sm text-[var(--color-foreground)] mb-2 leading-relaxed">Då och då delar jag tankar om hälsa och homeopati via mail.</p>
+        <a href={mailtoUrl} class="text-[var(--color-leather)] underline underline-offset-2 font-medium text-sm hover:opacity-80">Maila mig →</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="py-10 border-y-4 border-dashed border-red-400 mt-16">
+    <p class="container-prose text-xs uppercase tracking-widest text-red-500 font-bold mb-2">Rejected: Option C — Icon + one-liner, no wrapper</p>
+  </div>
+  <section class="py-8">
+    <div class="container-prose max-w-xl text-center flex items-center justify-center gap-2 flex-wrap">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" class="text-[var(--color-leather)] shrink-0">
+        <path d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
+      </svg>
+      <p class="text-sm text-[var(--color-muted-foreground)]">
+        Nyfiken på mer om homeopati?
+        <a href={mailtoUrl} class="text-[var(--color-leather)] underline underline-offset-2 font-medium hover:opacity-80">Maila mig så hör vi av oss.</a>
+      </p>
+    </div>
+  </section>
+
+  <div class="py-16 border-t-4 border-dashed border-red-400 mt-16"></div>
+</Base>

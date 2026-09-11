@@ -11,7 +11,7 @@ interface Props {
   eyebrow?: string;
   title?: string;
   images: GalleryImage[];
-  columns?: 2 | 3 | 4;
+  columns?: '2' | '3' | '4';
   showCaptions?: boolean;
   showFilters?: boolean;
   filterLabel?: string;
@@ -21,16 +21,16 @@ interface Props {
 import { makeUrlFn } from '@/utils/url';
 import imageAlts from '@/content/settings/image-alts.json';
 const siteUrl = makeUrlFn(import.meta.env.BASE_URL);
-const { id, eyebrow, title, images, columns = 3, showCaptions = false, showFilters = false, filterLabel, ctaLabel, ctaHref } = Astro.props;
+const { id, eyebrow, title, images, columns = '3', showCaptions = false, showFilters = false, filterLabel, ctaLabel, ctaHref } = Astro.props;
 
 const getAlt = (img: GalleryImage) =>
   (imageAlts as Record<string, string>)[img.url] || img.alt || '';
 
 const uid = Math.random().toString(36).slice(2, 7);
 const colClass =
-  columns === 2 ? 'grid-cols-1 sm:grid-cols-2' :
-  columns === 4 ? 'grid-cols-2 lg:grid-cols-4' :
-                  'grid-cols-2 lg:grid-cols-3';
+  columns === '2' ? 'grid-cols-1 sm:grid-cols-2' :
+  columns === '4' ? 'grid-cols-2 lg:grid-cols-4' :
+                    'grid-cols-2 lg:grid-cols-3';
 
 const slides = images.map(img => ({ src: siteUrl(img.url), alt: getAlt(img) }));
 
@@ -308,60 +308,21 @@ const hasFilters = motifs.length > 0;
   }
 </style>
 
+<script is:inline src="/scripts/lightbox.js"></script>
 <script define:vars={{ uid, slides, hasFilters }}>
   // Slideshow
-  const dialog  = document.getElementById('ss-' + uid);
-  const ssImg   = document.getElementById('ss-img-' + uid);
-  const ssCap   = document.getElementById('ss-cap-' + uid);
-  const ssCnt   = document.getElementById('ss-cnt-' + uid);
-  const closeBtn = dialog.querySelector('.ss-close');
-  const prevBtn = dialog.querySelector('.ss-prev');
-  const nextBtn = dialog.querySelector('.ss-next');
-
-  let current = 0;
-  let opener  = null;
-
-  function show(idx, animate = false) {
-    current = ((idx % slides.length) + slides.length) % slides.length;
-    if (animate) {
-      ssImg.classList.add('fade');
-      setTimeout(() => {
-        ssImg.src = slides[current].src;
-        ssImg.alt = slides[current].alt;
-        ssImg.classList.remove('fade');
-      }, 180);
-    } else {
-      ssImg.src = slides[current].src;
-      ssImg.alt = slides[current].alt;
-    }
-    ssCap.textContent = slides[current].alt || '';
-    ssCnt.textContent = `${current + 1} / ${slides.length}`;
-    prevBtn.disabled = current === 0;
-    nextBtn.disabled = current === slides.length - 1;
-  }
-
-  document.querySelectorAll(`[data-gallery="${uid}"]`).forEach(btn => {
-    btn.addEventListener('click', () => {
-      opener = btn;
-      show(Number(btn.dataset.index));
-      dialog.showModal();
-      closeBtn.focus();
-    });
-  });
-
-  dialog.addEventListener('close', () => {
-    opener?.focus();
-    opener = null;
-  });
-
-  prevBtn.addEventListener('click', () => show(current - 1, true));
-  nextBtn.addEventListener('click', () => show(current + 1, true));
-  closeBtn.addEventListener('click', () => dialog.close());
-  dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
-  dialog.addEventListener('keydown', e => {
-    if (e.key === 'ArrowLeft')  show(current - 1, true);
-    if (e.key === 'ArrowRight') show(current + 1, true);
-    if (e.key === 'Escape')     dialog.close();
+  initDialogLightbox({
+    dialogId: 'ss-' + uid,
+    imageId: 'ss-img-' + uid,
+    captionId: 'ss-cap-' + uid,
+    counterId: 'ss-cnt-' + uid,
+    closeSelector: '.ss-close',
+    prevSelector: '.ss-prev',
+    nextSelector: '.ss-next',
+    triggerSelector: `[data-gallery="${uid}"]`,
+    indexAttr: 'data-index',
+    slides,
+    fade: true,
   });
 
   // Motif filter

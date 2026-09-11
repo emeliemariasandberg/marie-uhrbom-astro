@@ -131,25 +131,15 @@ const withImages = items.map(item => ({
   .cs-lb-close:hover { background: rgba(255, 255, 255, 0.25); }
 </style>
 
-<script define:vars={{ uid, withImages }}>
-  const dialog = document.getElementById('cs-' + uid);
-  const lbImg  = document.getElementById('cs-img-' + uid);
-  const close  = dialog.querySelector('.cs-lb-close');
-  let opener   = null;
-
-  document.querySelectorAll(`[data-cs="${uid}"]`).forEach(btn => {
-    btn.addEventListener('click', () => {
-      const item = withImages[Number(btn.dataset.index)];
-      lbImg.src = item.src;
-      lbImg.alt = item.attribution ?? '';
-      opener = btn;
-      dialog.showModal();
-      close.focus();
-    });
+<script is:inline src="/scripts/lightbox.js"></script>
+<script define:vars={{ uid, slides: withImages.map(item => ({ src: item.src, alt: item.attribution ?? '' })) }}>
+  initDialogLightbox({
+    dialogId: 'cs-' + uid,
+    imageId: 'cs-img-' + uid,
+    closeSelector: '.cs-lb-close',
+    triggerSelector: `[data-cs="${uid}"]`,
+    indexAttr: 'data-index',
+    slides,
+    fade: false,
   });
-
-  close.addEventListener('click', () => dialog.close());
-  dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
-  dialog.addEventListener('close', () => { opener?.focus(); opener = null; });
-  dialog.addEventListener('keydown', e => { if (e.key === 'Escape') dialog.close(); });
 </script>

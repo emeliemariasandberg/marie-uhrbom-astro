@@ -14,7 +14,6 @@ import CTA from './blocks/CTA.astro';
 import Quote from './blocks/Quote.astro';
 import InfoCard from './blocks/InfoCard.astro';
 import Testimonials from './blocks/Testimonials.astro';
-import NewsletterSignup from './blocks/NewsletterSignup.astro';
 import ProcessSteps from './blocks/ProcessSteps.astro';
 import CredentialStrip from './blocks/CredentialStrip.astro';
 import CustomerStories from './blocks/CustomerStories.astro';
@@ -57,8 +56,6 @@ const { sections } = Astro.props;
       return <InfoCard title={section.title} body={section.body} tone={section.tone} />;
     case 'testimonials':
       return <Testimonials eyebrow={section.eyebrow} title={section.title} items={section.items ?? []} />;
-    case 'newsletter-signup':
-      return <NewsletterSignup {...section} />;
     case 'process-steps':
       return <ProcessSteps eyebrow={section.eyebrow} title={section.title} steps={section.steps ?? []} />;
     case 'credential-strip':
