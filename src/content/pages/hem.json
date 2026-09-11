@@ -5,8 +5,8 @@
     "slug": ""
   },
   "banner": {
-    "enabled": false,
-    "message": "",
+    "enabled": true,
+    "message": "Jag deltar på marknad i Ånimskog lördag 12 september kl 11-15. Kom och säg hej!",
     "linkLabel": "",
     "linkHref": ""
   },
