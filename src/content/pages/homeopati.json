@@ -88,7 +88,7 @@
       "id": "forfragan",
       "eyebrow": "Ta första steget",
       "title": "Skicka en förfrågan",
-      "intro": "OBS! Just nu kontakt endast via mail info@marieuhrbom.se eller sms/telefonsamtal till 0703-266213.\n\nFyll i formuläret så hör jag av mig inom ett par dagar. Du är också välkommen att ringa eller skicka ett e-postmeddelande direkt.",
+      "intro": "Fyll i formuläret så hör jag av mig inom ett par dagar. Du är också välkommen att ringa eller skicka ett e-postmeddelande direkt.",
       "area": "homeopati",
       "subjectLabel": "Vad gäller det?",
       "messagePlaceholder": "Berätta kort om vad du söker hjälp med, och om du föredrar att ses fysiskt, via video eller telefon.",
@@ -96,7 +96,7 @@
     }
   ],
   "banner": {
-    "enabled": true,
-    "message": "OBS! Just nu kontakt endast via mail info@marieuhrbom.se eller sms/telefonsamtal till 0703-266213. Formulär ur funktion."
+    "enabled": false,
+    "message": ""
   }
 }

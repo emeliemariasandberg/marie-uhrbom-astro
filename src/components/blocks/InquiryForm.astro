@@ -9,7 +9,6 @@ interface Props {
   area?: string;
   showSubject?: boolean;
   nameLabel?: string;
-  emailLabel?: string;
   messageLabel?: string;
   subjectLabel?: string;
   messagePlaceholder?: string;
@@ -24,7 +23,6 @@ const {
   area = 'general',
   showSubject = true,
   nameLabel = 'Namn',
-  emailLabel = 'E-post',
   messageLabel = 'Meddelande',
   subjectLabel = 'Ämne',
   messagePlaceholder = 'Ditt meddelande…',
@@ -48,35 +46,19 @@ const areaLabel = {
     {intro && <p class="text-[var(--color-muted-foreground)] leading-relaxed mb-8">{intro}</p>}
 
     <form id={formId} class="space-y-5">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div>
-          <label for={`${formId}-name`} class="block text-sm font-medium mb-1.5">
-            {nameLabel} <span class="text-[var(--color-destructive)]">*</span>
-          </label>
-          <input
-            id={`${formId}-name`}
-            name="name"
-            type="text"
-            required
-            aria-required="true"
-            autocomplete="name"
-            class="w-full px-3.5 py-2.5 rounded-lg border border-[var(--color-input)] bg-[var(--color-card)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] focus:ring-offset-1 transition-shadow"
-          />
-        </div>
-        <div>
-          <label for={`${formId}-email`} class="block text-sm font-medium mb-1.5">
-            {emailLabel} <span class="text-[var(--color-destructive)]">*</span>
-          </label>
-          <input
-            id={`${formId}-email`}
-            name="email"
-            type="email"
-            required
-            aria-required="true"
-            autocomplete="email"
-            class="w-full px-3.5 py-2.5 rounded-lg border border-[var(--color-input)] bg-[var(--color-card)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] focus:ring-offset-1 transition-shadow"
-          />
-        </div>
+      <div>
+        <label for={`${formId}-name`} class="block text-sm font-medium mb-1.5">
+          {nameLabel} <span class="text-[var(--color-destructive)]">*</span>
+        </label>
+        <input
+          id={`${formId}-name`}
+          name="name"
+          type="text"
+          required
+          aria-required="true"
+          autocomplete="name"
+          class="w-full px-3.5 py-2.5 rounded-lg border border-[var(--color-input)] bg-[var(--color-card)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-ring)] focus:ring-offset-1 transition-shadow"
+        />
       </div>
 
       {showSubject && (
@@ -129,13 +111,12 @@ const areaLabel = {
     e.preventDefault();
 
     const name    = form.querySelector('[name="name"]')?.value?.trim()    ?? '';
-    const email   = form.querySelector('[name="email"]')?.value?.trim()   ?? '';
     const subject = showSubject ? (form.querySelector('[name="subject"]')?.value?.trim() ?? '') : '';
     const message = form.querySelector('[name="message"]')?.value?.trim() ?? '';
 
     const mailSubject = subject ? `[${areaLabel}] ${subject}` : `[${areaLabel}] Förfrågan via marieuhrbom.se`;
 
-    const bodyLines = [`Namn: ${name}`, `E-post: ${email}`];
+    const bodyLines = [`Namn: ${name}`];
     if (subject) bodyLines.push(`Ämne: ${subject}`);
     bodyLines.push('', message);
 

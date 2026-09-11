@@ -11,6 +11,9 @@ interface Props {
 }
 
 const { eyebrow, title, items = [] } = Astro.props;
+
+const EXPAND_THRESHOLD = 280;
+const uid = Math.random().toString(36).slice(2, 7);
 ---
 
 <section class="py-16 md:py-24 bg-[var(--color-muted)]">
@@ -21,19 +24,55 @@ const { eyebrow, title, items = [] } = Astro.props;
         {title && <h2 class="font-display text-3xl md:text-4xl font-medium leading-tight">{title}</h2>}
       </div>
     )}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {items.map(item => (
-        <blockquote class="bg-[var(--color-card)] border border-[var(--color-border)] rounded-xl p-7 flex flex-col gap-5 shadow-[var(--shadow-soft)]">
-          <p class="font-display text-xl italic leading-relaxed text-[var(--color-foreground)] flex-1">
-            &ldquo;{item.quote}&rdquo;
-          </p>
-          {item.attribution && (
-            <footer class="text-sm text-[var(--color-muted-foreground)] font-medium tracking-wide">
-              &mdash; {item.attribution}
-            </footer>
-          )}
-        </blockquote>
-      ))}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+      {items.map((item, i) => {
+        const isLong = item.quote.length > EXPAND_THRESHOLD;
+        const quoteId = `tm-quote-${uid}-${i}`;
+        return (
+          <blockquote class="bg-[var(--color-card)] border border-[var(--color-border)] rounded-xl p-7 flex flex-col gap-4 shadow-[var(--shadow-soft)]">
+            <p id={quoteId} class:list={['font-display text-xl italic leading-relaxed text-[var(--color-foreground)] flex-1', { 'tm-clamped': isLong }]}>
+              &ldquo;{item.quote}&rdquo;
+            </p>
+            {isLong && (
+              <button type="button" class="tm-toggle text-sm font-medium text-[var(--color-leather)] hover:underline self-end cursor-pointer" data-target={quoteId} aria-expanded="false">
+                Läs mer
+              </button>
+            )}
+            {item.attribution && (
+              <footer class="text-sm text-[var(--color-muted-foreground)] font-medium tracking-wide">
+                &mdash; {item.attribution}
+              </footer>
+            )}
+          </blockquote>
+        );
+      })}
     </div>
   </div>
 </section>
+
+<style>
+  .tm-clamped {
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .tm-clamped.tm-expanded {
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
+  }
+</style>
+
+<script>
+  document.querySelectorAll('.tm-toggle').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-target');
+      const quote = id ? document.getElementById(id) : null;
+      if (!quote) return;
+      const expanded = quote.classList.toggle('tm-expanded');
+      btn.textContent = expanded ? 'Visa mindre' : 'Läs mer';
+      btn.setAttribute('aria-expanded', String(expanded));
+    });
+  });
+</script>

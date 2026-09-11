@@ -235,7 +235,7 @@
       "id": "bestall",
       "eyebrow": "Beställ eller fråga",
       "title": "Skicka en förfrågan",
-      "intro": "OBS! Just nu kontakt endast via mail info@marieuhrbom.se eller sms/telefonsamtal till 0703-266213.\n\nFyll i formuläret så hör jag av mig inom ett par dagar. Beskriv gärna vad du vill ha — motiv, om du vill ha namn på remmen, och om du har önskemål om färg på baksidan.",
+      "intro": "Fyll i formuläret så hör jag av mig inom ett par dagar. Beskriv gärna vad du vill ha — motiv, om du vill ha namn på remmen, och om du har önskemål om färg på baksidan.",
       "area": "hantverk",
       "subjectLabel": "Vad gäller det?",
       "messagePlaceholder": "T.ex: Gevärrem med älgmotiv och namnet Svensson. Standardlängd 90 cm. Ofärgad baksida.",
@@ -243,7 +243,7 @@
     }
   ],
   "banner": {
-    "enabled": true,
-    "message": "OBS! Just nu kontakt endast via mail info@marieuhrbom.se eller sms/telefonsamtal till 0703-266213. Formulär ur funktion."
+    "enabled": false,
+    "message": ""
   }
 }
