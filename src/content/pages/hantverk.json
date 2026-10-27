@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Läderhantverk — Marie Uhrbom",
-    "description": "Handgjorda gevärsremmar, beställt läderhantverk och sadelmakeri i Tärnsjö-läder. Traditionellt hantverk med material av hög kvalitet från Marie Uhrbom utanför Mellerud.",
+    "description": "Handgjorda vapenremmar, beställt läderhantverk och sadelmakeri i Tärnsjö-läder. Traditionellt hantverk av hög kvalitet från Marie Uhrbom utanför Mellerud.",
     "slug": "hantverk"
   },
   "schema": [
@@ -243,7 +243,7 @@
     }
   ],
   "banner": {
-    "enabled": false,
-    "message": ""
+    "enabled": true,
+    "message": "Julklapp? Tänk på att beställa i god tid."
   }
 }
