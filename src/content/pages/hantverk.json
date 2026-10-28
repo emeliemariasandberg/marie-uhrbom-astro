@@ -123,28 +123,28 @@
           "url": "/images/vapenrem-vildsvin-motiv.jpg",
           "alt": "Handgjord gevärsrem i vegetabilgarvat Tärnsjöläder med vildsvinsmotiv",
           "motif": "Vildsvin",
-          "caption": "Rem med vildsvinsmotiv",
+          "caption": "Vapenrem med vildsvinsmotiv",
           "detail": "Tärnsjöläder · naturlig finish · 90 cm"
         },
         {
           "url": "/images/laderhantverk2.jpeg",
           "alt": "Rådjursmotiv med kundens namn",
           "motif": "Rådjur",
-          "caption": "Rådjursmotiv med namn",
+          "caption": "Vapenrem med rådjursmotiv och namn",
           "detail": "Kundens namn graverat · färgad baksida"
         },
         {
           "url": "/images/dovhjort-motiv-vapenrem.webp",
           "alt": "Gevärsrem med dovhjortsmotiv",
           "motif": "Dovhjort",
-          "caption": "Gevärsrem med dovhjortsmotiv",
+          "caption": "Vapenrem med dovhjortsmotiv",
           "detail": "3D-relief i Tärnsjöläder"
         },
         {
           "url": "/images/kronhjort-dovhjort-motiv-vapenrem.jpg",
           "alt": "Kronhjort till vänster, dovhjort till höger",
           "motif": "Dovhjort",
-          "caption": "Kronhjort & dovhjort",
+          "caption": "Vapenremsmotiv kronhjort & dovhjort",
           "detail": "Kronhjort till vänster, dovhjort till höger"
         },
         {
@@ -155,15 +155,15 @@
             "Älg",
             "Varg"
           ],
-          "caption": "Orre, älg och varg i rad",
+          "caption": "Vapenremsmotiv orre, älg och varg i rad",
           "detail": "Orre älg varg"
         },
         {
-          "url": "/images/vapenrem-alg.webp",
+          "url": "/images/baksida-vapenrem-med-logo.jpg",
           "alt": "Baksidan kan fås färgad mot kostnad. På baksidan ett neopren för att förhindra glid.",
-          "caption": "Färgad baksida med neopren",
-          "detail": "Tillval ·färg +200 kr · förhindrar glid",
-          "motif": "Älg"
+          "caption": "Baksida vapenrem med neopren",
+          "detail": "Neopren förhindrar glid. Tillval färgad baksida +200 kr",
+          "motif": "Baksida natur och färgad"
         },
         {
           "url": "/images/vapenrem-hare-alg.jpeg",
@@ -172,18 +172,38 @@
             "Hare",
             "Älg"
           ],
-          "caption": "Hare och älg",
+          "caption": "Vapenrem motiv Hare och älg",
           "detail": "Färgerna varierar med lädrets textur"
         },
         {
           "url": "/images/hare-lodjur-radjur-motiv-vapenrem.jpg",
           "alt": "",
-          "caption": "Hare, lodjur, rådjur",
-          "detail": "från vänster tillhöger",
+          "caption": "Vapenremsmotiv hare, lodjur, rådjur",
+          "detail": "från vänster till höger",
           "motif": [
             "Hare",
             "lodjur",
             "rådjur"
+          ]
+        },
+        {
+          "url": "/images/balte-med-eklov-handgjord.jpg",
+          "alt": "",
+          "caption": "Exempel på bälte med eklöv och ekollon",
+          "detail": "Det finns många möjligheter att köpa ett unikt bälte",
+          "motif": [
+            "Bälte",
+            "motiv"
+          ]
+        },
+        {
+          "url": "/images/balte-handskuret-namn.jpg",
+          "alt": "",
+          "caption": "Exempel på bälte med handskuret namn",
+          "detail": "Det finns många möjligheter att köpa ett unikt bälte",
+          "motif": [
+            "Bälte",
+            "namn"
           ]
         }
       ]
