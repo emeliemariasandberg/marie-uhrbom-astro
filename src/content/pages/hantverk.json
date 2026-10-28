@@ -104,6 +104,14 @@
       "cta2Href": "#motiv"
     },
     {
+      "type": "hero-overlay",
+      "eyebrow": "läderhantverk",
+      "title": "Handgjorda bälten med mera",
+      "subtitle": "Gediget hantverk av Tärnsjöläder. Motiv, namn, antikfärgat eller natur? Här finns alla möjligheter även för dig med egna idéer!",
+      "image": "/images/balte-med-eklov-handgjord.jpg",
+      "alt": "Bälte med eklöv och ekollon"
+    },
+    {
       "type": "gallery",
       "id": "motiv",
       "eyebrow": "Hantverk med själ",
