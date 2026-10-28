@@ -104,6 +104,12 @@
       "cta2Href": "#motiv"
     },
     {
+      "type": "info-card",
+      "title": "Priser (inklusive moms)",
+      "body": "- Rem med ofärgad baksida, befintligt motiv och namn: **1 250 kr**\n- Färgad baksida: **+200 kr**\n- Kundens eget motiv: **från +400 kr**\n\nKontakta mig via formuläret nedan för att stämma av leveranstid och lägga din beställning.",
+      "tone": "warm"
+    },
+    {
       "type": "hero-overlay",
       "eyebrow": "läderhantverk",
       "title": "Handgjorda bälten med mera",
@@ -229,12 +235,6 @@
           "body": "Produkten tillverkas för hand från en hel hud svenskt läder. När den är klar skickar jag den till dig — spårbar frakt och information hur du tar hand om remmen följer med."
         }
       ]
-    },
-    {
-      "type": "info-card",
-      "title": "Priser (inklusive moms)",
-      "body": "- Rem med ofärgad baksida, befintligt motiv och namn: **1 250 kr**\n- Färgad baksida: **+200 kr**\n- Kundens eget motiv: **från +400 kr**\n\nKontakta mig via formuläret nedan för att stämma av leveranstid och lägga din beställning.",
-      "tone": "warm"
     },
     {
       "type": "text",
