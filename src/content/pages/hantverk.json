@@ -96,7 +96,7 @@
       "eyebrow": "Läderhantverk",
       "title": "Handgjord vapenrem",
       "subtitle": "Vegetabiliskt garvat Tärnsjöläder med motiv och namn — gediget hantverk från Mellerud.",
-      "image": "/images/vapenrem-alg.webp",
+      "image": "/images/vapenrem-motiv-alg.jpg",
       "alt": "",
       "cta1Label": "Beställ en rem",
       "cta1Href": "#bestall",
@@ -211,6 +211,13 @@
             "Bälte",
             "namn"
           ]
+        },
+        {
+          "url": "/images/vapenrem-pa-sten-motiv-alg.jpg",
+          "alt": "",
+          "caption": "NY! Vapenremsmotiv älg",
+          "detail": "Ny bild på älg från 2026-10-29",
+          "motif": "Älg"
         }
       ]
     },
@@ -272,6 +279,6 @@
   ],
   "banner": {
     "enabled": true,
-    "message": "Snart kommer nytt motiv på vapenrem, håll utkik!"
+    "message": "Nu finns nytt motiv på vapenrem, se nedan för NY älg!"
   }
 }
