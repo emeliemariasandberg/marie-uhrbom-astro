@@ -218,6 +218,42 @@
           "caption": "NY! Vapenremsmotiv älg",
           "detail": "Ny bild på älg från 2026-10-29",
           "motif": "Älg"
+        },
+        {
+          "url": "/images/handskuret-namn-vapenrem.jpg",
+          "alt": "",
+          "caption": "Stor text på vapenrem",
+          "detail": "Handskuren text"
+        },
+        {
+          "url": "/images/snusmumrik-1.jpg",
+          "alt": "",
+          "detail": "Väska för snusburken",
+          "caption": "Snusmumrik 1"
+        },
+        {
+          "url": "/images/snusmumrik-2.jpg",
+          "alt": "",
+          "caption": "Snusmumrik 2",
+          "detail": "Väska för snusburken"
+        },
+        {
+          "url": "/images/harspannen-1.jpg",
+          "alt": "",
+          "caption": "Hårspännen 1",
+          "detail": "Olika motiv och storlekar"
+        },
+        {
+          "url": "/images/harspannen-2.jpg",
+          "alt": "",
+          "caption": "Hårspännen 2",
+          "detail": "Olika motiv och storlekar"
+        },
+        {
+          "url": "/images/harspannen-3.jpg",
+          "alt": "",
+          "caption": "Hårspännen 3",
+          "detail": "Olika motiv och storlekar"
         }
       ]
     },
