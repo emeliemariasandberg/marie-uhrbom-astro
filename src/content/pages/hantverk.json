@@ -110,6 +110,11 @@
       "tone": "warm"
     },
     {
+      "type": "text",
+      "title": "Beställ en personlig vapenrem",
+      "body": "Hos mig beställer du en vapenrem i Tärnsjöläder, 3–3,5 mm tjockt med ett neoprenfoder på övre delen av baksidan som förhindrar att remmen glider. Standardlängden är 90 cm och passar de flesta jägare — något längre kan beställas vid behov. Remmen fästs i geväret med läderremmar så att det inte finns något som skramlar eller blänker.\n\n## Tillgängliga motiv\n\nÄlg, rådjur, hare, orre, varg, vildsvin, dovhjort, kronhjort, lodjur. Eget motiv går att beställa — hör av dig för mer information.\n\nMotiven görs för hand med läderplastik där mönstret skärs ut och slås in med punsar för en tydlig 3D-effekt.\n\n## Namn på remmen\n\nDu kan få ditt namn (eller ett annat ord) instansat med bokstavspunsar. Kontrollera stavningen noga innan du beställer — det går inte att ändra i efterhand. Nu finns även möjlighet till handskuren text av kortare namn.\n\n## Färg och finish\n\nRemmen färgas med shattering, en teknik som ger naturliga variationer i färgen beroende på lädrets struktur. Baksidan lämnas ofärgad som standard men kan färgas mot tillägg.\n\n## Leveranstid\n\nVarje rem görs på beställning från en hel hud. Leveranstiden varierar — fråga gärna om aktuell tid innan du beställer, eller räkna med några veckors väntan."
+    },
+    {
       "type": "hero-overlay",
       "eyebrow": "läderhantverk",
       "title": "Annat läderhantverk",
@@ -272,7 +277,7 @@
         {
           "number": "1",
           "title": "Kontakta mig",
-          "body": "Berätta vad du vill ha — motiv, mått, namn och eventuella önskemål om färg. Jag svarar inom ett par dagar."
+          "body": "Berätta vad du vill ha — produkt, motiv, mått, namn och eventuella önskemål om färg. Jag svarar inom ett par dagar."
         },
         {
           "number": "2",
@@ -281,15 +286,10 @@
         },
         {
           "number": "3",
-          "title": "Du får din rem",
-          "body": "Produkten tillverkas för hand från en hel hud svenskt läder. När den är klar skickar jag den till dig — spårbar frakt och information hur du tar hand om remmen följer med."
+          "title": "Du får din beställning",
+          "body": "Produkten tillverkas för hand från en hel hud svenskt läder. När den är klar skickar jag den till dig — spårbar frakt ."
         }
       ]
-    },
-    {
-      "type": "text",
-      "title": "Beställ en personlig gevärrem",
-      "body": "Hos mig beställer du en gevärrem i Tärnsjöläder, 3–3,5 mm tjockt med ett neoprenfoder på övre delen av baksidan som förhindrar att remmen glider. Standardlängden är 90 cm och passar de flesta jägare — något längre kan beställas vid behov. Remmen fästs i geväret med läderremmar så att det inte finns något som skramlar eller blänker.\n\n## Tillgängliga motiv\n\nÄlg, rådjur, hare, orre, varg, vildsvin, dovhjort, kronhjort, lodjur. Eget motiv går att beställa — hör av dig för mer information.\n\nMotiven görs för hand med läderplastik där mönstret skärs ut och slås in med punsar för en tydlig 3D-effekt.\n\n## Namn på remmen\n\nDu kan få ditt namn (eller ett annat ord) instansat med bokstavspunsar. Kontrollera stavningen noga innan du beställer — det går inte att ändra i efterhand.\n\n## Färg och finish\n\nRemmen färgas med shattering, en teknik som ger naturliga variationer i färgen beroende på lädrets struktur. Baksidan lämnas ofärgad som standard men kan färgas mot tillägg.\n\n## Leveranstid\n\nVarje rem görs på beställning från en hel hud. Leveranstiden varierar — fråga gärna om aktuell tid innan du beställer, eller räkna med några veckors väntan."
     },
     {
       "type": "customer-stories",
