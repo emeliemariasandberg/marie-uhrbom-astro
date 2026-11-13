@@ -112,8 +112,8 @@
     {
       "type": "hero-overlay",
       "eyebrow": "läderhantverk",
-      "title": "Handgjorda bälten med mera",
-      "subtitle": "Gediget hantverk av Tärnsjöläder. Motiv, namn, antikfärgat eller natur? Här finns alla möjligheter även för dig med egna idéer!",
+      "title": "Annat läderhantverk",
+      "subtitle": "Gediget hantverk av Tärnsjöläder. Bälte, väska, hårspänne, hundhalsband, knivfodral? Motiv, namn, antikfärgat eller natur? Här finns alla möjligheter även för dig med egna idéer!",
       "image": "/images/balte-med-eklov-handgjord.jpg",
       "alt": "Bälte med eklöv och ekollon"
     },
@@ -197,20 +197,14 @@
           "alt": "",
           "caption": "Exempel på bälte med eklöv och ekollon",
           "detail": "Det finns många möjligheter att köpa ett unikt bälte",
-          "motif": [
-            "Bälte",
-            "motiv"
-          ]
+          "motif": "Annat läderhantverk"
         },
         {
           "url": "/images/balte-handskuret-namn.jpg",
           "alt": "",
           "caption": "Exempel på bälte med handskuret namn",
           "detail": "Det finns många möjligheter att köpa ett unikt bälte",
-          "motif": [
-            "Bälte",
-            "namn"
-          ]
+          "motif": "Handskuren text"
         },
         {
           "url": "/images/vapenrem-pa-sten-motiv-alg.jpg",
@@ -223,37 +217,50 @@
           "url": "/images/handskuret-namn-vapenrem.jpg",
           "alt": "",
           "caption": "Stor text på vapenrem",
-          "detail": "Handskuren text"
+          "detail": "Handskuren text",
+          "motif": "Handskuren text"
         },
         {
           "url": "/images/snusmumrik-1.jpg",
           "alt": "",
           "detail": "Väska för snusburken",
-          "caption": "Snusmumrik 1"
+          "caption": "Snusmumrik 1",
+          "motif": "Annat läderhantverk"
         },
         {
           "url": "/images/snusmumrik-2.jpg",
           "alt": "",
           "caption": "Snusmumrik 2",
-          "detail": "Väska för snusburken"
+          "detail": "Väska för snusburken",
+          "motif": "Annat läderhantverk"
         },
         {
           "url": "/images/harspannen-1.jpg",
           "alt": "",
           "caption": "Hårspännen 1",
-          "detail": "Olika motiv och storlekar"
+          "detail": "Olika motiv och storlekar",
+          "motif": "Annat läderhantverk"
         },
         {
           "url": "/images/harspannen-2.jpg",
           "alt": "",
           "caption": "Hårspännen 2",
-          "detail": "Olika motiv och storlekar"
+          "detail": "Olika motiv och storlekar",
+          "motif": "Annat läderhantverk"
         },
         {
           "url": "/images/harspannen-3.jpg",
           "alt": "",
           "caption": "Hårspännen 3",
-          "detail": "Olika motiv och storlekar"
+          "detail": "Olika motiv och storlekar",
+          "motif": "Annat läderhantverk"
+        },
+        {
+          "url": "/images/laeder-vaska-solros-handgjord.jpg",
+          "alt": "",
+          "caption": "Väska med solros",
+          "motif": "Annat läderhantverk",
+          "detail": "På beställning efter önskemål"
         }
       ]
     },
