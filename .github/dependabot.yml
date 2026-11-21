@@ -1,0 +1,22 @@
+version: 2
+updates:
+  # npm-paket (Astro, Tailwind, marked m.fl.)
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 5
+    groups:
+      # Patch- och minor-uppdateringar samlas i en PR per månad.
+      # Major-uppdateringar kommer som egna PR:er eftersom de kan kräva ändringar.
+      minor-och-patch:
+        update-types: [minor, patch]
+
+  # GitHub Actions i .github/workflows
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
