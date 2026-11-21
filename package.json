@@ -10,7 +10,7 @@
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
     "@tailwindcss/vite": "^4.1.5",
-    "astro": "^7.3.2",
+    "astro": "^7.4.7",
     "marked": "^15.0.12",
     "tailwindcss": "^4.1.5"
   }
